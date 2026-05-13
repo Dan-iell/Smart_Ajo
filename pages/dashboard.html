@@ -130,16 +130,39 @@
   </nav>
 
   <script type="module">
-    import { getToken } from "../js/api.js";
+    import { getToken, getMe } from "../js/api.js";
 
-    if (!getToken()) {
-      window.location.replace("../index.html");
-    } else {
-      const script = document.createElement("script");
-      script.type = "module";
-      script.src = "../js/dashboard.js";
-      document.body.appendChild(script);
+    async function initDashboard() {
+      const token = getToken();
+
+      if (!token) {
+        window.location.replace("../index.html");
+        return;
+      }
+
+      try {
+        // Fetch user data to fix the "Hello, User" name problem
+        const user = await getMe();
+        const nameElement = document.getElementById("userName");
+        
+        if (nameElement && user.full_name) {
+          nameElement.textContent = `Hello, ${user.full_name}`;
+        }
+
+        // Load the rest of the dashboard logic (groups, balances, etc.)
+        const script = document.createElement("script");
+        script.type = "module";
+        script.src = "../js/dashboard.js";
+        document.body.appendChild(script);
+        
+      } catch (error) {
+        console.error("Failed to initialize dashboard:", error);
+        // Fallback name if API fails
+        document.getElementById("userName").textContent = "Hello, User";
+      }
     }
+
+    initDashboard();
   </script>
 </body>
 </html>
