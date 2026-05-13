@@ -10,7 +10,6 @@ const BASE_URL = "https://smartajo.up.railway.app";
 
 export function getToken() {
   const token = localStorage.getItem("ajo_token");
-  // Defensive check: If token is null or saved as a "poisoned" string, return null
   if (!token || token === "undefined" || token === "null") return null;
   return token;
 }
@@ -46,7 +45,6 @@ function clearToken() {
 async function request(method, endpoint, body = null, isAuth = false) {
   const token = getToken();
 
-  // If a route requires auth but we have no token, don't even try the fetch
   if (isAuth && !token) {
     logoutUser();
     return;
@@ -71,7 +69,6 @@ async function request(method, endpoint, body = null, isAuth = false) {
     const response = await fetch(url, options);
     const contentType = response.headers.get("content-type");
 
-    // Handle expired tokens
     if (response.status === 401 && isAuth) {
       const refreshed = await attemptTokenRefresh();
       if (refreshed) return request(method, endpoint, body, isAuth);
@@ -165,14 +162,24 @@ export async function getMe() {
   return request("GET", "api/auth/me/", null, true);
 }
 
-// In js/api.js
 export async function getMyGroups() {
   try {
-    // We use the 'request' helper to handle the BASE_URL,
-    // JSON parsing, and the Authorization header automatically.
     return await request("GET", "api/groups/my-groups/", null, true);
   } catch (error) {
     console.error("Error fetching user groups:", error);
+    throw error;
+  }
+}
+
+/**
+ * NEW: Fetches all available groups for discovery.
+ * Resolves the SyntaxError in groups.html.
+ */
+export async function discoverGroups() {
+  try {
+    return await request("GET", "api/groups/", null, true);
+  } catch (error) {
+    console.error("Error in discoverGroups API call:", error);
     throw error;
   }
 }
@@ -183,7 +190,6 @@ export async function addCard(cardData) {
 
 export function logoutUser() {
   clearToken();
-  // Relative path ensures it works whether you're in /pages/ or root
   window.location.href = window.location.origin + "/index.html";
 }
 
@@ -194,7 +200,6 @@ export function logoutUser() {
 export function requireAuth() {
   const token = getToken();
   if (!token) {
-    // If you are in /pages/dashboard.html, you need to go UP one level to index.html
     window.location.replace("../index.html");
     return false;
   }
