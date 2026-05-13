@@ -172,6 +172,18 @@ export async function getMyGroups() {
 }
 
 /**
+ * NEW: Fetches details for a single group by its ID.
+ */
+export async function getGroupDetail(groupId) {
+  try {
+    return await request("GET", `api/groups/${groupId}/`, null, true);
+  } catch (error) {
+    console.error(`Error fetching detail for group ${groupId}:`, error);
+    throw error;
+  }
+}
+
+/**
  * NEW: Fetches all available groups for discovery.
  * Resolves the SyntaxError in groups.html.
  */

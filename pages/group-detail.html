@@ -248,33 +248,79 @@
     </div>
 
     <script type="module">
-      import { getGroupDetails } from "../js/api.js"; // Ensure this function exists in your api.js
+      // NOTE: Ensure the function name in api.js matches what you import here
+      import { getGroupDetail } from "../js/api.js";
 
-      // 1. Get the ID from the URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const groupId = urlParams.get("id");
+      async function initDetails() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const groupId = urlParams.get("id");
 
-      async function init() {
         if (!groupId) {
-          console.error("No group ID found");
+          window.location.href = "groups.html";
           return;
         }
 
         try {
-          // 2. Fetch the data for this specific group
-          const group = await getGroupDetails(groupId);
+          const group = await getGroupDetail(groupId);
 
-          // 3. Inject the data into your page elements
-          document.getElementById("groupName").textContent = group.name;
-          document.getElementById("contributionAmount").textContent =
+          // 1. Update Header & Titles
+          document.getElementById("groupTitle").textContent = group.name;
+
+          // 2. Calculate Progress
+          const target = group.target_amount || 0;
+          const current = group.current_pool || 0;
+          const percentage =
+            target > 0 ? Math.round((current / target) * 100) : 0;
+
+          // 3. Update Circular Progress UI
+          document.getElementById("currentPool").textContent =
+            `₦${Number(current).toLocaleString()}`;
+          document.getElementById("targetPool").textContent =
+            `₦${Number(target).toLocaleString()}`;
+          document.getElementById("progressText").textContent =
+            `${percentage}% Complete`;
+
+          // Update the SVG circle stroke
+          const circle = document.getElementById("progressCircle");
+          const circumference = 2 * Math.PI * 50; // r=50
+          const offset = circumference - (percentage / 100) * circumference;
+          circle.style.strokeDasharray = circumference;
+          circle.style.strokeDashoffset = offset;
+
+          // 4. Update Summary Table (Fixed IDs to match your HTML)
+          document.getElementById("summaryTotalPool").textContent =
+            `₦${Number(target).toLocaleString()}`;
+          document.getElementById("summaryContribution").textContent =
             `₦${Number(group.contribution_amount).toLocaleString()}`;
-          // Add more fields as needed...
+          document.getElementById("summaryMembers").textContent =
+            group.members_count || 0;
+          document.getElementById("summaryFrequency").textContent =
+            group.contribution_frequency || "-";
         } catch (error) {
-          console.error("Failed to load group details:", error);
+          console.error("Error loading details:", error);
+          document.getElementById("groupTitle").textContent = "Error Loading";
         }
       }
 
-      init();
+      // Tab Switching Logic
+      window.switchTab = function (tabId) {
+        // Update Buttons
+        document.querySelectorAll('[id^="tab-"]').forEach((btn) => {
+          btn.classList.remove("border-[#3A3A3A]", "text-[#1A1A1A]");
+          btn.classList.add("border-transparent", "text-[#9E9E9E]");
+        });
+        const activeTab = document.getElementById(`tab-${tabId}`);
+        activeTab.classList.add("border-[#3A3A3A]", "text-[#1A1A1A]");
+        activeTab.classList.remove("text-[#9E9E9E]");
+
+        // Update Content
+        document.querySelectorAll(".tab-content").forEach((content) => {
+          content.classList.remove("active");
+        });
+        document.getElementById(`content-${tabId}`).classList.add("active");
+      };
+
+      initDetails();
     </script>
   </body>
 </html>
