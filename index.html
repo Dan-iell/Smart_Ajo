@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Ajo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#F5F4EF',
+            muted: '#6B6B6B',
+          },
+          fontFamily: {
+            serif: ['Fraunces', 'serif'],
+            sans: ['DM Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.9s ease both; }
+    .fade-up-delay { animation: fadeUp 0.9s ease 0.2s both; }
+    
+    /* Force height for mobile browsers */
+    html, body { height: 100%; margin: 0; padding: 0; }
+  </style>
+</head>
+<!-- min-h-screen and flex on the body is the most reliable way to center content -->
+<body style="margin: 0; padding: 0; background-color: #F5F4EF; height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; overflow: hidden; font-family: 'DM Sans', sans-serif;">
+
+  <!-- The main container -->
+  <div class="fade-up" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 28px; padding: 0 24px;">
+
+    <!-- Logo placeholder -->
+    <div style="width: 176px; height: 144px; background-color: #B0B5AC; display: flex; align-items: center; justify-content: center; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+      <img src="./assets/icons/logo.png" alt="Smart Ajo Logo" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerHTML='<span style=\'font-family: Fraunces, serif; font-size: 30px; font-weight: 900; color: white;\'>SA</span>'"/>
+    </div>
+
+    <!-- Text container -->
+    <div class="fade-up-delay">
+      <h1 style="font-family: 'Fraunces', serif; font-size: 48px; font-weight: 700; color: black; margin: 0 0 12px 0; letter-spacing: -0.025em; line-height: 1;">
+        Smart Ajo
+      </h1>
+      <p style="color: #6B6B6B; font-size: 16px; margin: 0;">
+        Save Together. Grow Together.
+      </p>
+    </div>
+
+  </div>
+
+  <script type="module">
+    // Smart Redirect Logic
+    setTimeout(() => {
+      const token = localStorage.getItem("ajo_token");
+      
+      // Validation to catch "undefined" strings from previous errors
+      if (token && token !== "undefined") {
+        window.location.href = 'pages/dashboard.html';
+      } else {
+        window.location.href = 'pages/onboarding.html';
+      }
+    }, 2500);
+  </script>
+</body>
+</html>

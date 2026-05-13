@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Ajo – Set Up Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px);} to { opacity:1; transform:translateY(0);} }
+    .fade-up { animation: fadeUp 0.7s ease both; }
+    /* Custom style to hide date picker icon until clicked for a cleaner look */
+    input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
+  </style>
+</head>
+<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto flex flex-col font-['DM_Sans']">
+  <div class="flex flex-col flex-1 px-6 pt-10 pb-10 fade-up">
+
+    <div class="flex gap-1.5 mb-8">
+      <div class="h-1 flex-1 bg-[#3A3A3A] rounded-full"></div>
+      <div class="h-1 flex-1 bg-[#3A3A3A] rounded-full"></div>
+      <div class="h-1 flex-1 bg-[#3A3A3A] rounded-full"></div>
+      <div class="h-1 flex-1 bg-[#E0E0E0] rounded-full"></div>
+    </div>
+
+    <h1 class="font-['Fraunces'] text-3xl font-bold text-black mb-1">Set Up Your Profile</h1>
+    <p class="text-sm text-[#6B6B6B] mb-7">Tell us a bit about yourself to personalise your experience.</p>
+
+    <div class="flex justify-center mb-7">
+      <div class="relative">
+        <div class="w-20 h-20 bg-[#B0B5AC] rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-sm" id="avatarPreview">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
+        </div>
+        <label for="avatarInput" class="absolute -bottom-1 -right-1 w-7 h-7 bg-[#3A3A3A] rounded-full flex items-center justify-center cursor-pointer hover:bg-black transition-colors shadow-md">
+          <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        </label>
+        <input type="file" id="avatarInput" accept="image/*" class="hidden" />
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+
+      <div>
+        <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block">Display Name</label>
+        <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5 focus-within:border-[#3A3A3A] transition-colors">
+          <svg class="w-4 h-4 text-[#9E9E9E] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
+          <input type="text" id="displayName" placeholder="How should we call you?" class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD]"/>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block">Date of Birth</label>
+        <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5 focus-within:border-[#3A3A3A] transition-colors">
+          <svg class="w-4 h-4 text-[#9E9E9E] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <input type="date" id="dateOfBirth" class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A]"/>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block">Nationality</label>
+        <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5 focus-within:border-[#3A3A3A] transition-colors">
+          <svg class="w-4 h-4 text-[#9E9E9E] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+          <select id="nationality" class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A] appearance-none cursor-pointer">
+            <option value="" disabled selected>Select nationality</option>
+            <option value="Nigerian">Nigerian</option>
+            <option value="Ghanaian">Ghanaian</option>
+            <option value="Kenyan">Kenyan</option>
+            <option value="South African">South African</option>
+            <option value="Other">Other</option>
+          </select>
+          <svg class="w-4 h-4 text-[#9E9E9E] shrink-0 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <p id="authError" class="text-red-500 text-xs mt-2 hidden text-center"></p>
+
+      <button id="profileBtn" onclick="handleSetupProfile()"
+        class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide mt-2 transition-all duration-200 hover:bg-black active:scale-95 shadow-sm">
+        CONTINUE
+      </button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { handleSetupProfile } from "../js/auth.js";
+    
+    // Attach to window so onclick works in module mode
+    window.handleSetupProfile = handleSetupProfile;
+
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarPreview = document.getElementById('avatarPreview');
+
+    // Handle image selection and preview
+    avatarInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Basic size validation (e.g., max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Image is too large. Please select an image under 2MB.");
+        avatarInput.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        avatarPreview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-full animate-fade-in"/>`;
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>
+</html>
