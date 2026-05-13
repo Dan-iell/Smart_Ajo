@@ -167,16 +167,14 @@ export async function getMe() {
 
 // In js/api.js
 export async function getMyGroups() {
-  const token = getToken();
-  const response = await fetch(`${API_URL}/api/groups/my-groups/`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`, // This is the magic line
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) throw new Error("Failed to fetch groups");
-  return response.json();
+  try {
+    // We use the 'request' helper to handle the BASE_URL,
+    // JSON parsing, and the Authorization header automatically.
+    return await request("GET", "api/groups/my-groups/", null, true);
+  } catch (error) {
+    console.error("Error fetching user groups:", error);
+    throw error;
+  }
 }
 
 export async function addCard(cardData) {
