@@ -163,6 +163,28 @@ export async function getMe() {
   return request("GET", "api/auth/me/", null, true);
 }
 
+/**
+ * Fetches group members to extract a specific profile.
+ * Targets Swagger: GET /api/groups/{id}/members/
+ */
+export async function getMemberProfile(groupId, memberId) {
+  try {
+    const members = await request(
+      "GET",
+      `api/groups/${groupId}/members/`,
+      null,
+      true,
+    );
+    // Finds the specific member in the returned list
+    const member = members.find((m) => String(m.id) === String(memberId));
+    if (!member) throw new Error("Member not found in this group.");
+    return member;
+  } catch (error) {
+    console.error(`Error fetching profile:`, error);
+    throw error;
+  }
+}
+
 export async function getMyGroups() {
   try {
     return await request("GET", "api/groups/my-groups/", null, true);
@@ -172,9 +194,6 @@ export async function getMyGroups() {
   }
 }
 
-/**
- * Fetches details for a single group by its ID.
- */
 export async function getGroupDetail(groupId) {
   try {
     return await request("GET", `api/groups/${groupId}/`, null, true);
@@ -184,16 +203,10 @@ export async function getGroupDetail(groupId) {
   }
 }
 
-/**
- * UPDATED: Matches POST /api/groups/create/ in Swagger
- */
 export async function createGroup(groupData) {
   return request("POST", "api/groups/create/", groupData, true);
 }
 
-/**
- * UPDATED: Matches GET /api/groups/discover/ in Swagger
- */
 export async function discoverGroups() {
   try {
     return await request("GET", "api/groups/discover/", null, true);
@@ -203,9 +216,6 @@ export async function discoverGroups() {
   }
 }
 
-/**
- * Matches POST /api/groups/{id}/join/ in Swagger
- */
 export async function joinGroup(groupId) {
   return request("POST", `api/groups/${groupId}/join/`, null, true);
 }
