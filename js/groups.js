@@ -337,11 +337,19 @@ export async function handleCreateGroup() {
     const data = await createGroup({ name, description, contributionAmount: Number(contributionAmount), frequency, maxMembers: Number(maxMembers), rotationMethod });
 
     // Get invite link and show on success screen
-    if (data.group?.id) {
-      const linkData = await getGroupInviteLink(data.group.id);
-      localStorage.setItem('ajo_new_group_link', linkData.inviteLink || '');
-      localStorage.setItem('ajo_new_group_id', data.group.id);
+    const groupId = data.group?.id || data.id;
+    if (groupId) {
+      localStorage.setItem('ajo_new_group_id', groupId);
       localStorage.setItem('ajo_new_group_name', name);
+      try {
+        const linkData = await getGroupInviteLink(groupId);
+        // Backend may return invite_link (snake) or inviteLink (camel) or link
+        const link = linkData.invite_link || linkData.inviteLink || linkData.link || '';
+        localStorage.setItem('ajo_new_group_link', link);
+      } catch {
+        // Endpoint not implemented yet — group-created.html will build a fallback URL
+        localStorage.setItem('ajo_new_group_link', '');
+      }
     }
 
     // Clear temp storage

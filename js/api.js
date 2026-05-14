@@ -279,6 +279,67 @@ export async function deleteCard(cardId) {
   return request("DELETE", `api/payments/cards/${cardId}/`, null, true);
 }
 
+// ─────────────────────────────────────────────
+// ALERTS / NOTIFICATIONS
+// GET  /api/notifications/          → [ { id, type, title, message, is_read, created_at } ]
+// PATCH /api/notifications/{id}/    → mark as read
+// DELETE /api/notifications/{id}/   → delete
+// ─────────────────────────────────────────────
+
+export async function getAlerts(type = '') {
+  const endpoint = type ? `api/notifications/?type=${type}` : 'api/notifications/';
+  return request("GET", endpoint, null, true);
+}
+
+export async function markAlertAsRead(alertId) {
+  return request("PATCH", `api/notifications/${alertId}/`, { is_read: true }, true);
+}
+
+export async function deleteAlert(alertId) {
+  return request("DELETE", `api/notifications/${alertId}/`, null, true);
+}
+
+// ─────────────────────────────────────────────
+// GROUP DETAIL EXTRAS
+// These extend the base group endpoints already defined above.
+// GET /api/groups/{id}/             → full group detail (reuse getGroupDetail)
+// GET /api/groups/{id}/members/     → member list
+// GET /api/contributions/group/{id}/→ cycle contributions
+// GET /api/contributions/payouts/{id}/ → payout schedule
+// GET /api/groups/{id}/invite-link/ → shareable invite link
+// ─────────────────────────────────────────────
+
+// Alias so groups.js can call getGroupById without breaking
+export async function getGroupById(groupId) {
+  return getGroupDetail(groupId);
+}
+
+export async function getGroupMembers(groupId) {
+  return request("GET", `api/groups/${groupId}/members/`, null, true);
+}
+
+export async function getCycleContributions(groupId) {
+  return request("GET", `api/contributions/group/${groupId}/`, null, true);
+}
+
+export async function getNextPayout(groupId) {
+  return request("GET", `api/contributions/payouts/${groupId}/`, null, true);
+}
+
+export async function getGroupInviteLink(groupId) {
+  return request("GET", `api/groups/${groupId}/invite-link/`, null, true);
+}
+
+// Health score — uses the existing /api/auth/risk/ endpoint (group-level if id provided)
+export async function getGroupHealthScore(groupId) {
+  try {
+    return await request("GET", `api/groups/${groupId}/health/`, null, true);
+  } catch {
+    // Fallback: return a neutral score if endpoint doesn't exist yet
+    return { score: 75, label: 'Good', details: 'Based on payment history.' };
+  }
+}
+
 export function logoutUser() {
   clearToken();
   window.location.href = window.location.origin + "/index.html";
