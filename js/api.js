@@ -60,6 +60,7 @@ async function request(method, endpoint, body = null, isAuth = false) {
   const options = { method, headers };
   if (body) options.body = JSON.stringify(body);
 
+  // Normalizes slashes to ensure trailing slashes for Django compatibility
   let cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
   if (!cleanEndpoint.endsWith("/")) cleanEndpoint += "/";
 
@@ -172,7 +173,7 @@ export async function getMyGroups() {
 }
 
 /**
- * NEW: Fetches details for a single group by its ID.
+ * Fetches details for a single group by its ID.
  */
 export async function getGroupDetail(groupId) {
   try {
@@ -184,16 +185,29 @@ export async function getGroupDetail(groupId) {
 }
 
 /**
- * NEW: Fetches all available groups for discovery.
- * Resolves the SyntaxError in groups.html.
+ * UPDATED: Matches POST /api/groups/create/ in Swagger
+ */
+export async function createGroup(groupData) {
+  return request("POST", "api/groups/create/", groupData, true);
+}
+
+/**
+ * UPDATED: Matches GET /api/groups/discover/ in Swagger
  */
 export async function discoverGroups() {
   try {
-    return await request("GET", "api/groups/", null, true);
+    return await request("GET", "api/groups/discover/", null, true);
   } catch (error) {
     console.error("Error in discoverGroups API call:", error);
     throw error;
   }
+}
+
+/**
+ * Matches POST /api/groups/{id}/join/ in Swagger
+ */
+export async function joinGroup(groupId) {
+  return request("POST", `api/groups/${groupId}/join/`, null, true);
 }
 
 export async function addCard(cardData) {

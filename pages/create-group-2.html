@@ -188,30 +188,17 @@
     </div>
 
     <script>
-      let selectedFrequency = "biweekly"; // Matches your screenshot preference
+      let selectedFrequency = "biweekly"; 
 
       function setFreq(val) {
         selectedFrequency = val;
         const buttons = document.querySelectorAll('button[id^="freq-"]');
-
         buttons.forEach((btn) => {
           if (btn.id === `freq-${val}`) {
-            // Smoothly activate
-            btn.classList.add(
-              "bg-[#3A3A3A]",
-              "text-white",
-              "font-semibold",
-              "shadow-md",
-            );
+            btn.classList.add("bg-[#3A3A3A]", "text-white", "font-semibold", "shadow-md");
             btn.classList.remove("text-[#9E9E9E]", "font-medium");
           } else {
-            // Smoothly deactivate
-            btn.classList.remove(
-              "bg-[#3A3A3A]",
-              "text-white",
-              "font-semibold",
-              "shadow-md",
-            );
+            btn.classList.remove("bg-[#3A3A3A]", "text-white", "font-semibold", "shadow-md");
             btn.classList.add("text-[#9E9E9E]", "font-medium");
           }
         });
@@ -228,18 +215,14 @@
           return;
         }
 
-        // Step 2 logic: merge data for step 3
-        const existingData = JSON.parse(
-          sessionStorage.getItem("pendingGroupData") || "{}",
-        );
-        const updatedData = {
-          ...existingData,
-          contribution_amount: amount,
+        // Save specifically as Step 2 data
+        const step2Data = {
+          contribution_amount: parseFloat(amount),
           frequency: selectedFrequency,
-          max_members: maxMembers,
+          max_members: parseInt(maxMembers),
         };
 
-        sessionStorage.setItem("pendingGroupData", JSON.stringify(updatedData));
+        localStorage.setItem("group_step_2", JSON.stringify(step2Data));
         window.location.href = "create-group-3.html";
       });
     </script>

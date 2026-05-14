@@ -1,130 +1,266 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Ajo – Create Group Step 3</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    .fade-up{animation:fadeUp 0.5s ease both;} body{padding-bottom:90px;}
-    .option-card { transition: all 0.2s ease; cursor: pointer; border-width: 2px; }
-    .option-card.selected { border-color: #3A3A3A; background: #F9F9F7; }
-    .option-radio { width:20px; height:20px; border-radius:50%; border:2px solid #E0E0E0; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
-    .option-card.selected .option-radio { border-color:#3A3A3A; background:#3A3A3A; }
-    .option-dot { width:8px; height:8px; border-radius:50%; background:white; opacity:0; transition:opacity 0.2s; }
-    .option-card.selected .option-dot { opacity:1; }
-  </style>
-</head>
-<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
-  <div class="px-5 pt-10 fade-up">
-    <div class="flex items-center gap-3 mb-6">
-      <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0]">
-        <svg class="w-4 h-4 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo – Create Group Step 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.5s ease both;
+      }
+      body {
+        padding-bottom: 90px;
+      }
+      .option-card {
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border-width: 2px;
+      }
+      .option-card.selected {
+        border-color: #3a3a3a;
+        background: #f9f9f7;
+      }
+      .option-radio {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .option-card.selected .option-radio {
+        border-color: #3a3a3a;
+        background: #3a3a3a;
+      }
+      .option-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .option-card.selected .option-dot {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
+  >
+    <div class="px-5 pt-10 fade-up">
+      <div class="flex items-center gap-3 mb-6">
+        <button
+          onclick="history.back()"
+          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0]"
+        >
+          <svg
+            class="w-4 h-4 text-[#3A3A3A]"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <h1 class="font-['Fraunces'] text-xl font-bold text-[#1A1A1A]">
+          Create Group
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-2 mb-8">
+        <div
+          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-4 h-4 text-white"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div class="flex-1 h-0.5 bg-[#3A3A3A]"></div>
+        <div
+          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"
+        >
+          <svg
+            class="w-4 h-4 text-white"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div class="flex-1 h-0.5 bg-[#3A3A3A]"></div>
+        <div
+          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"
+        >
+          <span class="text-white text-xs font-bold">3</span>
+        </div>
+      </div>
+
+      <h2 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A] mb-1">
+        Rotation Method
+      </h2>
+      <p class="text-sm text-[#6B6B6B] mb-7">
+        How should payout turns be decided?
+      </p>
+
+      <p id="finalError" class="text-xs text-red-500 mb-4 hidden"></p>
+
+      <div class="flex flex-col gap-3 mb-8">
+        <div
+          class="option-card selected bg-white border-[#3A3A3A] rounded-2xl p-4 flex items-start gap-4"
+          data-method="random"
+          onclick="selectOption(this)"
+        >
+          <div class="option-radio shrink-0 mt-0.5">
+            <div class="option-dot"></div>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-[#1A1A1A]">Random Draw</p>
+            <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">
+              Fair random selection each cycle
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-4 flex items-start gap-4"
+          data-method="admin"
+          onclick="selectOption(this)"
+        >
+          <div class="option-radio shrink-0 mt-0.5">
+            <div class="option-dot"></div>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-[#1A1A1A]">Admin Decides</p>
+            <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">
+              Group admin assigns payout order
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-4 flex items-start gap-4"
+          data-method="bidding"
+          onclick="selectOption(this)"
+        >
+          <div class="option-radio shrink-0 mt-0.5">
+            <div class="option-dot"></div>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-[#1A1A1A]">Members Bid</p>
+            <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">
+              Members bid for early payout
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <button
+        id="finalCreateBtn"
+        class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:bg-black active:scale-95"
+      >
+        Create Group
       </button>
-      <h1 class="font-['Fraunces'] text-xl font-bold text-[#1A1A1A]">Create Group</h1>
     </div>
 
-    <div class="flex items-center gap-2 mb-8">
-      <div class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
-      <div class="flex-1 h-0.5 bg-[#3A3A3A]"></div>
-      <div class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></div>
-      <div class="flex-1 h-0.5 bg-[#3A3A3A]"></div>
-      <div class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"><span class="text-white text-xs font-bold">3</span></div>
-    </div>
+    <!-- ... existing head and styles ... -->
 
-    <h2 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A] mb-1">Rotation Method</h2>
-    <p class="text-sm text-[#6B6B6B] mb-7">How should payout turns be decided?</p>
+    <script type="module">
+      import { createGroup } from "../js/api.js";
 
-    <p id="finalError" class="text-xs text-red-500 mb-4 hidden"></p>
+      let selectedMethod = "random";
 
-    <div class="flex flex-col gap-3 mb-8">
-      <div class="option-card selected bg-white border-[#3A3A3A] rounded-2xl p-4 flex items-start gap-4" data-method="random" onclick="selectOption(this)">
-        <div class="option-radio shrink-0 mt-0.5"><div class="option-dot"></div></div>
-        <div>
-          <p class="text-sm font-semibold text-[#1A1A1A]">Random Draw</p>
-          <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">Fair random selection each cycle</p>
-        </div>
-      </div>
+      window.selectOption = function (element) {
+        selectedMethod = element.getAttribute("data-method");
+        document.querySelectorAll(".option-card").forEach((card) => {
+          card.classList.remove("selected", "border-[#3A3A3A]");
+          card.classList.add("border-[#E0E0E0]");
+        });
+        element.classList.add("selected", "border-[#3A3A3A]");
+        element.classList.remove("border-[#E0E0E0]");
+      };
 
-      <div class="option-card bg-white border-[#E0E0E0] rounded-2xl p-4 flex items-start gap-4" data-method="admin" onclick="selectOption(this)">
-        <div class="option-radio shrink-0 mt-0.5"><div class="option-dot"></div></div>
-        <div>
-          <p class="text-sm font-semibold text-[#1A1A1A]">Admin Decides</p>
-          <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">Group admin assigns payout order</p>
-        </div>
-      </div>
+      async function handleCreateGroup() {
+        const errorEl = document.getElementById("finalError");
+        const btn = document.getElementById("finalCreateBtn");
 
-      <div class="option-card bg-white border-[#E0E0E0] rounded-2xl p-4 flex items-start gap-4" data-method="bidding" onclick="selectOption(this)">
-        <div class="option-radio shrink-0 mt-0.5"><div class="option-dot"></div></div>
-        <div>
-          <p class="text-sm font-semibold text-[#1A1A1A]">Members Bid</p>
-          <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">Members bid for early payout</p>
-        </div>
-      </div>
-    </div>
+        // 1. Pull data from the updated localStorage keys
+        const step1 = JSON.parse(localStorage.getItem("group_step_1") || "{}");
+        const step2 = JSON.parse(localStorage.getItem("group_step_2") || "{}");
+        
+        // 2. Final check: If keys are empty, try the old session key as a fallback
+        const legacyData = JSON.parse(sessionStorage.getItem("pendingGroupData") || "{}");
 
-    <button id="finalCreateBtn" class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:bg-black active:scale-95">Create Group</button>
-  </div>
+        const finalData = {
+          name: step1.name || legacyData.name,
+          description: step1.description || legacyData.description,
+          contribution_amount: step2.contribution_amount || parseFloat(legacyData.contribution_amount),
+          max_members: step2.max_members || parseInt(legacyData.max_members),
+          rotation_method: selectedMethod,
+          // Add frequency if your backend requires it
+          frequency: step2.frequency || legacyData.frequency || "monthly"
+        };
 
-  <script type="module">
-  import { createGroup } from "../js/api.js";
+        // Debugging: This helps you see if 'name' is still missing in the console
+        console.log("Attempting to create group with:", finalData);
 
-  let selectedMethod = 'random';
+        if (!finalData.name || !finalData.max_members) {
+           errorEl.textContent = "Error: Group name or member count is missing. Please restart the process.";
+           errorEl.classList.remove("hidden");
+           return;
+        }
 
-  window.selectOption = (el) => {
-    document.querySelectorAll('.option-card').forEach(c => {
-        c.classList.remove('selected', 'border-[#3A3A3A]');
-        c.classList.add('border-[#E0E0E0]');
-    });
-    el.classList.add('selected', 'border-[#3A3A3A]');
-    el.classList.remove('border-[#E0E0E0]');
-    selectedMethod = el.getAttribute('data-method');
-  };
+        try {
+          errorEl.classList.add("hidden");
+          btn.innerText = "Creating...";
+          btn.disabled = true;
 
-  document.getElementById('finalCreateBtn').addEventListener('click', async () => {
-    const btn = document.getElementById('finalCreateBtn');
-    const errorEl = document.getElementById('finalError');
-    
-    // 1. Get raw data
-    const rawData = JSON.parse(sessionStorage.getItem('pendingGroupData') || '{}');
-    const today = new Date().toISOString().split('T')[0];
+          await createGroup(finalData);
 
-    // 2. Build Payload
-    const payload = {
-      name: rawData.name || "Unnamed Group",
-      description: rawData.description || "No description",
-      contribution_amount: parseFloat(rawData.contribution_amount) || 1000,
-      contribution_frequency: rawData.frequency || "monthly",
-      max_members: parseInt(rawData.max_members) || 10,
-      start_date: today
-    };
+          // Clear all storage after success
+          localStorage.removeItem("group_step_1");
+          localStorage.removeItem("group_step_2");
+          sessionStorage.removeItem("pendingGroupData");
 
-    console.log("Sending Payload:", payload); // DEBUG: Look at this in F12
+          alert("Group created successfully!");
+          window.location.href = "groups.html";
+        } catch (error) {
+          errorEl.textContent = error.message;
+          errorEl.classList.remove("hidden");
+          btn.innerText = "Create Group";
+          btn.disabled = false;
+        }
+      }
 
-    btn.disabled = true;
-    btn.textContent = "Creating...";
-    errorEl.classList.add('hidden');
-
-    try {
-      const response = await createGroup(payload);
-      console.log("Server Response:", response);
-      
-      // Save name for the success page
-      localStorage.setItem('lastCreatedGroup', JSON.stringify({ name: payload.name }));
-      
-      sessionStorage.removeItem('pendingGroupData');
-      window.location.href = 'group-created.html';
-    } catch (err) {
-      btn.disabled = false;
-      btn.textContent = "Create Group";
-      
-      // Detailed error for debugging
-      errorEl.textContent = `Error: ${err.message}`;
-      errorEl.classList.remove('hidden');
-      console.error("Fetch Error Detail:", err);
-    }
-  });
-</script>
-</body>
+      document
+        .getElementById("finalCreateBtn")
+        .addEventListener("click", handleCreateGroup);
+    </script>
+  </body>
 </html>
