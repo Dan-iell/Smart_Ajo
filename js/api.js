@@ -240,6 +240,45 @@ export async function getRoundSummary(groupId) {
   return request("GET", `api/contributions/round-summary/${groupId}/`, null, true);
 }
 
+// ─────────────────────────────────────────────
+// WALLET
+// ─────────────────────────────────────────────
+
+export async function getWallet() {
+  return request("GET", "api/wallet/", null, true);
+}
+
+export async function fundWallet(amount) {
+  return request("POST", "api/wallet/fund/", { amount }, true);
+}
+
+export async function getWalletTransactions() {
+  return request("GET", "api/wallet/transactions/", null, true);
+}
+
+// ─────────────────────────────────────────────
+// CARDS
+// Backend endpoint: POST /api/payments/add-card/
+// Body: { card_number, cvv, expiry_month, expiry_year }
+// ─────────────────────────────────────────────
+
+export async function getCards() {
+  return request("GET", "api/payments/cards/", null, true);
+}
+
+export async function saveCard({ cardNumber, cvv, expiryMonth, expiryYear }) {
+  return request("POST", "api/payments/add-card/", {
+    card_number: cardNumber,
+    cvv,
+    expiry_month: expiryMonth,
+    expiry_year: expiryYear,
+  }, true);
+}
+
+export async function deleteCard(cardId) {
+  return request("DELETE", `api/payments/cards/${cardId}/`, null, true);
+}
+
 export function logoutUser() {
   clearToken();
   window.location.href = window.location.origin + "/index.html";

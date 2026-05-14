@@ -51,6 +51,7 @@ async function loadGroupSelector() {
     if (amountEl) amountEl.textContent = `₦${Number(firstAmount).toLocaleString('en-NG')}`;
     if (groupLabel) groupLabel.textContent = first.name;
     setValue('summaryAmount', `₦ ${Number(firstAmount).toLocaleString('en-NG')}`);
+    updateCycleDue(first);
 
     sessionStorage.setItem('ajo_pay_groupId', first.id);
     sessionStorage.setItem('ajo_pay_amount', firstAmount);
@@ -62,9 +63,11 @@ async function loadGroupSelector() {
       const opt = selector.options[selector.selectedIndex];
       const amount = opt.dataset.amount;
       const name = opt.text;
+      const idx = selector.selectedIndex;
       if (amountEl) amountEl.textContent = `₦${Number(amount).toLocaleString('en-NG')}`;
       if (groupLabel) groupLabel.textContent = name;
       setValue('summaryAmount', `₦ ${Number(amount).toLocaleString('en-NG')}`);
+      updateCycleDue(groups[idx]);
       sessionStorage.setItem('ajo_pay_groupId', opt.value);
       sessionStorage.setItem('ajo_pay_amount', amount);
       sessionStorage.setItem('ajo_pay_groupName', name);
@@ -79,6 +82,28 @@ async function loadGroupSelector() {
 function updatePayButton(amount) {
   const btn = document.getElementById('payBtn');
   if (btn) btn.textContent = `Pay ₦${Number(amount).toLocaleString('en-NG')} with Squad`;
+}
+
+function updateCycleDue(group) {
+  if (!group) return;
+  // Cycle: e.g. "Round 3 of 8"
+  const current = group.current_round ?? group.round_number ?? null;
+  const total   = group.total_rounds ?? group.members_count ?? group.member_count ?? null;
+  setValue('cycleDisplay', current != null && total != null ? `Round ${current} of ${total}` : '—');
+
+  // Due date
+  const raw = group.next_due_date ?? group.due_date ?? null;
+  if (raw) {
+    const date = new Date(raw);
+    const today = new Date();
+    const diffDays = Math.round((date - today) / 86400000);
+    const label = diffDays === 0 ? 'Today' : diffDays === 1 ? 'Tomorrow'
+      : diffDays < 0 ? 'Overdue'
+      : date.toLocaleDateString('en-NG', { month: 'short', day: 'numeric' });
+    setValue('dueDateDisplay', label);
+  } else {
+    setValue('dueDateDisplay', '—');
+  }
 }
 
 export function proceedToConfirm() {
