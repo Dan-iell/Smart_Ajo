@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Ajo – Create Group Step 3</title>
+    <title>Smart Ajo – Rotation Method</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
@@ -27,27 +27,28 @@
         padding-bottom: 90px;
       }
       .option-card {
-        transition: all 0.2s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
         border-width: 2px;
       }
       .option-card.selected {
-        border-color: #3a3a3a;
-        background: #f9f9f7;
+        border-color: #1B5E3B;
+        background: #1B5E3B/5;
+        transform: translateY(-2px);
       }
       .option-radio {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         border-radius: 50%;
-        border: 2px solid #e0e0e0;
+        border: 2px solid #E0E0E0;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
       }
       .option-card.selected .option-radio {
-        border-color: #3a3a3a;
-        background: #3a3a3a;
+        border-color: #1B5E3B;
+        background: #1B5E3B;
       }
       .option-dot {
         width: 8px;
@@ -66,16 +67,17 @@
     class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
   >
     <div class="px-5 pt-10 fade-up">
+      <!-- Header -->
       <div class="flex items-center gap-3 mb-6">
         <button
           onclick="history.back()"
-          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0]"
+          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] shadow-sm active:scale-90 transition-transform"
         >
           <svg
-            class="w-4 h-4 text-[#3A3A3A]"
+            class="w-4 h-4 text-[#1B5E3B]"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             viewBox="0 0 24 24"
           >
             <path d="M15 18l-6-6 6-6" />
@@ -86,39 +88,18 @@
         </h1>
       </div>
 
-      <div class="flex items-center gap-2 mb-8">
-        <div
-          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"
-        >
-          <svg
-            class="w-4 h-4 text-white"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
-            <path d="M5 13l4 4L19 7" />
-          </svg>
+      <!-- Full Stepper -->
+      <div class="flex items-center gap-2 mb-8 px-2">
+        <div class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
         </div>
-        <div class="flex-1 h-0.5 bg-[#3A3A3A]"></div>
-        <div
-          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"
-        >
-          <svg
-            class="w-4 h-4 text-white"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
-            <path d="M5 13l4 4L19 7" />
-          </svg>
+        <div class="flex-1 h-1 bg-[#1B5E3B] rounded-full"></div>
+        <div class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
         </div>
-        <div class="flex-1 h-0.5 bg-[#3A3A3A]"></div>
-        <div
-          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center"
-        >
-          <span class="text-white text-xs font-bold">3</span>
+        <div class="flex-1 h-1 bg-[#1B5E3B] rounded-full"></div>
+        <div class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm">
+          <span class="text-white text-xs font-black">3</span>
         </div>
       </div>
 
@@ -126,14 +107,15 @@
         Rotation Method
       </h2>
       <p class="text-sm text-[#6B6B6B] mb-7">
-        How should payout turns be decided?
+        Determine how payout turns are assigned.
       </p>
 
-      <p id="finalError" class="text-xs text-red-500 mb-4 hidden"></p>
+      <p id="finalError" class="text-xs font-bold text-red-600 mb-4 hidden bg-red-50 p-4 rounded-xl border border-red-100 text-center"></p>
 
-      <div class="flex flex-col gap-3 mb-8">
+      <!-- Options -->
+      <div class="flex flex-col gap-4 mb-8">
         <div
-          class="option-card selected bg-white border-[#3A3A3A] rounded-2xl p-4 flex items-start gap-4"
+          class="option-card selected bg-white border-[#1B5E3B] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
           data-method="random"
           onclick="selectOption(this)"
         >
@@ -141,15 +123,15 @@
             <div class="option-dot"></div>
           </div>
           <div>
-            <p class="text-sm font-semibold text-[#1A1A1A]">Random Draw</p>
-            <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">
-              Fair random selection each cycle
+            <p class="text-sm font-bold text-[#1A1A1A]">Random Draw</p>
+            <p class="text-xs text-[#9E9E9E] mt-1 font-medium leading-relaxed">
+              Transparent, random selection generated by the system each cycle.
             </p>
           </div>
         </div>
 
         <div
-          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-4 flex items-start gap-4"
+          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
           data-method="admin"
           onclick="selectOption(this)"
         >
@@ -157,15 +139,15 @@
             <div class="option-dot"></div>
           </div>
           <div>
-            <p class="text-sm font-semibold text-[#1A1A1A]">Admin Decides</p>
-            <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">
-              Group admin assigns payout order
+            <p class="text-sm font-bold text-[#1A1A1A]">Admin Assignment</p>
+            <p class="text-xs text-[#9E9E9E] mt-1 font-medium leading-relaxed">
+              You manually assign the payout sequence for all members.
             </p>
           </div>
         </div>
 
         <div
-          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-4 flex items-start gap-4"
+          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
           data-method="bidding"
           onclick="selectOption(this)"
         >
@@ -173,24 +155,24 @@
             <div class="option-dot"></div>
           </div>
           <div>
-            <p class="text-sm font-semibold text-[#1A1A1A]">Members Bid</p>
-            <p class="text-xs text-[#9E9E9E] mt-0.5 leading-relaxed">
-              Members bid for early payout
+            <p class="text-sm font-bold text-[#1A1A1A]">Member Bidding</p>
+            <p class="text-xs text-[#9E9E9E] mt-1 font-medium leading-relaxed">
+              Members can bid small amounts to secure earlier payout slots.
             </p>
           </div>
         </div>
       </div>
 
+      <!-- Action Button -->
       <button
         id="finalCreateBtn"
-        class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:bg-black active:scale-95"
+        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-black tracking-wide transition-all duration-300 hover:brightness-105 active:scale-[0.98] shadow-lg shadow-orange-900/20"
       >
-        Create Group
+        Complete Group Creation
       </button>
     </div>
 
-    <!-- ... existing head and styles ... -->
-
+    <!-- Scripting -->
     <script type="module">
       import { createGroup } from "../js/api.js";
 
@@ -199,10 +181,10 @@
       window.selectOption = function (element) {
         selectedMethod = element.getAttribute("data-method");
         document.querySelectorAll(".option-card").forEach((card) => {
-          card.classList.remove("selected", "border-[#3A3A3A]");
+          card.classList.remove("selected", "border-[#1B5E3B]");
           card.classList.add("border-[#E0E0E0]");
         });
-        element.classList.add("selected", "border-[#3A3A3A]");
+        element.classList.add("selected", "border-[#1B5E3B]");
         element.classList.remove("border-[#E0E0E0]");
       };
 
@@ -210,57 +192,55 @@
         const errorEl = document.getElementById("finalError");
         const btn = document.getElementById("finalCreateBtn");
 
-        // 1. Pull data from the updated localStorage keys
         const step1 = JSON.parse(localStorage.getItem("group_step_1") || "{}");
         const step2 = JSON.parse(localStorage.getItem("group_step_2") || "{}");
         
-        // 2. Final check: If keys are empty, try the old session key as a fallback
-        const legacyData = JSON.parse(sessionStorage.getItem("pendingGroupData") || "{}");
-
         const finalData = {
-          name: step1.name || legacyData.name,
-          description: step1.description || legacyData.description,
-          contribution_amount: step2.contribution_amount || parseFloat(legacyData.contribution_amount),
-          max_members: step2.max_members || parseInt(legacyData.max_members),
+          name: step1.name,
+          description: step1.description,
+          contribution_amount: step2.contribution_amount,
+          max_members: step2.max_members,
           rotation_method: selectedMethod,
-          // Add frequency if your backend requires it
-          frequency: step2.frequency || legacyData.frequency || "monthly"
+          frequency: step2.frequency || "monthly"
         };
 
-        // Debugging: This helps you see if 'name' is still missing in the console
-        console.log("Attempting to create group with:", finalData);
-
         if (!finalData.name || !finalData.max_members) {
-           errorEl.textContent = "Error: Group name or member count is missing. Please restart the process.";
+           errorEl.textContent = "Data missing. Please return to Step 1.";
            errorEl.classList.remove("hidden");
            return;
         }
 
         try {
           errorEl.classList.add("hidden");
-          btn.innerText = "Creating...";
+          btn.innerText = "Finishing...";
           btn.disabled = true;
 
           await createGroup(finalData);
 
-          // Clear all storage after success
+          const result = await createGroup(finalData);
+
+          // Save the real group code for the success page
+          if (result.code) {
+            localStorage.setItem("ajo_last_group_code", result.code);
+          }
+          if (result.name || finalData.name) {
+            localStorage.setItem("lastCreatedGroup", JSON.stringify({ name: result.name || finalData.name }));
+          }
+
+          // Clear cache
           localStorage.removeItem("group_step_1");
           localStorage.removeItem("group_step_2");
-          sessionStorage.removeItem("pendingGroupData");
 
-          alert("Group created successfully!");
           window.location.href = "groups.html";
         } catch (error) {
           errorEl.textContent = error.message;
           errorEl.classList.remove("hidden");
-          btn.innerText = "Create Group";
+          btn.innerText = "Complete Group Creation";
           btn.disabled = false;
         }
       }
 
-      document
-        .getElementById("finalCreateBtn")
-        .addEventListener("click", handleCreateGroup);
+      document.getElementById("finalCreateBtn").addEventListener("click", handleCreateGroup);
     </script>
   </body>
 </html>

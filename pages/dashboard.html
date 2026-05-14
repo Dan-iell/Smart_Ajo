@@ -36,7 +36,6 @@
         padding-bottom: 80px;
       }
 
-      /* Loading skeleton pulse */
       .skeleton {
         background: linear-gradient(
           90deg,
@@ -64,8 +63,9 @@
       <!-- Header -->
       <div class="flex items-center justify-between mb-6 fade-up">
         <div class="flex items-center gap-3">
+          <!-- Avatar circle updated to Green -->
           <div
-            class="w-11 h-11 bg-[#B0B5AC] rounded-full flex items-center justify-center overflow-hidden"
+            class="w-11 h-11 bg-[#1B5E3B] rounded-full flex items-center justify-center overflow-hidden"
           >
             <img
               id="userAvatar"
@@ -108,7 +108,7 @@
           </svg>
           <span
             id="notificationBadge"
-            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full hidden"
+            class="absolute top-2 right-2 w-2 h-2 bg-[#F2A83B] rounded-full hidden"
           ></span>
         </button>
       </div>
@@ -125,21 +125,23 @@
           class="absolute -bottom-10 -left-8 w-40 h-40 bg-white opacity-5 rounded-full"
         ></div>
 
-        <p class="text-[#9E9E9E] text-xs mb-1 relative">Total Saved</p>
+        <p class="text-white opacity-60 text-xs mb-1 relative font-medium">
+          Total Saved
+        </p>
         <div class="flex items-end gap-1 mb-6 relative">
           <span
             id="totalBalance"
             class="text-white text-4xl font-['Fraunces'] font-bold tracking-tight"
             >₦0</span
           >
-          <span class="text-[#9E9E9E] text-sm mb-1">.00</span>
+          <span class="text-white opacity-60 text-sm mb-1">.00</span>
         </div>
 
         <!-- Quick Actions -->
         <div class="grid grid-cols-3 gap-3 relative">
           <button
             onclick="window.location.href = 'create-group.html'"
-            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
+            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95 border border-white/10"
           >
             <svg
               class="w-5 h-5 text-white"
@@ -154,7 +156,7 @@
           </button>
           <button
             onclick="window.location.href = 'groups.html'"
-            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
+            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95 border border-white/10"
           >
             <svg
               class="w-5 h-5 text-white"
@@ -168,12 +170,13 @@
             </svg>
             <span class="text-white text-xs font-medium">Explore</span>
           </button>
+          <!-- Pay Now Button updated to Gold -->
           <button
             onclick="window.location.href = 'make-payment.html'"
-            class="flex flex-col items-center gap-2 bg-white rounded-2xl py-3 px-2 hover:bg-gray-100 transition-all active:scale-95"
+            class="flex flex-col items-center gap-2 bg-[#F2A83B] rounded-2xl py-3 px-2 hover:bg-[#d99635] transition-all active:scale-95 shadow-md shadow-orange-900/20"
           >
             <svg
-              class="w-5 h-5 text-[#2A2A2A]"
+              class="w-5 h-5 text-white"
               fill="none"
               stroke="currentColor"
               stroke-width="1.8"
@@ -182,18 +185,18 @@
               <line x1="12" y1="1" x2="12" y2="23" />
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
-            <span class="text-[#2A2A2A] text-xs font-semibold">Pay Now</span>
+            <span class="text-white text-xs font-bold">Pay Now</span>
           </button>
         </div>
       </div>
 
-      <!-- Alert Banner -->
+      <!-- Alert Banner (Updated to soft Gold tints) -->
       <div
         id="alertBanner"
-        class="hidden bg-[#FFF8E7] border border-[#F5E6B0] rounded-2xl px-4 py-3.5 mb-6 flex items-start gap-3 fade-up-3"
+        class="hidden bg-[#FFF9ED] border border-[#FDE6B1] rounded-2xl px-4 py-3.5 mb-6 flex items-start gap-3 fade-up-3"
       >
         <div
-          class="w-8 h-8 bg-[#F5A623] rounded-full flex items-center justify-center shrink-0 mt-0.5"
+          class="w-8 h-8 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5"
         >
           <svg
             class="w-4 h-4 text-white"
@@ -210,17 +213,17 @@
           </svg>
         </div>
         <div class="flex-1">
-          <p class="text-sm font-semibold text-[#7A5500]">Payment Due</p>
+          <p class="text-sm font-semibold text-[#8C5E00]">Payment Due</p>
           <p
             id="alertText"
-            class="text-xs text-[#9A7020] mt-0.5 leading-relaxed"
+            class="text-xs text-[#A37410] mt-0.5 leading-relaxed"
           >
             You have an upcoming contribution.
           </p>
         </div>
         <button
           onclick="this.parentElement.style.display = 'none'"
-          class="text-[#9A7020] hover:text-[#7A5500] transition-colors mt-0.5"
+          class="text-[#A37410] hover:text-[#8C5E00] transition-colors mt-0.5"
         >
           <svg
             class="w-4 h-4"
@@ -242,12 +245,11 @@
           </h2>
           <a
             href="groups.html"
-            class="text-xs text-[#6B6B6B] font-medium hover:text-black transition-colors"
+            class="text-xs text-[#1B5E3B] font-bold hover:opacity-70 transition-colors"
             >See All →</a
           >
         </div>
         <div id="groupsContainer" class="flex flex-col gap-3">
-          <!-- Skeleton Loaders -->
           <div class="h-20 w-full skeleton rounded-2xl"></div>
           <div class="h-20 w-full skeleton rounded-2xl opacity-60"></div>
         </div>
@@ -260,12 +262,12 @@
     >
       <button
         onclick="window.location.href = 'dashboard.html'"
-        class="flex flex-col items-center gap-1 text-[#3A3A3A]"
+        class="flex flex-col items-center gap-1 text-[#1B5E3B]"
       >
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
         </svg>
-        <span class="text-[10px] font-semibold">Home</span>
+        <span class="text-[10px] font-bold">Home</span>
       </button>
       <button
         onclick="window.location.href = 'groups.html'"
@@ -283,9 +285,10 @@
         </svg>
         <span class="text-[10px] font-medium">Groups</span>
       </button>
+      <!-- Center Action Button Gold -->
       <button
         onclick="window.location.href = 'make-payment.html'"
-        class="w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center -mt-6 shadow-lg active:scale-95 transition-all"
+        class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-orange-900/30 active:scale-95 transition-all"
       >
         <svg
           class="w-6 h-6 text-white"
@@ -313,7 +316,7 @@
         </svg>
         <span
           id="navAlertBadge"
-          class="absolute top-0 right-2 w-2 h-2 bg-red-500 rounded-full hidden"
+          class="absolute top-0 right-2 w-2 h-2 bg-[#F2A83B] rounded-full hidden"
         ></span>
         <span class="text-[10px] font-medium">Alerts</span>
       </button>
@@ -335,98 +338,8 @@
       </button>
     </nav>
 
-    <script type="module">
-      import { getToken, getMe, getMyGroups } from "../js/api.js";
+  
+      <script type="module" src="../js/dashboard.js"></script>
 
-      async function initDashboard() {
-        const token = getToken();
-
-        if (!token) {
-          window.location.replace("../index.html");
-          return;
-        }
-
-        // Handle Name Fetching
-        try {
-          const user = await getMe();
-          const nameElement = document.getElementById("userName");
-          if (nameElement && user.full_name) {
-            nameElement.textContent = `Hello, ${user.full_name}`;
-          }
-        } catch (error) {
-          console.error("Name Fetch Error:", error);
-        }
-
-        // Handle Group Fetching
-        try {
-          const groups = await getMyGroups();
-          const container = document.getElementById("groupsContainer");
-
-          if (container) {
-            const groupsList = Array.isArray(groups)
-              ? groups
-              : groups.results || [];
-
-            if (groupsList.length > 0) {
-              container.innerHTML = groupsList
-                .map((group) => {
-                  // PROGRESS CALCULATION:
-                  // Set to 0 since there are no contributions yet.
-                  const progress = 0;
-
-                  return `
-          <div class="bg-white rounded-2xl p-4 shadow-sm border border-[#F0F0F0] mb-3 transition-all">
-            <!-- Top Section: Avatar and Info (Arrow Removed) -->
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-3">
-                <!-- Circular Avatar -->
-                <div class="w-12 h-12 bg-[#E0E0E0] rounded-full flex items-center justify-center shrink-0">
-                  <svg class="w-6 h-6 text-[#9E9E9E]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-base font-bold text-[#1A1A1A]">${group.name}</p>
-                  <p class="text-sm text-[#9E9E9E]">₦${Number(group.contribution_amount).toLocaleString()}/mo</p>
-                </div>
-              </div>
-              <!-- The chevron SVG was removed from here to match image_1ca6bc.png -->
-            </div>
-
-            <!-- Progress Bar Section -->
-            <div class="w-full h-1.5 bg-[#E0E0E0] rounded-full mb-2 overflow-hidden">
-              <div class="h-full bg-[#3A3A3A] transition-all duration-500" style="width: ${progress}%"></div>
-            </div>
-
-            <!-- Bottom Stats Section -->
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-[#9E9E9E]">${group.members_count || 0} members</span>
-              <span class="text-xs font-semibold text-[#3A3A3A]">Upcoming</span>
-            </div>
-          </div>
-        `;
-                })
-                .join("");
-            } else {
-              container.innerHTML = `<p class="text-xs text-[#9E9E9E] text-center py-8">No groups found.</p>`;
-            }
-          }
-        } catch (error) {
-          console.error("DETAILED GROUP ERROR:", error);
-          const container = document.getElementById("groupsContainer");
-          if (container) {
-            container.innerHTML = `<div class="p-4 bg-red-50 rounded-xl"><p class="text-xs text-red-500 text-center">Error: ${error.message}</p></div>`;
-          }
-        }
-
-        // Load external logic
-        const script = document.createElement("script");
-        script.type = "module";
-        script.src = "../js/dashboard.js";
-        document.body.appendChild(script);
-      }
-
-      initDashboard();
-    </script>
   </body>
 </html>

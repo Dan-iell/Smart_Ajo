@@ -6,9 +6,27 @@
     <title>Smart Ajo – Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brandGreen: "#1b5e3b",
+              brandGreenDark: "#144d30",
+              brandGold: "#f2a83b",
+              brandCream: "#faf8f4",
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+              sans: ["DM Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
     <style>
       @keyframes fadeUp {
         from {
@@ -32,16 +50,15 @@
     </style>
   </head>
   <body
-    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto flex flex-col font-['DM_Sans']"
+    class="bg-brandCream min-h-screen max-w-[430px] mx-auto flex flex-col font-sans"
   >
     <div class="flex flex-col flex-1 px-6 pt-14 pb-10">
       <!-- Logo Section -->
       <div class="flex items-center gap-3 mb-8 fade-up">
         <!-- Logo Container -->
         <div
-          class="w-10 h-10 bg-[#B0B5AC] rounded-lg flex items-center justify-center overflow-hidden"
+          class="w-10 h-10 bg-brandGreen rounded-xl flex items-center justify-center overflow-hidden shadow-lg shadow-brandGreen/20"
         >
-          <!-- Replace 'logo.png' with your actual logo file path -->
           <img
             src="../assets/icons/logo.png"
             alt="Smart Ajo Logo"
@@ -51,50 +68,52 @@
               this.nextElementSibling.style.display = 'block';
             "
           />
-
           <!-- Fallback if image fails to load -->
-          <span class="hidden font-['Fraunces'] text-sm font-black text-white"
+          <span class="hidden font-display text-sm font-bold text-white"
             >SA</span
           >
         </div>
 
-        <span class="font-['Fraunces'] text-lg font-bold text-black"
-          >Smart Ajo</span
-        >
+        <span class="font-display text-xl font-bold tracking-tight">
+          <span class="text-brandGreen">Smart</span
+          ><span class="text-brandGold">Ajo</span>
+        </span>
       </div>
 
       <!-- Welcome Text -->
-      <div class="mb-8 fade-up-2">
+      <div class="mb-10 fade-up-2">
         <h1
-          class="font-['Fraunces'] text-3xl font-bold text-black leading-tight mb-2"
+          class="font-display text-4xl font-bold text-slate-900 leading-[1.1] mb-3 tracking-tighter"
         >
-          Welcome back<br />to the Circle.
+          Welcome back<br />to the
+          <span class="text-brandGreen italic font-medium">Circle.</span>
         </h1>
-        <p class="text-sm text-[#6B6B6B]">
+        <p class="text-sm text-slate-500 leading-relaxed">
           Secure access to your community savings and financial heritage.
         </p>
       </div>
 
       <!-- Form Section -->
-      <div class="flex flex-col gap-4 fade-up-3">
+      <div class="flex flex-col gap-5 fade-up-3">
         <p
           id="authError"
-          class="text-xs text-red-500 hidden bg-red-50 p-3 rounded-lg border border-red-100 mb-2"
+          class="text-xs text-red-600 hidden bg-red-50 p-4 rounded-2xl border border-red-100 mb-2 font-medium"
         ></p>
 
         <!-- Email Field -->
         <div>
-          <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block"
-            >Email</label
+          <label
+            class="text-[11px] font-bold uppercase tracking-widest text-brandGreen mb-2 ml-1 block"
+            >Email Address</label
           >
           <div
-            class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5 focus-within:border-black transition-all"
+            class="flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-5 py-4 focus-within:border-brandGreen focus-within:ring-4 focus-within:ring-brandGreen/5 transition-all"
           >
             <svg
-              class="w-4 h-4 text-[#9E9E9E] shrink-0"
+              class="w-4 h-4 text-slate-400 shrink-0"
               fill="none"
               stroke="currentColor"
-              stroke-width="1.8"
+              stroke-width="2"
               viewBox="0 0 24 24"
             >
               <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -104,24 +123,25 @@
               type="email"
               id="email"
               placeholder="example@gmail.com"
-              class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD]"
+              class="flex-1 text-sm bg-transparent outline-none text-slate-900 placeholder-slate-400 font-medium"
             />
           </div>
         </div>
 
         <!-- Password Field -->
         <div>
-          <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block"
+          <label
+            class="text-[11px] font-bold uppercase tracking-widest text-brandGreen mb-2 ml-1 block"
             >Password</label
           >
           <div
-            class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5 focus-within:border-black transition-all"
+            class="flex items-center gap-3 bg-white border border-slate-200 rounded-2xl px-5 py-4 focus-within:border-brandGreen focus-within:ring-4 focus-within:ring-brandGreen/5 transition-all"
           >
             <svg
-              class="w-4 h-4 text-[#9E9E9E] shrink-0"
+              class="w-4 h-4 text-slate-400 shrink-0"
               fill="none"
               stroke="currentColor"
-              stroke-width="1.8"
+              stroke-width="2"
               viewBox="0 0 24 24"
             >
               <rect x="3" y="11" width="18" height="11" rx="2" />
@@ -131,19 +151,19 @@
               type="password"
               id="password"
               placeholder="Enter password"
-              class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD]"
+              class="flex-1 text-sm bg-transparent outline-none text-slate-900 placeholder-slate-400 font-medium"
             />
             <button
               type="button"
               id="togglePasswordBtn"
-              class="text-[#9E9E9E] hover:text-black transition-colors"
+              class="text-slate-400 hover:text-brandGreen transition-colors"
             >
               <svg
                 id="eyeIcon"
-                class="w-4 h-4"
+                class="w-5 h-5"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="1.8"
+                stroke-width="2"
                 viewBox="0 0 24 24"
               >
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -151,10 +171,10 @@
               </svg>
             </button>
           </div>
-          <div class="text-right mt-2">
+          <div class="text-right mt-3">
             <a
               href="forgot-password.html"
-              class="text-xs text-[#6B6B6B] hover:text-black transition-colors"
+              class="text-xs font-bold text-brandGold uppercase tracking-tight hover:text-brandGreen transition-colors"
               >Forgot password?</a
             >
           </div>
@@ -164,34 +184,31 @@
         <button
           id="signInBtn"
           type="button"
-          class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide mt-2 transition-all duration-200 hover:bg-black active:scale-95 shadow-md"
+          class="w-full py-4.5 bg-brandGold text-white rounded-2xl text-sm font-bold tracking-wide mt-4 transition-all duration-200 hover:bg-[#e8951c] hover:shadow-lg hover:shadow-brandGold/20 active:scale-95 py-4"
         >
           Sign In
         </button>
 
-        <p class="text-center text-xs text-[#6B6B6B] mt-1">
+        <p class="text-center text-xs text-slate-500 mt-4">
           New to the community?
           <a
             href="signup.html"
-            class="text-black font-semibold underline underline-offset-2"
-            >Sign Up</a
+            class="text-brandGreen font-bold hover:underline underline-offset-4 ml-1"
+            >Create Account</a
           >
         </p>
       </div>
     </div>
 
     <script type="module">
-      // Consolidating all auth logic into one script block
       import {
         handleSignIn,
         redirectIfLoggedIn,
         togglePasswordVisibility,
       } from "../js/auth.js";
 
-      // 1. Guard: Check if already logged in
       redirectIfLoggedIn();
 
-      // 2. Password Toggle logic (using Event Listener instead of inline onclick)
       const toggleBtn = document.getElementById("togglePasswordBtn");
       if (toggleBtn) {
         toggleBtn.addEventListener("click", () => {
@@ -199,16 +216,14 @@
         });
       }
 
-      // 3. Sign In Logic
       const loginBtn = document.getElementById("signInBtn");
       if (loginBtn) {
         loginBtn.addEventListener("click", (e) => {
           e.preventDefault();
-          handleSignIn(); // Ensure this matches the exported function in auth.js
+          handleSignIn();
         });
       }
 
-      // 4. Keyboard support
       document.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
