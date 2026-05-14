@@ -79,7 +79,10 @@
         Scan Card
       </button>
 
-      <button onclick="window.location.href='dashboard.html'"
+      <!-- Error message -->
+      <p id="cardError" class="hidden text-xs text-red-500 text-center -mt-1"></p>
+
+      <button id="saveCardBtn" onclick="window._saveCard()"
         class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:bg-black active:scale-95">
         Save Card
       </button>
@@ -90,9 +93,6 @@
     function formatCard(input) {
       let val = input.value.replace(/\D/g, '').substring(0, 16);
       input.value = val.replace(/(.{4})/g, '$1 ').trim();
-      document.getElementById('cardDisplay').textContent =
-        (input.value || '•••• •••• •••• ••••').padEnd(19, '•').replace(/\d{4}(?= \d)/g, m => m);
-      const display = input.value ? input.value.padEnd(19, '•') : '•••• •••• •••• ••••';
       document.getElementById('cardDisplay').textContent = input.value || '•••• •••• •••• ••••';
     }
 
@@ -101,6 +101,54 @@
       if (val.length >= 3) val = val.slice(0, 2) + '/' + val.slice(2);
       input.value = val;
       document.getElementById('expiryDisplay').textContent = input.value || 'MM/YY';
+    }
+  </script>
+
+  <script type="module">
+    import { requireAuth, saveCard } from '../js/api.js';
+    if (!requireAuth()) throw new Error('Not authenticated');
+
+    window._saveCard = async function() {
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const expiry    = document.getElementById('expiry').value;
+      const cvvInput  = document.querySelector('input[type="password"]');
+      const cvv       = cvvInput?.value || '';
+      const errorEl   = document.getElementById('cardError');
+      const btn       = document.getElementById('saveCardBtn');
+
+      // Basic validation
+      if (cardNumber.length !== 16) { showError('Enter a valid 16-digit card number.'); return; }
+      if (!expiry.includes('/') || expiry.length !== 5) { showError('Enter a valid expiry date (MM/YY).'); return; }
+      if (cvv.length < 3) { showError('Enter a valid CVV.'); return; }
+
+      const [expMonth, expYear] = expiry.split('/');
+
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      btn.classList.add('opacity-60');
+      errorEl.classList.add('hidden');
+
+      try {
+        await saveCard({
+          cardNumber,
+          cvv,
+          expiryMonth: expMonth,
+          expiryYear: `20${expYear}`,
+        });
+        // Success — go back to wallet
+        window.location.href = 'wallet.html';
+      } catch (e) {
+        showError(e.message || 'Failed to save card. Please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Save Card';
+        btn.classList.remove('opacity-60');
+      }
+    };
+
+    function showError(msg) {
+      const el = document.getElementById('cardError');
+      el.textContent = msg;
+      el.classList.remove('hidden');
     }
   </script>
 </body>
