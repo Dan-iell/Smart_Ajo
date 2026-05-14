@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo — Modernizing Community Savings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brandGreen: "#1b5e3b",
+              brandGreenLight: "#e8f5e9",
+              brandGold: "#f2a83b",
+              brandCream: "#faf8f4",
+              brandMuted: "#6b7280",
+            },
+            fontFamily: {
+              sans: ["DM Sans", "sans-serif"],
+              display: ["Space Grotesk", "sans-serif"],
+              mono: ["DM Mono", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-up {
+        animation: fadeUp 0.6s ease forwards;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body class="bg-brandCream text-slate-900 font-sans">
+    <!-- NAVIGATION -->
+    <nav
+      class="fixed top-0 w-full z-50 bg-brandCream/80 backdrop-blur-md border-b border-gray-200 px-6 md:px-16 py-4 flex justify-between items-center"
+    >
+      <a href="#" class="font-display font-bold text-2xl tracking-tight">
+        <span class="text-brandGreen">Smart</span
+        ><span class="text-brandGold">Ajo</span>
+      </a>
+      <ul class="hidden lg:flex items-center gap-8 font-medium text-sm">
+        <li>
+          <a href="#how" class="hover:text-brandGreen transition-colors"
+            >How it works</a
+          >
+        </li>
+        <li>
+          <a href="#features" class="hover:text-brandGreen transition-colors"
+            >Features</a
+          >
+        </li>
+        <li>
+          <a href="#ai" class="hover:text-brandGreen transition-colors"
+            >AI Risk</a
+          >
+        </li>
+        <li>
+          <a href="#payment" class="hover:text-brandGreen transition-colors"
+            >Payments</a
+          >
+        </li>
+        <li>
+          <a
+            href="signin.html"
+            class="bg-brandGreen text-white px-6 py-2.5 rounded-xl font-bold hover:bg-opacity-90 transition-all"
+            >Get Started</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="pt-32 pb-20 px-6 text-center max-w-5xl mx-auto">
+      <div
+        class="animate-fade-up [animation-delay:100ms] inline-block bg-emerald-100 text-brandGreen text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-6"
+      >
+        Built for Nigerian communities
+      </div>
+      <h1
+        class="animate-fade-up [animation-delay:200ms] font-display text-5xl md:text-7xl font-bold tracking-tighter leading-[1.1] mb-6"
+      >
+        Ajo, the way it was <br /><span
+          class="italic font-normal text-brandGreen"
+          >always</span
+        >
+        meant to <span class="text-brandGold">work.</span>
+      </h1>
+      <p
+        class="animate-fade-up [animation-delay:300ms] text-lg text-brandMuted max-w-xl mx-auto mb-10 leading-relaxed"
+      >
+        Smart Ajo brings transparency, structure, and AI-powered trust to
+        Nigeria's oldest savings tradition. No more defaulters.
+      </p>
+      <div
+        class="animate-fade-up [animation-delay:400ms] flex flex-wrap justify-center gap-4"
+      >
+        <a
+          href="signin.html"
+          class="bg-brandGreen text-white px-8 py-4 rounded-2xl font-display font-bold text-lg hover:shadow-xl transition-all"
+          >Join the Circle</a
+        >
+        <a
+          href="#how"
+          class="border-2 border-brandGreen text-brandGreen px-8 py-4 rounded-2xl font-display font-bold text-lg hover:bg-emerald-50 transition-all"
+          >See How It Works</a
+        >
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section id="how" class="py-24 px-6 md:px-16 bg-white">
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+      >
+        <div>
+          <span
+            class="text-brandGold font-display font-bold text-xs uppercase tracking-widest mb-4 block"
+            >How It Works</span
+          >
+          <h2 class="font-display text-4xl font-bold mb-10">
+            Simple, structured,<br />and secure.
+          </h2>
+          <div class="space-y-8">
+            <div class="flex gap-6">
+              <div
+                class="w-10 h-10 rounded-full bg-brandGreen text-white flex items-center justify-center font-bold shrink-0"
+              >
+                1
+              </div>
+              <div>
+                <h4 class="font-display font-bold text-lg mb-1">
+                  Create or join a group
+                </h4>
+                <p class="text-brandMuted text-sm">
+                  Set your contribution amount and frequency. Invite members
+                  with a single link.
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-6">
+              <div
+                class="w-10 h-10 rounded-full bg-brandGreen text-white flex items-center justify-center font-bold shrink-0"
+              >
+                2
+              </div>
+              <div>
+                <h4 class="font-display font-bold text-lg mb-1">
+                  Contribute every cycle
+                </h4>
+                <p class="text-brandMuted text-sm">
+                  Pay securely via card or bank transfer. The platform handles
+                  collection automatically.
+                </p>
+              </div>
+            </div>
+            <div class="flex gap-6">
+              <div
+                class="w-10 h-10 rounded-full bg-brandGreen text-white flex items-center justify-center font-bold shrink-0"
+              >
+                3
+              </div>
+              <div>
+                <h4 class="font-display font-bold text-lg mb-1">
+                  Receive your payout
+                </h4>
+                <p class="text-brandMuted text-sm">
+                  When it's your turn, the full pool is sent directly to your
+                  bank account. Instant and verified.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MOCKUP COMPONENT -->
+        <div
+          class="bg-brandCream p-8 rounded-[40px] border border-gray-200 shadow-2xl"
+        >
+          <div
+            class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100"
+          >
+            <div class="flex justify-between items-center mb-6">
+              <p class="font-display font-bold text-sm">
+                Good morning, Chiamaka
+              </p>
+              <div
+                class="w-8 h-8 rounded-full bg-brandGreen text-white flex items-center justify-center text-[10px] font-bold"
+              >
+                CA
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="bg-brandCream p-4 rounded-2xl">
+                <p class="text-[10px] text-brandMuted uppercase font-bold mb-1">
+                  Saved
+                </p>
+                <p class="font-mono font-bold text-brandGreen text-lg">
+                  ₦85,000
+                </p>
+              </div>
+              <div class="bg-brandCream p-4 rounded-2xl">
+                <p class="text-[10px] text-brandMuted uppercase font-bold mb-1">
+                  Groups
+                </p>
+                <p class="font-mono font-bold text-brandGreen text-lg">3</p>
+              </div>
+            </div>
+            <div
+              class="bg-gradient-to-r from-brandGold to-[#e8951c] p-4 rounded-2xl flex justify-between items-center mb-6 text-white"
+            >
+              <div>
+                <p class="text-[10px] opacity-80 font-bold">Due in 2 days</p>
+                <p class="font-mono font-bold text-base">₦10,000</p>
+              </div>
+              <button
+                class="bg-white text-brandGold px-4 py-2 rounded-lg text-[10px] font-bold"
+              >
+                Pay Now
+              </button>
+            </div>
+            <div class="p-4 border border-gray-100 rounded-2xl">
+              <div class="flex justify-between text-xs font-bold mb-3">
+                <span>Lagos Girls Ajo</span>
+                <span class="text-brandGreen font-mono">₦10,000/mo</span>
+              </div>
+              <div class="w-full bg-gray-100 h-1.5 rounded-full mb-2">
+                <div class="bg-brandGreen h-full w-[70%] rounded-full"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-brandMuted">
+                <span>7 of 10 paid</span><span>Cycle 3 of 12</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section id="features" class="py-24 px-6 md:px-16">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span
+          class="text-brandGold font-display font-bold text-xs uppercase tracking-widest mb-4 block"
+          >Features</span
+        >
+        <h2 class="font-display text-4xl font-bold mb-4">
+          Everything traditional ajo was missing.
+        </h2>
+        <p class="text-brandMuted">
+          We kept what works and built what was always needed.
+        </p>
+      </div>
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+      >
+        <div
+          class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all"
+        >
+          <div
+            class="w-12 h-12 bg-brandGreen text-white flex items-center justify-center rounded-xl mb-6 text-xl"
+          >
+            👥
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3">Group Management</h3>
+          <p class="text-brandMuted text-sm leading-relaxed">
+            Create groups with custom rules, contribution amounts, and rotation
+            methods easily.
+          </p>
+        </div>
+        <div
+          class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all"
+        >
+          <div
+            class="w-12 h-12 bg-brandGold text-white flex items-center justify-center rounded-xl mb-6 text-xl"
+          >
+            📊
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3">
+            Real-time Tracking
+          </h3>
+          <p class="text-brandMuted text-sm leading-relaxed">
+            See exactly who has contributed and whose turn is next. No more
+            chasing screenshots.
+          </p>
+        </div>
+        <div
+          class="bg-white p-8 rounded-3xl border border-gray-100 hover:shadow-xl transition-all"
+        >
+          <div
+            class="w-12 h-12 bg-brandGreen text-white flex items-center justify-center rounded-xl mb-6 text-xl"
+          >
+            🤖
+          </div>
+          <h3 class="font-display font-bold text-xl mb-3">AI Risk Detection</h3>
+          <p class="text-brandMuted text-sm leading-relaxed">
+            Our AI monitors behavior to flag high-risk members before they miss
+            a payment.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI RISK SECTION -->
+    <section id="ai" class="py-24 px-6 md:px-16 bg-brandCream">
+      <div
+        class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
+      >
+        <div
+          class="bg-white p-8 rounded-[40px] border border-gray-200 shadow-xl"
+        >
+          <h4 class="font-display font-bold text-sm text-center mb-8">
+            Group Health Score
+          </h4>
+          <div class="flex flex-col items-center mb-10">
+            <div
+              class="w-32 h-32 rounded-full border-[10px] border-gray-100 flex items-center justify-center relative"
+            >
+              <div
+                class="absolute inset-[-10px] rounded-full border-[10px] border-brandGreen border-b-transparent border-r-transparent"
+              ></div>
+              <div class="text-center">
+                <p class="font-mono text-3xl font-bold text-brandGreen">78</p>
+                <p class="text-[10px] text-brandMuted">/100</p>
+              </div>
+            </div>
+            <p class="mt-4 text-xs font-medium text-brandMuted">
+              This group is in Good Standing
+            </p>
+          </div>
+          <div class="space-y-3">
+            <div
+              class="flex items-center justify-between p-4 bg-brandCream rounded-2xl border border-gray-50"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-brandGreen text-white text-[10px] flex items-center justify-center font-bold"
+                >
+                  CA
+                </div>
+                <span class="text-sm font-display font-bold">Chiamaka A.</span>
+              </div>
+              <span
+                class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full uppercase"
+                >Low Risk</span
+              >
+            </div>
+            <div
+              class="flex items-center justify-between p-4 bg-brandCream rounded-2xl border border-gray-50"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-brandGold text-white text-[10px] flex items-center justify-center font-bold"
+                >
+                  TK
+                </div>
+                <span class="text-sm font-display font-bold">Tunde K.</span>
+              </div>
+              <span
+                class="text-[10px] font-bold text-red-700 bg-red-100 px-3 py-1 rounded-full uppercase"
+                >High Risk ⚠️</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span
+            class="text-brandGold font-display font-bold text-xs uppercase tracking-widest mb-4 block"
+            >AI Intelligence</span
+          >
+          <h2 class="font-display text-4xl font-bold mb-6">
+            Know who to trust<br />before it's too late.
+          </h2>
+          <p class="text-brandMuted text-lg mb-8">
+            Smart Ajo's AI builds a reliability profile for every member based
+            on cross-cycle payment patterns.
+          </p>
+          <div class="space-y-6">
+            <div class="flex gap-4">
+              <div
+                class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0"
+              >
+                🚨
+              </div>
+              <p class="text-sm text-brandMuted leading-relaxed">
+                <strong class="text-slate-900 block"
+                  >Early Warning Flags</strong
+                >
+                Get alerted when a member's payment pattern changes before a
+                default occurs.
+              </p>
+            </div>
+            <div class="flex gap-4">
+              <div
+                class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0"
+              >
+                🛡️
+              </div>
+              <p class="text-sm text-brandMuted leading-relaxed">
+                <strong class="text-slate-900 block">Admin Action Tools</strong>
+                Empower group admins to warn or remove unreliable members with
+                data-backed insights.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAYMENT SECTION -->
+    <section id="payment" class="py-24 px-6 md:px-16 bg-white">
+      <div class="max-w-4xl mx-auto text-center mb-16">
+        <span
+          class="text-brandGold font-display font-bold text-xs uppercase tracking-widest mb-4 block"
+          >Payments</span
+        >
+        <h2 class="font-display text-4xl font-bold mb-6">
+          Money moves. Safely. Instantly.
+        </h2>
+        <p class="text-brandMuted">
+          All payments are powered by Squad's secure infrastructure. No one
+          holds your money but the platform.
+        </p>
+      </div>
+      <div
+        class="bg-brandGreen p-10 rounded-[40px] text-white flex flex-wrap justify-center gap-8 md:gap-12 max-w-6xl mx-auto items-center"
+      >
+        <div class="text-center w-32">
+          <p class="font-mono text-[10px] text-brandGold mb-2">STEP 01</p>
+          <p class="font-display font-bold text-sm">Contribute</p>
+        </div>
+        <div class="hidden md:block opacity-30 text-2xl">→</div>
+        <div class="text-center w-32">
+          <p class="font-mono text-[10px] text-brandGold mb-2">STEP 02</p>
+          <p class="font-display font-bold text-sm">Pool Collects</p>
+        </div>
+        <div class="hidden md:block opacity-30 text-2xl">→</div>
+        <div class="text-center w-32">
+          <p class="font-mono text-[10px] text-brandGold mb-2">STEP 03</p>
+          <p class="font-display font-bold text-sm">Rotation Hits</p>
+        </div>
+        <div class="hidden md:block opacity-30 text-2xl">→</div>
+        <div class="text-center w-32">
+          <p class="font-mono text-[10px] text-brandGold mb-2">STEP 04</p>
+          <p class="font-display font-bold text-sm">Payout Sent</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section
+      class="bg-brandGreen py-24 px-6 text-center overflow-hidden relative"
+    >
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brandGold opacity-5 rounded-full blur-[100px]"
+      ></div>
+      <div class="relative z-10">
+        <h2
+          class="font-display text-4xl md:text-6xl font-bold text-white mb-8 tracking-tight"
+        >
+          Ready to join the circle?
+        </h2>
+        <a
+          href="signin.html"
+          class="bg-brandGold text-white px-12 py-5 rounded-2xl font-display font-bold text-xl hover:scale-105 transition-all inline-block shadow-2xl"
+          >Get Started — It's Free</a
+        >
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer
+      class="py-12 px-6 md:px-16 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-8"
+    >
+      <div class="font-display font-bold text-xl">
+        <span class="text-brandGreen">Smart</span
+        ><span class="text-brandGold">Ajo</span>
+      </div>
+      <div
+        class="flex gap-8 text-xs font-bold text-brandMuted uppercase tracking-widest"
+      >
+        <a href="#how" class="hover:text-brandGreen">How</a>
+        <a href="#features" class="hover:text-brandGreen">Features</a>
+        <a href="#ai" class="hover:text-brandGreen">AI</a>
+        <a href="#payment" class="hover:text-brandGreen">Payments</a>
+      </div>
+      <p class="text-[10px] text-brandMuted font-mono">
+        © 2026 Smart Ajo. Squad Hackathon 3.0 Entry.
+      </p>
+    </footer>
+  </body>
+</html>
