@@ -60,29 +60,35 @@
   </div>
 
   <script>
-    const lastGroup = JSON.parse(localStorage.getItem('lastCreatedGroup') || '{}');
-    if (lastGroup.name) {
-        document.getElementById('displayGroupName').textContent = lastGroup.name;
-    }
+    
+    // Pull real data saved by create-group-3.html
+    const step1 = JSON.parse(localStorage.getItem("group_step_1") || "{}");
+    const lastGroup = JSON.parse(localStorage.getItem("lastCreatedGroup") || "{}");
+    const groupCode = localStorage.getItem("ajo_last_group_code") || null;
 
-    const randomID = Math.random().toString(36).substring(2, 7).toUpperCase();
-    const inviteURL = `https://smartajo.app/join/${randomID}`;
-    document.getElementById('inviteLinkText').textContent = inviteURL;
+    const groupName = step1.name || lastGroup.name || "Your group";
+    document.getElementById("displayGroupName").textContent = groupName;
+
+    // Use real backend group code if available, otherwise show placeholder
+    const inviteURL = groupCode
+      ? `https://smartajo.app/join/${groupCode}`
+      : "Group code not available. Check your groups page.";
+
+    document.getElementById("inviteLinkText").textContent = inviteURL;
 
     function copyLink() {
-      navigator.clipboard.writeText(inviteURL).catch(()=>{});
-      const btn = document.getElementById('copyBtn');
-      const icon = document.getElementById('copyIcon');
-      
-      // Success feedback uses a slightly brighter green
-      btn.classList.replace('bg-[#F2A83B]', 'bg-green-600');
+      if (!groupCode) return;
+      navigator.clipboard.writeText(inviteURL).catch(() => {});
+      const btn = document.getElementById("copyBtn");
+      const icon = document.getElementById("copyIcon");
+      btn.classList.add("bg-green-600");
       icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>';
-      
       setTimeout(() => {
-        btn.classList.replace('bg-green-600', 'bg-[#F2A83B]');
+        btn.classList.remove("bg-green-600");
         icon.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
       }, 2000);
     }
+       
   </script>
 </body>
 </html>

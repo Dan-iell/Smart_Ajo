@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo – Make Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes pulse-ring { 0% { transform: scale(0.95); opacity: 0.7; } 70% { transform: scale(1.05); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
+      .fade-up { animation: fadeUp 0.5s ease both; }
+      .fade-up-2 { animation: fadeUp 0.5s 0.1s ease both; }
+      .fade-up-3 { animation: fadeUp 0.5s 0.2s ease both; }
+      body { padding-bottom: 120px; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; }
+      .pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+      .skeleton { background: linear-gradient(90deg, #e8e8e4 25%, #f0f0ec 50%, #e8e8e4 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+      @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+  </head>
+  <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto">
+
+    <!-- Header -->
+    <div class="bg-[#F5F4EF] px-5 pt-12 pb-4 flex items-center justify-between fade-up">
+      <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E8E8E4] transition-colors active:scale-95">
+        <svg class="w-4 h-4 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h1 class="text-sm font-semibold text-[#1A1A1A]">Make Payment</h1>
+      <div class="w-9"></div>
+    </div>
+
+    <div class="px-5">
+
+      <!-- Group card -->
+      <div id="groupCard" class="fade-up bg-[#2A2A2A] rounded-3xl p-5 mb-5">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-white text-opacity-60 text-[10px] uppercase tracking-widest opacity-60 mb-1">Group</p>
+            <h2 id="groupName" class="text-white font-bold text-lg leading-tight">Loading...</h2>
+          </div>
+          <span id="groupStatus" class="bg-white bg-opacity-10 text-white text-[10px] font-semibold px-3 py-1 rounded-full">Active</span>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-white bg-opacity-10 rounded-2xl p-3">
+            <p class="text-white text-opacity-50 text-[9px] uppercase tracking-wider mb-1 opacity-50">Amount</p>
+            <p id="contributionAmount" class="text-white font-bold text-sm">₦0</p>
+          </div>
+          <div class="bg-white bg-opacity-10 rounded-2xl p-3">
+            <p class="text-white text-opacity-50 text-[9px] uppercase tracking-wider mb-1 opacity-50">Round</p>
+            <p id="currentRound" class="text-white font-bold text-sm">0/0</p>
+          </div>
+          <div class="bg-white bg-opacity-10 rounded-2xl p-3">
+            <p class="text-white text-opacity-50 text-[9px] uppercase tracking-wider mb-1 opacity-50">Members</p>
+            <p id="memberCount" class="text-white font-bold text-sm">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Round summary — who paid -->
+      <div class="fade-up-2 mb-5">
+        <p class="text-[11px] font-bold text-[#9E9E9E] uppercase tracking-wider mb-3">Round Status</p>
+        <div id="roundSummary" class="flex flex-col gap-2">
+          <!-- Skeleton -->
+          <div class="skeleton h-14 rounded-2xl"></div>
+          <div class="skeleton h-14 rounded-2xl"></div>
+          <div class="skeleton h-14 rounded-2xl"></div>
+        </div>
+      </div>
+
+      <!-- Payout recipient notice -->
+      <div id="payoutNotice" class="hidden fade-up-2 bg-[#F0FDF4] border border-[#BBF7D0] rounded-2xl px-4 py-3.5 mb-5 flex items-center gap-3">
+        <div class="w-8 h-8 bg-[#16A34A] rounded-full flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-[#15803D]">Payout this round</p>
+          <p id="payoutRecipientText" class="text-[10px] text-[#16A34A]">Loading...</p>
+        </div>
+      </div>
+
+      <!-- Already paid notice -->
+      <div id="alreadyPaidNotice" class="hidden fade-up-2 bg-[#F0FDF4] border border-[#BBF7D0] rounded-2xl px-4 py-3.5 mb-5 flex items-center gap-3">
+        <div class="w-8 h-8 bg-[#16A34A] rounded-full flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-[#15803D]">You've paid this round</p>
+          <p class="text-[10px] text-[#16A34A]">Your contribution has been recorded.</p>
+        </div>
+      </div>
+
+      <!-- Error notice -->
+      <div id="errorNotice" class="hidden fade-up-2 bg-[#FFF1F0] border border-[#FECACA] rounded-2xl px-4 py-3.5 mb-5 flex items-center gap-3">
+        <div class="w-8 h-8 bg-[#EF4444] rounded-full flex items-center justify-center shrink-0">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-[#B91C1C]">Payment Error</p>
+          <p id="errorText" class="text-[10px] text-[#EF4444]">Something went wrong.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Fixed bottom pay button -->
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-[#F5F4EF] border-t border-[#E8E8E4] px-5 py-4 z-50">
+      <button
+        id="payBtn"
+        class="w-full bg-[#2A2A2A] text-white font-bold py-4 rounded-2xl text-sm active:scale-[0.98] transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Pay ₦0
+      </button>
+      <p class="text-center text-[10px] text-[#9E9E9E] mt-2">Secured by Squad · Powered by GTBank</p>
+    </div>
+
+    <script type="module">
+      import { requireAuth, getGroupDetail, initiateContribution, getRoundSummary, getMe } from "../js/api.js";
+
+      if (!requireAuth()) throw new Error("Not authenticated");
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const groupId = urlParams.get("id");
+
+      if (!groupId) {
+        window.location.href = "groups.html";
+      }
+
+      let contributionAmount = 0;
+      let alreadyPaid = false;
+
+      function showError(msg) {
+        const el = document.getElementById("errorNotice");
+        document.getElementById("errorText").textContent = msg;
+        el.classList.remove("hidden");
+      }
+
+      function hideError() {
+        document.getElementById("errorNotice").classList.add("hidden");
+      }
+
+      function setPayBtnLoading(loading) {
+        const btn = document.getElementById("payBtn");
+        btn.disabled = loading;
+        if (loading) {
+          btn.innerHTML = `
+            <div class="flex items-center justify-center gap-3">
+              <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span>Redirecting to payment...</span>
+            </div>`;
+        } else {
+          btn.innerHTML = `Pay ₦${Number(contributionAmount).toLocaleString()}`;
+        }
+      }
+
+      function getRiskColor(level) {
+        if (level === "low") return { bg: "bg-[#F0FDF4]", text: "text-[#16A34A]", dot: "bg-[#16A34A]" };
+        if (level === "medium") return { bg: "bg-[#FFFBEB]", text: "text-[#D97706]", dot: "bg-[#D97706]" };
+        return { bg: "bg-[#FFF1F0]", text: "text-[#EF4444]", dot: "bg-[#EF4444]" };
+      }
+
+      function getStatusBadge(status) {
+        const map = {
+          paid:    { bg: "bg-[#F0FDF4]", text: "text-[#16A34A]", label: "Paid" },
+          late:    { bg: "bg-[#FFFBEB]", text: "text-[#D97706]", label: "Late" },
+          missed:  { bg: "bg-[#FFF1F0]", text: "text-[#EF4444]", label: "Missed" },
+          pending: { bg: "bg-[#F5F5F5]", text: "text-[#9E9E9E]", label: "Pending" },
+        };
+        return map[status] || map.pending;
+      }
+
+      async function init() {
+        try {
+          const [group, summary, me] = await Promise.all([
+            getGroupDetail(groupId),
+            getRoundSummary(groupId),
+            getMe()
+          ]);
+
+          contributionAmount = group.contribution_amount;
+
+          // Populate group card
+          document.getElementById("groupName").textContent = group.name;
+          document.getElementById("contributionAmount").textContent = `₦${Number(group.contribution_amount).toLocaleString()}`;
+          document.getElementById("currentRound").textContent = `${group.current_round}/${group.max_members}`;
+          document.getElementById("memberCount").textContent = group.total_members;
+
+          // Payout recipient notice
+          if (summary.payout_recipient) {
+            const notice = document.getElementById("payoutNotice");
+            notice.classList.remove("hidden");
+            const isMe = summary.payout_recipient === me.full_name;
+            document.getElementById("payoutRecipientText").textContent = isMe
+              ? "🎉 You receive the pool this round!"
+              : `${summary.payout_recipient} receives ₦${Number(summary.pool_amount).toLocaleString()} this round`;
+          }
+
+          // Round summary members
+          const myContrib = summary.contributions.find(c => c.user_id === me.id);
+          alreadyPaid = myContrib && (myContrib.status === "paid" || myContrib.status === "late");
+
+          const summaryHtml = summary.contributions.map(contrib => {
+            const isMe = contrib.user_id === me.id;
+            const statusBadge = getStatusBadge(contrib.status);
+            const risk = getRiskColor(contrib.risk_level);
+            const initials = contrib.name.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
+
+            return `
+              <div class="bg-white border border-[#F5F5F5] rounded-2xl px-4 py-3 flex items-center justify-between ${isMe ? 'ring-1 ring-[#2A2A2A]' : ''}">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-[#B0B5AC] flex items-center justify-center shrink-0">
+                    <span class="text-[10px] font-bold text-white">${initials}</span>
+                  </div>
+                  <div>
+                    <p class="text-sm font-semibold text-[#1A1A1A]">${contrib.name}${isMe ? ' <span class="text-[#9E9E9E] font-normal">(you)</span>' : ''}</p>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                      <span class="w-1.5 h-1.5 rounded-full ${risk.dot}"></span>
+                      <span class="text-[10px] ${risk.text} capitalize">${contrib.risk_level} risk</span>
+                    </div>
+                  </div>
+                </div>
+                <span class="text-[10px] font-bold px-2.5 py-1 rounded-lg ${statusBadge.bg} ${statusBadge.text}">${statusBadge.label}</span>
+              </div>
+            `;
+          }).join("");
+
+          document.getElementById("roundSummary").innerHTML = summaryHtml;
+
+          // Update pay button
+          if (alreadyPaid) {
+            document.getElementById("alreadyPaidNotice").classList.remove("hidden");
+            const btn = document.getElementById("payBtn");
+            btn.textContent = "Already Paid ✓";
+            btn.disabled = true;
+            btn.classList.add("opacity-50", "cursor-not-allowed");
+          } else {
+            document.getElementById("payBtn").textContent = `Pay ₦${Number(contributionAmount).toLocaleString()}`;
+          }
+
+        } catch (e) {
+          console.error(e);
+          showError(e.message || "Failed to load group details.");
+          document.getElementById("roundSummary").innerHTML = '<p class="text-center py-6 text-[#9E9E9E] text-xs">Could not load round data.</p>';
+        }
+      }
+
+      // Pay button handler
+      document.getElementById("payBtn").addEventListener("click", async () => {
+        if (alreadyPaid) return;
+        hideError();
+        setPayBtnLoading(true);
+
+        try {
+          const result = await initiateContribution(groupId);
+
+          if (result.checkout_url) {
+            // Redirect to Squad checkout
+            window.location.href = result.checkout_url;
+          } else {
+            throw new Error("No checkout URL returned from server.");
+          }
+        } catch (e) {
+          console.error(e);
+          showError(e.message || "Payment initiation failed. Please try again.");
+          setPayBtnLoading(false);
+        }
+      });
+
+      init();
+    </script>
+  </body>
+</html>

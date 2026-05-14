@@ -2,6 +2,8 @@
 //  Smart Ajo — auth.js
 // ============================================================
 
+const BASE_URL = "https://smartajo.up.railway.app";
+
 import {
   loginUser,
   registerUser,
@@ -9,6 +11,7 @@ import {
   resendOtp,
   logoutUser,
   redirectIfLoggedIn,
+  getToken,
 } from "./api.js";
 
 // Re-exporting this function for HTML imports
@@ -177,6 +180,57 @@ export function handleLogout() {
   logoutUser();
 }
 
+export async function handleSetupProfile() {
+  const displayName = document.getElementById("displayName")?.value?.trim();
+  const dateOfBirth = document.getElementById("dateOfBirth")?.value;
+  const errorEl = document.getElementById("authError");
+
+  if (!displayName) {
+    if (errorEl) {
+      errorEl.textContent = "Please enter a display name.";
+      errorEl.classList.remove("hidden");
+    }
+    return;
+  }
+
+  const btn = document.getElementById("profileBtn");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Saving...";
+  }
+
+  try {
+    const token = getToken();
+    const response = await fetch(
+      `${BASE_URL}/api/auth/profile/`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          first_name: displayName.split(" ")[0],
+          last_name: displayName.split(" ").slice(1).join(" ") || "",
+          date_of_birth: dateOfBirth || null,
+        }),
+      }
+    );
+
+    if (!response.ok) throw new Error("Failed to update profile.");
+    window.location.replace("dashboard.html");
+  } catch (error) {
+    if (errorEl) {
+      errorEl.textContent = error.message || "Something went wrong.";
+      errorEl.classList.remove("hidden");
+    }
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "CONTINUE";
+    }
+  }
+}
+
 // ─────────────────────────────────────────────
 // GLOBAL EXPOSURE
 // ─────────────────────────────────────────────
@@ -187,4 +241,5 @@ if (typeof window !== "undefined") {
   window.handleResendOTP = handleResendOTP;
   window.handleLogout = handleLogout;
   window.togglePassword = () => togglePasswordVisibility("password");
+  window.handleSetupProfile = handleSetupProfile;
 }

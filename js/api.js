@@ -223,6 +223,18 @@ export async function joinGroup(groupId) {
   return request("POST", `api/groups/${groupId}/join/`, null, true);
 }
 
+export async function joinGroupByCode(code) {
+  return request("POST", "api/groups/join-by-code/", { code }, true);
+}
+
+export async function getGroupMembers(groupId) {
+  return request("GET", `api/groups/${groupId}/members/`, null, true);
+}
+
+export async function getUserRisk() {
+  return request("GET", "api/users/risk/", null, true);
+}
+
 export async function addCard(cardData) {
   return request("POST", "api/payments/add-card/", cardData, true);
 }
