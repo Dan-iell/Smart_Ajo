@@ -227,6 +227,22 @@ export async function addCard(cardData) {
   return request("POST", "api/payments/add-card/", cardData, true);
 }
 
+export async function initiatePayment(groupId) {
+  return request("POST", `api/contributions/contribute/${groupId}/`, null, true);
+}
+
+export async function verifyPayment({ transactionRef }) {
+  return request("POST", "api/contributions/squad-callback/", { transaction_ref: transactionRef }, true);
+}
+
+export async function getPaymentHistory() {
+  return request("GET", "api/contributions/mine/", null, true);
+}
+
+export async function getRoundSummary(groupId) {
+  return request("GET", `api/contributions/round-summary/${groupId}/`, null, true);
+}
+
 export function logoutUser() {
   clearToken();
   window.location.href = window.location.origin + "/index.html";
