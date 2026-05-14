@@ -164,9 +164,13 @@ export async function getMe() {
 }
 
 /**
- * Fetches group members to extract a specific profile.
- * Targets Swagger: GET /api/groups/{id}/members/
+ * Updates the current user's profile information.
+ * Pointing to /api/auth/profile/ as per Swagger documentation.
  */
+export async function updateProfile(userData) {
+  // Use PATCH for partial updates (just name/email/phone)
+  return request("PATCH", "api/auth/profile/", userData, true);
+}
 export async function getMemberProfile(groupId, memberId) {
   try {
     const members = await request(
@@ -175,7 +179,6 @@ export async function getMemberProfile(groupId, memberId) {
       null,
       true,
     );
-    // Finds the specific member in the returned list
     const member = members.find((m) => String(m.id) === String(memberId));
     if (!member) throw new Error("Member not found in this group.");
     return member;
