@@ -89,98 +89,123 @@
     </div>
 
     <script type="module">
-      import { getToken, getMyGroups, discoverGroups } from "../js/api.js";
+  import { getToken, getMyGroups, discoverGroups, joinGroup } from "../js/api.js";
 
-      const myContainer = document.getElementById("myGroupsContainer");
-      const discoverContainer = document.getElementById("discoverGroupsContainer");
-      const tabMy = document.getElementById("tab-my");
-      const tabDiscover = document.getElementById("tab-discover");
-      const contentMy = document.getElementById("content-my");
-      const contentDiscover = document.getElementById("content-discover");
+  const myContainer = document.getElementById("myGroupsContainer");
+  const discoverContainer = document.getElementById("discoverGroupsContainer");
+  const tabMy = document.getElementById("tab-my");
+  const tabDiscover = document.getElementById("tab-discover");
+  const contentMy = document.getElementById("content-my");
+  const contentDiscover = document.getElementById("content-discover");
 
-      async function loadGroups(type = "my") {
-        const activeContainer = type === "my" ? myContainer : discoverContainer;
-        activeContainer.innerHTML = `<p class="text-center text-[#9E9E9E] py-10 text-xs">Loading groups...</p>`;
+  // Global join function handler
+  window.handleJoin = async (event, groupId) => {
+    event.stopPropagation(); // Prevents the card's onclick from triggering
+    const btn = event.currentTarget;
+    const originalText = btn.innerText;
+    
+    try {
+      btn.innerText = "Joining...";
+      btn.disabled = true;
+      await joinGroup(groupId);
+      
+      // Success feedback
+      btn.innerText = "Joined!";
+      btn.classList.replace("bg-[#1B5E3B]", "bg-[#F2A83B]");
+      
+      setTimeout(() => {
+        switchTab("my"); // Refresh and show in My Groups
+      }, 1000);
+    } catch (error) {
+      alert(error.message);
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }
+  };
 
-        try {
-          const groups = type === "my" ? await getMyGroups() : await discoverGroups();
-          const groupsList = Array.isArray(groups) ? groups : groups.results || [];
+  async function loadGroups(type = "my") {
+    const activeContainer = type === "my" ? myContainer : discoverContainer;
+    activeContainer.innerHTML = `<p class="text-center text-[#9E9E9E] py-10 text-xs">Loading groups...</p>`;
 
-          if (groupsList.length === 0) {
-            activeContainer.innerHTML = `<div class="py-10 text-center"><p class="text-xs text-[#9E9E9E]">No groups found.</p></div>`;
-            return;
+    try {
+      const groups = type === "my" ? await getMyGroups() : await discoverGroups();
+      const groupsList = Array.isArray(groups) ? groups : groups.results || [];
+
+      if (groupsList.length === 0) {
+        activeContainer.innerHTML = `<div class="py-10 text-center"><p class="text-xs text-[#9E9E9E]">No groups found.</p></div>`;
+        return;
+      }
+
+      activeContainer.innerHTML = groupsList
+        .map((group) => {
+          // Progress calculation (stays 0 if no pool)
+          const current = parseFloat(group.current_pool || 0);
+          const target = parseFloat(group.contribution_amount * (group.max_members || 1));
+          const progress = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
+
+          return `
+      <div 
+        onclick="window.location.href = 'group-detail.html?id=${group.id}'"
+        class="bg-white rounded-2xl p-4 shadow-sm border border-[#F0F0F0] mb-3 cursor-pointer transition-all"
+      >
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-[#1B5E3B]/10 rounded-full flex items-center justify-center shrink-0">
+               <svg class="w-6 h-6 text-[#1B5E3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <div>
+              <p class="text-base font-bold text-[#1A1A1A]">${group.name}</p>
+              <p class="text-sm font-semibold text-[#F2A83B]">₦${Number(group.contribution_amount).toLocaleString()}/mo</p>
+            </div>
+          </div>
+          ${
+            type === "discover"
+              ? `<button onclick="handleJoin(event, '${group.id}')" class="bg-[#1B5E3B] text-white text-xs px-5 py-2.5 rounded-full font-bold transition-transform">Join</button>`
+              : `<svg class="w-5 h-5 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>`
           }
+        </div>
 
-          activeContainer.innerHTML = groupsList
-            .map((group) => {
-              // DYNAMIC PROGRESS CALCULATION
-              const current = parseFloat(group.current_pool || 0);
-              const target = parseFloat(group.contribution_amount * (group.members_count || group.max_members) || 0);
-              const progress = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0;
+        <div class="w-full h-1.5 bg-[#E0E0E0] rounded-full mb-2 overflow-hidden">
+          <div class="h-full bg-[#1B5E3B] transition-all duration-500" style="width: ${progress}%"></div>
+        </div>
 
-              return `
-          <div 
-            onclick="window.location.href = 'group-detail.html?id=${group.id}'"
-            class="bg-white rounded-2xl p-4 shadow-sm border border-[#F0F0F0] mb-3 cursor-pointer active:scale-[0.98] transition-all"
-          >
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-[#1B5E3B]/10 rounded-full flex items-center justify-center shrink-0">
-                   <svg class="w-6 h-6 text-[#1B5E3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                </div>
-                <div>
-                  <p class="text-base font-bold text-[#1A1A1A]">${group.name}</p>
-                  <p class="text-sm font-semibold text-[#F2A83B]">₦${Number(group.contribution_amount).toLocaleString()}/mo</p>
-                </div>
-              </div>
-              ${
-                type === "discover"
-                  ? `<button class="bg-[#1B5E3B] text-white text-xs px-5 py-2.5 rounded-full font-bold active:scale-95 transition-transform">Join</button>`
-                  : `<svg class="w-5 h-5 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>`
-              }
-            </div>
+        <div class="flex items-center justify-between text-[10px] text-[#9E9E9E]">
+          <span class="font-medium">${group.members_count || 0} members</span>
+          <span class="${type === "my" ? "font-bold text-[#1B5E3B]" : ""}">
+            ${type === "my" ? "Due Tomorrow" : "Open for Joining"}
+          </span>
+        </div>
+      </div>`;
+        })
+        .join("");
+    } catch (error) {
+      activeContainer.innerHTML = `<p class="text-center text-red-500 py-10 text-xs">Error: ${error.message}</p>`;
+    }
+  }
 
-            <div class="w-full h-1.5 bg-[#E0E0E0] rounded-full mb-2 overflow-hidden">
-              <div class="h-full bg-[#1B5E3B]" style="width: ${progress}%"></div>
-            </div>
-
-            <div class="flex items-center justify-between text-[10px] text-[#9E9E9E]">
-              <span class="font-medium">${group.members_count || 0} members</span>
-              <span class="${type === "my" ? "font-bold text-[#1B5E3B]" : ""}">
-                ${type === "my" ? "Due Tomorrow" : "Starts Soon"}
-              </span>
-            </div>
-          </div>`;
-            })
-            .join("");
-        } catch (error) {
-          activeContainer.innerHTML = `<p class="text-center text-red-500 py-10 text-xs">Error: ${error.message}</p>`;
-        }
-      }
-
-      function switchTab(type) {
-        if (type === "my") {
-          tabMy.classList.add("bg-[#1B5E3B]", "text-white");
-          tabMy.classList.remove("text-[#9E9E9E]");
-          tabDiscover.classList.remove("bg-[#1B5E3B]", "text-white");
-          tabDiscover.classList.add("text-[#9E9E9E]");
-          contentMy.classList.add("active");
-          contentDiscover.classList.remove("active");
-          loadGroups("my");
-        } else {
-          tabDiscover.classList.add("bg-[#1B5E3B]", "text-white");
-          tabDiscover.classList.remove("text-[#9E9E9E]");
-          tabMy.classList.remove("bg-[#1B5E3B]", "text-white");
-          tabMy.classList.add("text-[#9E9E9E]");
-          contentDiscover.classList.add("active");
-          contentMy.classList.remove("active");
-          loadGroups("discover");
-        }
-      }
-
+  function switchTab(type) {
+    if (type === "my") {
+      tabMy.classList.add("bg-[#1B5E3B]", "text-white");
+      tabMy.classList.remove("text-[#9E9E9E]");
+      tabDiscover.classList.remove("bg-[#1B5E3B]", "text-white");
+      tabDiscover.classList.add("text-[#9E9E9E]");
+      contentMy.classList.add("active");
+      contentDiscover.classList.remove("active");
       loadGroups("my");
-      tabMy.addEventListener("click", () => switchTab("my"));
-      tabDiscover.addEventListener("click", () => switchTab("discover"));
-    </script>
+    } else {
+      tabDiscover.classList.add("bg-[#1B5E3B]", "text-white");
+      tabDiscover.classList.remove("text-[#9E9E9E]");
+      tabMy.classList.remove("bg-[#1B5E3B]", "text-white");
+      tabMy.classList.add("text-[#9E9E9E]");
+      contentDiscover.classList.add("active");
+      contentMy.classList.remove("active");
+      loadGroups("discover");
+    }
+  }
+
+  loadGroups("my");
+  tabMy.addEventListener("click", () => switchTab("my"));
+  tabDiscover.addEventListener("click", () => switchTab("discover"));
+</script>
   </body>
 </html>

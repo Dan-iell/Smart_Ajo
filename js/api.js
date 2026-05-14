@@ -159,18 +159,22 @@ export async function resendOtp(email) {
 // USER & DATA ACTIONS
 // ─────────────────────────────────────────────
 
+/**
+ * Fetches current user basic info.
+ * Targets Swagger: GET /api/auth/me/
+ */
 export async function getMe() {
   return request("GET", "api/auth/me/", null, true);
 }
 
 /**
  * Updates the current user's profile information.
- * Pointing to /api/auth/profile/ as per Swagger documentation.
+ * Targets Swagger: PATCH /api/auth/profile/
  */
 export async function updateProfile(userData) {
-  // Use PATCH for partial updates (just name/email/phone)
   return request("PATCH", "api/auth/profile/", userData, true);
 }
+
 export async function getMemberProfile(groupId, memberId) {
   try {
     const members = await request(
@@ -219,6 +223,10 @@ export async function discoverGroups() {
   }
 }
 
+/**
+ * Joins a specific group by ID.
+ * Targets Swagger: POST /api/groups/{id}/join/
+ */
 export async function joinGroup(groupId) {
   return request("POST", `api/groups/${groupId}/join/`, null, true);
 }
