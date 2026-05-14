@@ -2,156 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Ajo – Profile</title>
+  <title>Smart Ajo – My Profile</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
     .fade-up { animation: fadeUp 0.5s ease both; }
     .fade-up-2 { animation: fadeUp 0.5s ease 0.1s both; }
-    body { padding-bottom: 100px; }
+    body { padding-bottom: 100px; font-family: 'DM Sans', sans-serif; }
+    .font-brand { font-family: 'Fraunces', serif; }
   </style>
 </head>
-<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
+<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto">
 
   <div class="px-5 pt-12">
-    <div class="flex flex-col items-center text-center mb-7 fade-up">
-      <div class="relative mb-4">
-        <div id="avatarContainer" class="w-20 h-20 bg-[#B0B5AC] rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
-          <span id="userInitials" class="font-['Fraunces'] text-white text-2xl font-bold uppercase"></span>
-          <img id="userAvatar" src="" alt="Profile" class="w-full h-full object-cover hidden">
+    <!-- Profile Header -->
+    <div class="flex flex-col items-center text-center mb-8 fade-up">
+      <div class="relative mb-5">
+        <div id="avatarContainer" class="w-24 h-24 bg-[#1B5E3B] rounded-3xl flex items-center justify-center overflow-hidden border-4 border-white shadow-xl rotate-3 transform">
+          <span id="userInitials" class="font-brand text-white text-3xl font-bold uppercase -rotate-3"></span>
+          <img id="userAvatar" src="" alt="Profile" class="w-full h-full object-cover hidden -rotate-3">
         </div>
-        <label for="avatarInput" class="absolute -bottom-1 -right-1 w-7 h-7 bg-[#3A3A3A] rounded-full flex items-center justify-center border-2 border-[#F5F4EF] cursor-pointer">
-          <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <label for="avatarInput" class="absolute -bottom-2 -right-2 w-9 h-9 bg-[#F2A83B] rounded-full flex items-center justify-center border-4 border-[#F5F4EF] cursor-pointer shadow-lg active:scale-90 transition-transform">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </label>
         <input type="file" id="avatarInput" accept="image/*" class="hidden" />
       </div>
 
-      <h1 id="userFullName" class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A] mb-1">Loading...</h1>
-      <p id="userPhone" class="text-sm text-[#9E9E9E] mb-0.5">...</p>
-      <p id="userEmail" class="text-sm text-[#9E9E9E] mb-3">...</p>
+      <h1 id="userFullName" class="font-brand text-2xl font-black text-[#1A1A1A] mb-1">Loading...</h1>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-[10px] font-black uppercase tracking-widest bg-[#1B5E3B]/10 text-[#1B5E3B] px-3 py-1 rounded-full">Engineering Student</span>
+      </div>
 
-      <button onclick="window.location.href='edit-profile.html'"
-        class="border border-[#3A3A3A] text-sm font-semibold text-[#3A3A3A] px-5 py-2 rounded-full hover:bg-[#3A3A3A] hover:text-white transition-all active:scale-95">
-        Edit Profile
-      </button>
+      <div class="flex gap-3">
+        <button onclick="window.location.href='edit-profile.html'"
+          class="bg-[#1B5E3B] text-xs font-bold text-white px-6 py-2.5 rounded-xl shadow-lg shadow-green-900/20 active:scale-95 transition-all">
+          Edit Profile
+        </button>
+        <button class="bg-white border border-[#E0E0E0] text-[#1A1A1A] px-4 py-2.5 rounded-xl active:scale-95 transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 1 1 0-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 1 0 5.367-2.684 3 3 0 0 0-5.367 2.684zm0 9.316a3 3 0 1 0 5.368 2.684 3 3 0 0 0-5.368-2.684z"/></svg>
+        </button>
+      </div>
     </div>
 
+    <!-- Menu Options -->
     <div class="flex flex-col gap-3 fade-up-2">
-      <button class="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-4 hover:shadow-sm transition-all active:scale-[0.99]">
-        <div class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <!-- Risk Score Card -->
+      <button class="group w-full bg-white rounded-2xl p-4 flex items-center gap-4 border border-transparent hover:border-[#1B5E3B]/20 transition-all active:scale-[0.98]">
+        <div class="w-12 h-12 bg-[#1B5E3B]/5 rounded-2xl flex items-center justify-center shrink-0 group-hover:bg-[#1B5E3B] transition-colors">
+          <svg class="w-6 h-6 text-[#1B5E3B] group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <span class="flex-1 text-sm font-semibold text-[#1A1A1A] text-left">My Risk Score</span>
-        <div id="riskLevelDisplay" class="text-[10px] font-bold uppercase tracking-tighter text-[#9E9E9E]">--</div>
-        <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        <div class="flex-1 text-left">
+            <span class="block text-sm font-bold text-[#1A1A1A]">Trust Factor</span>
+            <span class="text-[10px] text-[#9E9E9E] font-bold uppercase tracking-tight">AI-Verified Member</span>
+        </div>
+        <div id="riskLevelDisplay" class="text-xs font-black text-[#1B5E3B] bg-[#1B5E3B]/10 px-3 py-1 rounded-lg">A+</div>
       </button>
 
-      <button class="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-4 hover:shadow-sm">
-        <div class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </div>
-        <span class="flex-1 text-sm font-semibold text-[#1A1A1A] text-left">Savings History</span>
-        <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
+      <!-- Standard Menu Items -->
+      <div class="bg-white rounded-3xl p-2 flex flex-col gap-1 border border-white shadow-sm">
+          <button class="w-full hover:bg-[#F5F4EF] rounded-2xl px-4 py-4 flex items-center gap-4 transition-colors">
+            <div class="w-10 h-10 bg-[#F2A83B]/10 rounded-xl flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-[#F2A83B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <span class="flex-1 text-sm font-bold text-[#1A1A1A] text-left">Contribution History</span>
+            <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
 
-      <button onclick="window.location.href='alerts.html'" class="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-4 hover:shadow-sm">
-        <div class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        </div>
-        <span class="flex-1 text-sm font-semibold text-[#1A1A1A] text-left">Notifications</span>
-        <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
+          <button onclick="window.location.href='add-card.html'" class="w-full hover:bg-[#F5F4EF] rounded-2xl px-4 py-4 flex items-center gap-4 transition-colors">
+            <div class="w-10 h-10 bg-[#1B5E3B]/10 rounded-xl flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+            </div>
+            <span class="flex-1 text-sm font-bold text-[#1A1A1A] text-left">Wallet & Cards</span>
+            <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
 
-      <button onclick="window.location.href='add-card.html'" class="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-4 hover:shadow-sm">
-        <div class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
-        </div>
-        <span class="flex-1 text-sm font-semibold text-[#1A1A1A] text-left">Linked Accounts</span>
-        <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
+          <button class="w-full hover:bg-[#F5F4EF] rounded-2xl px-4 py-4 flex items-center gap-4 transition-colors">
+            <div class="w-10 h-10 bg-[#E0E0E0]/30 rounded-xl flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <span class="flex-1 text-sm font-bold text-[#1A1A1A] text-left">Security Settings</span>
+            <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+      </div>
 
-      <button class="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-4 hover:shadow-sm">
-        <div class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <button id="logoutBtn" class="w-full bg-[#FFF1F0] rounded-2xl px-4 py-4 flex items-center gap-4 mt-4 active:scale-95 transition-all group">
+        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-sm group-hover:bg-[#EF4444] transition-colors">
+          <svg class="w-5 h-5 text-[#EF4444] group-hover:text-white transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </div>
-        <span class="flex-1 text-sm font-semibold text-[#1A1A1A] text-left">Security</span>
-        <svg class="w-4 h-4 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
-
-      <button id="logoutBtn" class="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-4 mt-2 active:scale-95 transition-all">
-        <div class="w-10 h-10 bg-[#FFF1F0] rounded-xl flex items-center justify-center shrink-0">
-          <svg class="w-5 h-5 text-[#EF4444]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        </div>
-        <span class="flex-1 text-sm font-semibold text-[#EF4444] text-left">Log Out</span>
+        <span class="flex-1 text-sm font-bold text-[#EF4444] text-left">Sign Out</span>
       </button>
     </div>
   </div>
 
+  <!-- Bottom Nav -->
   <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
-    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px]">Home</span></button>
-    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="text-[10px]">Groups</span></button>
-    <div class="w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center -mt-6 shadow-lg active:scale-95 transition-transform"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
-    <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px]">Alerts</span></button>
-    <button class="flex flex-col items-center gap-1 text-[#3A3A3A]"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg><span class="text-[10px] font-semibold">Profile</span></button>
+    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px]">Home</span></button>
+    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="text-[10px]">Groups</span></button>
+    <div class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 active:scale-95 transition-all"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+    <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px]">Alerts</span></button>
+    <button class="flex flex-col items-center gap-1 text-[#1B5E3B]"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg><span class="text-[10px] font-bold">Profile</span></button>
   </div>
 
   <script type="module">
   import { getMe, requireAuth } from "../js/api.js";
   import { handleLogout } from "../js/auth.js";
 
-  // 1. Guard the page - checks if token exists
   if (requireAuth()) {
     initProfile();
   }
 
   async function initProfile() {
     try {
-      console.log("Fetching profile data...");
       const user = await getMe();
       
-      // Update Name
-      const nameEl = document.getElementById('userFullName');
-      if (nameEl) nameEl.textContent = user.full_name || "Smart User";
+      document.getElementById('userFullName').textContent = user.full_name || "Smart User";
       
-      // Update Email & Phone
-      const emailEl = document.getElementById('userEmail');
-      if (emailEl) emailEl.textContent = user.email || "No email provided";
-      
-      const phoneEl = document.getElementById('userPhone');
-      if (phoneEl) phoneEl.textContent = user.phone_number || "";
-
-      // Handle Avatar vs Initials
       const avatarImg = document.getElementById('userAvatar');
       const initialsSpan = document.getElementById('userInitials');
       
       if (user.avatar) {
-        // If they have a picture, show it and hide initials
         avatarImg.src = user.avatar;
         avatarImg.classList.remove('hidden');
         initialsSpan.classList.add('hidden');
       } else {
-        // Otherwise, generate initials from the name
-        const names = (user.full_name || "Smart User").split(" ");
-        const initials = names.map(n => n[0]).join("").substring(0, 2);
+        const initials = (user.full_name || "SU").split(" ").map(n => n[0]).join("").substring(0, 2);
         initialsSpan.textContent = initials;
         initialsSpan.classList.remove('hidden');
         avatarImg.classList.add('hidden');
       }
 
-      // Update Risk Level (Optional: assuming your API returns this)
-      const riskEl = document.getElementById('riskLevelDisplay');
-      if (riskEl && user.risk_score) {
-        riskEl.textContent = user.risk_score;
+      if (user.risk_score) {
+        document.getElementById('riskLevelDisplay').textContent = user.risk_score;
       }
-      
-      console.log("✨ Profile updated for:", user.full_name);
     } catch (error) {
-      console.error("⛔ Profile Error:", error);
+      console.error("Profile Error:", error);
     }
   }
 
-  // 2. Bind logout button
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', (e) => {
@@ -162,5 +150,3 @@
 </script>
 </body>
 </html>
-
-

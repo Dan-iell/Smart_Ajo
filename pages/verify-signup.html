@@ -1,120 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Ajo – Verify Account</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    @keyframes fadeUp { from { opacity:0; transform:translateY(20px);} to { opacity:1; transform:translateY(0);} }
-    .fade-up { animation: fadeUp 0.7s ease both; }
-    .otp-input { transition: all 0.2s ease-in-out; }
-    .otp-input:focus { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    .spinner {
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top: 2px solid #fff;
-      width: 18px;
-      height: 18px;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  </style>
-</head>
-<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto flex flex-col font-['DM_Sans']">
-  <div class="flex flex-col flex-1 px-6 pt-10 pb-10 fade-up">
-
-    <!-- Progress Steps (Updated to 3 tabs) -->
-    <div class="flex gap-1.5 mb-8">
-      <div class="h-1 flex-1 bg-[#3A3A3A] rounded-full"></div>
-      <div class="h-1 flex-1 bg-[#3A3A3A] rounded-full"></div>
-      <div class="h-1 flex-1 bg-[#E0E0E0] rounded-full"></div>
-    </div>
-
-    <!-- Icon -->
-    <div class="w-14 h-14 bg-[#3A3A3A] rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-      <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
-    </div>
-
-    <h1 class="font-['Fraunces'] text-3xl font-bold text-black mb-2">Verify Your Account</h1>
-    <p class="text-sm text-[#6B6B6B] mb-2 leading-relaxed">
-      We've sent a 6-digit code to <span id="displayEmail" class="text-black font-semibold">your email</span>
-    </p>
-    <p class="text-sm text-[#6B6B6B] mb-8">Wrong email? <button onclick="window.history.back()" class="text-black font-semibold underline underline-offset-2">Change it</button></p>
-
-    <div class="mb-3">
-      <label class="text-sm font-medium text-[#3A3A3A] mb-4 block">Resend code in: <span id="timer" class="text-black font-bold">01:23</span></label>
-      <div class="flex gap-2 justify-between" id="otp-container">
-        <!-- Input fields remain the same -->
-        <input type="text" maxlength="1" inputmode="numeric" class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#3A3A3A] text-[#3A3A3A] shadow-sm"/>
-        <input type="text" maxlength="1" inputmode="numeric" class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#3A3A3A] text-[#3A3A3A] shadow-sm"/>
-        <input type="text" maxlength="1" inputmode="numeric" class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#3A3A3A] text-[#3A3A3A] shadow-sm"/>
-        <input type="text" maxlength="1" inputmode="numeric" class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#3A3A3A] text-[#3A3A3A] shadow-sm"/>
-        <input type="text" maxlength="1" inputmode="numeric" class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#3A3A3A] text-[#3A3A3A] shadow-sm"/>
-        <input type="text" maxlength="1" inputmode="numeric" class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#3A3A3A] text-[#3A3A3A] shadow-sm"/>
-      </div>
-    </div>
-
-    <p id="authError" class="text-red-500 text-xs mt-2 mb-4 hidden text-center font-medium"></p>
-    <p class="text-sm text-[#6B6B6B] mb-8">Didn't get the code? <button id="resendBtn" disabled class="text-gray-400 font-semibold underline underline-offset-2 disabled:cursor-not-allowed">Resend</button></p>
-
-    <button id="verifyBtn" class="w-full py-5 bg-[#3A3A3A] text-white rounded-full text-base font-bold tracking-wide transition-all duration-300 hover:bg-black active:scale-[0.98] shadow-lg flex items-center justify-center gap-3">
-      <span id="btnText">Verify & Continue</span>
-      <div id="btnLoader" class="spinner hidden"></div>
-    </button>
-  </div>
-
-  <script type="module">
-    import { handleVerifySignup, handleResendOTP } from "../js/auth.js";
-
-    const otpInputs = document.querySelectorAll('.otp-input');
-    const timerEl = document.getElementById('timer');
-    const resendBtn = document.getElementById('resendBtn');
-    const verifyBtn = document.getElementById('verifyBtn');
-    
-    const email = localStorage.getItem("ajo_pending_email") || "";
-    document.getElementById("displayEmail").textContent = email || "your email";
-
-    otpInputs.forEach((input, i) => {
-      input.addEventListener('input', (e) => {
-        if (e.inputType === "deleteContentBackward") return;
-        if (input.value && i < otpInputs.length - 1) otpInputs[i + 1].focus();
-      });
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !input.value && i > 0) otpInputs[i - 1].focus();
-      });
-    });
-
-    verifyBtn.addEventListener('click', handleVerifySignup);
-    resendBtn.addEventListener('click', async () => {
-      await handleResendOTP();
-      resetTimer();
-    });
-
-    let countdown;
-    function resetTimer() {
-      let seconds = 83; 
-      resendBtn.disabled = true;
-      resendBtn.classList.add('text-gray-400');
-      resendBtn.classList.remove('text-black');
-      if(countdown) clearInterval(countdown);
-      countdown = setInterval(() => {
-        seconds--;
-        if (seconds <= 0) { 
-          clearInterval(countdown); 
-          timerEl.textContent = '00:00'; 
-          resendBtn.disabled = false;
-          resendBtn.classList.remove('text-gray-400');
-          resendBtn.classList.add('text-black');
-          return; 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo – Verify Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        timerEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      }, 1000);
-    }
-    resetTimer();
-  </script>
-</body>
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.7s ease both;
+      }
+      .otp-input {
+        transition: all 0.2s ease-in-out;
+      }
+      /* Focus state updated to Green shadow */
+      .otp-input:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(27, 94, 59, 0.1);
+      }
+      .spinner {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 2px solid #fff;
+        width: 18px;
+        height: 18px;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto flex flex-col font-['DM_Sans']"
+  >
+    <div class="flex flex-col flex-1 px-6 pt-10 pb-10 fade-up">
+      <!-- Progress Steps (Updated to Green) -->
+      <div class="flex gap-1.5 mb-8">
+        <div class="h-1 flex-1 bg-[#1B5E3B] rounded-full"></div>
+        <div class="h-1 flex-1 bg-[#1B5E3B] rounded-full"></div>
+        <div class="h-1 flex-1 bg-[#E0E0E0] rounded-full"></div>
+      </div>
+
+      <!-- Icon (Updated to Green) -->
+      <div
+        class="w-14 h-14 bg-[#1B5E3B] rounded-2xl flex items-center justify-center mb-6 shadow-sm"
+      >
+        <svg
+          class="w-7 h-7 text-white"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="m2 7 10 7 10-7" />
+        </svg>
+      </div>
+
+      <h1 class="font-['Fraunces'] text-3xl font-bold text-black mb-2">
+        Verify Your Account
+      </h1>
+      <p class="text-sm text-[#6B6B6B] mb-2 leading-relaxed">
+        We've sent a 6-digit code to
+        <span id="displayEmail" class="text-black font-semibold"
+          >your email</span
+        >
+      </p>
+      <p class="text-sm text-[#6B6B6B] mb-8">
+        Wrong email?
+        <button
+          onclick="window.history.back()"
+          class="text-[#1B5E3B] font-semibold underline underline-offset-2"
+        >
+          Change it
+        </button>
+      </p>
+
+      <div class="mb-3">
+        <!-- Label highlighted with Green -->
+        <label class="text-sm font-medium text-[#1B5E3B] mb-4 block"
+          >Resend code in:
+          <span id="timer" class="text-black font-bold">01:23</span></label
+        >
+        <div class="flex gap-2 justify-between" id="otp-container">
+          <!-- OTP Inputs focus color updated to Green -->
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#1B5E3B] text-[#1B5E3B] shadow-sm"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#1B5E3B] text-[#1B5E3B] shadow-sm"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#1B5E3B] text-[#1B5E3B] shadow-sm"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#1B5E3B] text-[#1B5E3B] shadow-sm"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#1B5E3B] text-[#1B5E3B] shadow-sm"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            inputmode="numeric"
+            class="otp-input w-[52px] h-14 text-center text-xl font-bold bg-white border border-[#E0E0E0] rounded-2xl outline-none focus:border-[#1B5E3B] text-[#1B5E3B] shadow-sm"
+          />
+        </div>
+      </div>
+
+      <p
+        id="authError"
+        class="text-red-500 text-xs mt-2 mb-4 hidden text-center font-medium"
+      ></p>
+      <p class="text-sm text-[#6B6B6B] mb-8">
+        Didn't get the code?
+        <button
+          id="resendBtn"
+          disabled
+          class="text-gray-400 font-semibold underline underline-offset-2 disabled:cursor-not-allowed"
+        >
+          Resend
+        </button>
+      </p>
+
+      <!-- Main Button updated to Gold -->
+      <button
+        id="verifyBtn"
+        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-bold tracking-wide transition-all duration-300 hover:bg-[#d99635] active:scale-[0.98] shadow-lg flex items-center justify-center gap-3"
+      >
+        <span id="btnText">Verify & Continue</span>
+        <div id="btnLoader" class="spinner hidden"></div>
+      </button>
+    </div>
+
+    <script type="module">
+      import { handleVerifySignup, handleResendOTP } from "../js/auth.js";
+
+      const otpInputs = document.querySelectorAll(".otp-input");
+      const timerEl = document.getElementById("timer");
+      const resendBtn = document.getElementById("resendBtn");
+      const verifyBtn = document.getElementById("verifyBtn");
+
+      const email = localStorage.getItem("ajo_pending_email") || "";
+      document.getElementById("displayEmail").textContent =
+        email || "your email";
+
+      otpInputs.forEach((input, i) => {
+        input.addEventListener("input", (e) => {
+          if (e.inputType === "deleteContentBackward") return;
+          if (input.value && i < otpInputs.length - 1) otpInputs[i + 1].focus();
+        });
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !input.value && i > 0)
+            otpInputs[i - 1].focus();
+        });
+      });
+
+      verifyBtn.addEventListener("click", handleVerifySignup);
+      resendBtn.addEventListener("click", async () => {
+        await handleResendOTP();
+        resetTimer();
+      });
+
+      let countdown;
+      function resetTimer() {
+        let seconds = 83;
+        resendBtn.disabled = true;
+        resendBtn.classList.add("text-gray-400");
+        resendBtn.classList.remove("text-[#1B5E3B]");
+        if (countdown) clearInterval(countdown);
+        countdown = setInterval(() => {
+          seconds--;
+          if (seconds <= 0) {
+            clearInterval(countdown);
+            timerEl.textContent = "00:00";
+            resendBtn.disabled = false;
+            resendBtn.classList.remove("text-gray-400");
+            resendBtn.classList.add("text-[#1B5E3B]");
+            return;
+          }
+          const m = Math.floor(seconds / 60);
+          const s = seconds % 60;
+          timerEl.textContent = `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+        }, 1000);
+      }
+      resetTimer();
+    </script>
+  </body>
 </html>
