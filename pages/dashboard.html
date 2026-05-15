@@ -138,7 +138,7 @@
         <!-- Quick Actions -->
         <div class="grid grid-cols-3 gap-3 relative">
           <button
-            onclick="window.location.href = 'create-group.html'"
+            onclick="event.stopPropagation(); window.location.href = 'create-group.html'"
             class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
           >
             <svg
@@ -153,7 +153,7 @@
             <span class="text-white text-xs font-medium">Create</span>
           </button>
           <button
-            onclick="window.location.href = 'groups.html'"
+            onclick="event.stopPropagation(); window.location.href = 'groups.html'"
             class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
           >
             <svg
@@ -169,7 +169,7 @@
             <span class="text-white text-xs font-medium">Explore</span>
           </button>
           <button
-            onclick="window.location.href = 'make-payment.html'"
+            onclick="event.stopPropagation(); window.location.href = 'make-payment.html'"
             class="flex flex-col items-center gap-2 bg-white rounded-2xl py-3 px-2 hover:bg-gray-100 transition-all active:scale-95"
           >
             <svg
