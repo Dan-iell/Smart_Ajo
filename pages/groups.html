@@ -11,63 +11,39 @@
     />
     <style>
       @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(16px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-      .fade-up {
-        animation: fadeUp 0.5s ease both;
-      }
-      body {
-        padding-bottom: 90px;
-      }
+      .fade-up { animation: fadeUp 0.5s ease both; }
+      body { padding-bottom: 90px; }
 
-      .tab-content {
-        display: none;
-      }
+      .tab-content { display: none; }
       .tab-content.active {
         display: block;
         animation: fadeUp 0.4s ease both;
       }
     </style>
   </head>
-  <body
-    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
-  >
+  <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
     <div class="px-5 pt-10">
-      <!-- Header -->
       <div class="flex items-center justify-between mb-6 fade-up">
         <h1 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A]">
           My Groups
         </h1>
         <button
-          onclick="window.location.href = 'make-payment.html'"
-          class="w-10 h-10 bg-[#1B5E3B] rounded-full flex items-center justify-center hover:bg-[#14452b] transition-colors active:scale-95 shadow-lg shadow-green-900/20"
+          onclick="window.location.href = 'create-group.html'"
+          class="w-10 h-10 bg-[#1B5E3B] rounded-full flex items-center justify-center hover:bg-[#14452b] transition-all active:scale-95 shadow-lg shadow-green-900/20"
         >
-          <svg
-            class="w-5 h-5 text-white"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path d="M12 5v14M5 12h14" />
           </svg>
         </button>
       </div>
 
-      <!-- Tabs (Deep Green Active State) -->
-      <div
-        class="bg-white rounded-full p-1 flex mb-6 fade-up border border-[#E0E0E0]"
-      >
+      <div class="bg-white rounded-full p-1 flex mb-6 fade-up border border-[#E0E0E0] shadow-sm">
         <button
           id="tab-my"
-          class="flex-1 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 bg-[#1B5E3B] text-white"
+          class="flex-1 py-2.5 rounded-full text-sm font-bold transition-all duration-200 bg-[#1B5E3B] text-white"
         >
           My Groups
         </button>
@@ -79,27 +55,15 @@
         </button>
       </div>
 
-      <!-- MY GROUPS TAB -->
       <div id="content-my" class="tab-content active">
         <div id="myGroupsContainer" class="flex flex-col gap-4">
-          <p class="text-center py-10 text-xs text-[#9E9E9E]">
-            Loading your groups...
-          </p>
+          <p class="text-center py-10 text-xs text-[#9E9E9E]">Loading your groups...</p>
         </div>
       </div>
 
-      <!-- DISCOVER TAB -->
       <div id="content-discover" class="tab-content">
-        <div
-          class="flex items-center gap-3 bg-white border border-[#E0E0E0] rounded-2xl px-4 py-3.5 mb-6 focus-within:border-[#F2A83B] transition-colors"
-        >
-          <svg
-            class="w-4 h-4 text-[#9E9E9E] shrink-0"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
+        <div class="flex items-center gap-3 bg-white border border-[#E0E0E0] rounded-2xl px-4 py-3.5 mb-6 focus-within:border-[#F2A83B] transition-colors shadow-sm">
+          <svg class="w-4 h-4 text-[#9E9E9E] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
@@ -109,89 +73,43 @@
             class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD]"
           />
         </div>
-        <div id="discoverGroupsContainer" class="flex flex-col gap-4">
-          <!-- Dynamic discover content -->
-        </div>
+        <div id="discoverGroupsContainer" class="flex flex-col gap-4"></div>
       </div>
     </div>
 
-    <!-- Bottom Nav (Brand Themed) -->
-    <div
-      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50"
-    >
-      <button
-        onclick="window.location.href = 'dashboard.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
-          <path d="M3 12L12 3l9 9" />
-          <path d="M9 21V12h6v9" />
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
+      <button onclick="window.location.href = 'dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M3 12L12 3l9 9" /><path d="M9 21V12h6v9" />
         </svg>
         <span class="text-[10px] font-medium">Home</span>
       </button>
       <button class="flex flex-col items-center gap-1 text-[#1B5E3B]">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
-          />
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
         </svg>
         <span class="text-[10px] font-bold">Groups</span>
       </button>
 
-      <!-- Central Action Button (Gold) -->
       <button
         onclick="window.location.href = 'make-payment.html'"
-        class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 hover:bg-[#d99635] transition-all active:scale-90"
+        class="w-14 h-14 bg-[#1B5E3B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-green-900/30 active:scale-90 transition-all"
       >
-        <svg
-          class="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path d="M12 5v14M5 12h14" />
         </svg>
       </button>
 
-      <button
-        onclick="window.location.href = 'alerts.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E] relative"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+      <button onclick="window.location.href = 'alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] relative">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
-        <span
-          class="absolute top-0 right-1.5 w-2 h-2 bg-[#F2A83B] rounded-full border border-white"
-        ></span>
+        <span class="absolute top-0 right-1.5 w-2 h-2 bg-[#F2A83B] rounded-full border border-white"></span>
         <span class="text-[10px] font-medium">Alerts</span>
       </button>
-      <button
-        onclick="window.location.href = 'profile.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="7" r="4" />
-          <path d="M5.5 20a7 7 0 0 1 13 0" />
+      <button onclick="window.location.href = 'profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <circle cx="12" cy="7" r="4" /><path d="M5.5 20a7 7 0 0 1 13 0" />
         </svg>
         <span class="text-[10px] font-medium">Profile</span>
       </button>
@@ -201,9 +119,7 @@
       import { getToken, getMyGroups, discoverGroups, joinGroup } from "../js/api.js";
 
       const myContainer = document.getElementById("myGroupsContainer");
-      const discoverContainer = document.getElementById(
-        "discoverGroupsContainer",
-      );
+      const discoverContainer = document.getElementById("discoverGroupsContainer");
       const tabMy = document.getElementById("tab-my");
       const tabDiscover = document.getElementById("tab-discover");
       const contentMy = document.getElementById("content-my");
@@ -211,25 +127,21 @@
 
       async function loadGroups(type = "my") {
         const activeContainer = type === "my" ? myContainer : discoverContainer;
-        activeContainer.innerHTML = `<p class="text-center text-[#9E9E9E] py-10 text-xs">Loading groups...</p>`;
+        activeContainer.innerHTML = `<p class="text-center text-[#9E9E9E] py-10 text-xs font-bold animate-pulse">Fetching ${type} groups...</p>`;
 
         try {
-          const groups =
-            type === "my" ? await getMyGroups() : await discoverGroups();
-          const groupsList = Array.isArray(groups)
-            ? groups
-            : groups.results || [];
+          const groups = type === "my" ? await getMyGroups() : await discoverGroups();
+          const groupsList = Array.isArray(groups) ? groups : groups.results || [];
 
           if (groupsList.length === 0) {
-            activeContainer.innerHTML = `<div class="py-10 text-center"><p class="text-xs text-[#9E9E9E]">No groups found.</p></div>`;
+            activeContainer.innerHTML = `<div class="py-10 text-center"><p class="text-sm font-bold text-[#9E9E9E]">No groups found.</p></div>`;
             return;
           }
 
-          // expose joinGroup for onclick handlers
           window._joinGroup = async (groupId) => {
             try {
               await joinGroup(groupId);
-              alert('You joined the group!');
+              alert('Successfully joined the group!');
               switchTab('my');
             } catch (e) { alert(e.message || 'Could not join group'); }
           };
@@ -241,43 +153,43 @@
               const cycleLabel = current && total ? `Round ${current}/${total}` : `${group.members_count || 0} members`;
 
               const rawDue = group.next_due_date ?? group.due_date ?? null;
-              let dueLabel = type === 'discover' ? '' : '—';
+              let dueLabel = type === 'discover' ? 'Active' : '—';
               let dueColor = 'text-[#9E9E9E]';
               if (rawDue) {
                 const diff = Math.ceil((new Date(rawDue) - new Date()) / 86400000);
-                if (diff < 0)       { dueLabel = 'Overdue';       dueColor = 'text-[#EF4444] font-bold'; }
-                else if (diff === 0){ dueLabel = 'Due Today';     dueColor = 'text-[#F5A623] font-bold'; }
-                else if (diff === 1){ dueLabel = 'Due Tomorrow';  dueColor = 'text-[#F5A623] font-bold'; }
-                else                { dueLabel = `Due in ${diff}d`; dueColor = 'text-[#22C55E] font-semibold'; }
+                if (diff < 0)       { dueLabel = 'Overdue';       dueColor = 'text-[#EF4444] font-black'; }
+                else if (diff === 0){ dueLabel = 'Due Today';     dueColor = 'text-[#F2A83B] font-black'; }
+                else if (diff === 1){ dueLabel = 'Due Tomorrow';  dueColor = 'text-[#F2A83B] font-black'; }
+                else                { dueLabel = `In ${diff} days`; dueColor = 'text-[#1B5E3B] font-bold'; }
               }
 
               return `
           <div
             onclick="${type === 'discover' ? '' : `window.location.href='group-detail.html?id=${group.id}'`}"
-            class="bg-white rounded-2xl p-4 shadow-sm border border-[#F0F0F0] mb-3 ${type !== 'discover' ? 'cursor-pointer active:scale-[0.98]' : ''} transition-all"
+            class="bg-white rounded-[24px] p-4 shadow-sm border border-[#F0F0F0] mb-3 ${type !== 'discover' ? 'cursor-pointer active:scale-[0.98]' : ''} transition-all hover:border-[#1B5E3B]/20"
           >
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-[#1B5E3B]/10 rounded-full flex items-center justify-center shrink-0">
-                   <svg class="w-6 h-6 text-[#1B5E3B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <div class="w-12 h-12 bg-[#1B5E3B]/5 rounded-2xl flex items-center justify-center shrink-0">
+                   <svg class="w-6 h-6 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                 </div>
                 <div>
                   <p class="text-base font-bold text-[#1A1A1A]">${group.name}</p>
-                  <p class="text-sm font-semibold text-[#F2A83B]">₦${Number(group.contribution_amount).toLocaleString()}/mo</p>
+                  <p class="text-sm font-black text-[#F2A83B]">₦${Number(group.contribution_amount).toLocaleString()}/mo</p>
                 </div>
               </div>
               ${type === "discover"
                 ? `<button onclick="event.stopPropagation();window._joinGroup('${group.id}')"
-                     class="bg-[#3A3A3A] text-white text-xs px-4 py-2 rounded-full font-bold active:scale-95 transition-transform">Join</button>`
-                : `<svg class="w-5 h-5 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>`
+                     class="bg-[#1B5E3B] text-white text-[10px] uppercase tracking-widest px-4 py-2 rounded-xl font-black active:scale-95 transition-all shadow-md shadow-green-900/10">Join</button>`
+                : `<svg class="w-5 h-5 text-[#BDBDBD]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>`
               }
             </div>
 
-            <div class="w-full h-1.5 bg-[#E0E0E0] rounded-full mb-2 overflow-hidden">
-              <div class="h-full bg-[#3A3A3A]" style="width:0%"></div>
+            <div class="w-full h-1.5 bg-[#F5F4EF] rounded-full mb-2 overflow-hidden">
+              <div class="h-full bg-[#1B5E3B]" style="width: 0%"></div>
             </div>
 
-            <div class="flex items-center justify-between text-[10px] text-[#9E9E9E]">
+            <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-tight text-[#9E9E9E]">
               <span>${cycleLabel}</span>
               ${type === 'my' ? `<span class="${dueColor}">${dueLabel}</span>` : ''}
             </div>
@@ -285,7 +197,7 @@
             })
             .join("");
         } catch (error) {
-          activeContainer.innerHTML = `<p class="text-center text-red-500 py-10 text-xs">Error: ${error.message}</p>`;
+          activeContainer.innerHTML = `<p class="text-center text-red-500 py-10 text-xs font-bold">Error: ${error.message}</p>`;
         }
       }
 
