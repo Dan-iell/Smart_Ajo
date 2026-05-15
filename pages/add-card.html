@@ -9,82 +9,86 @@
   <style>
     @keyframes fadeUp { from { opacity:0; transform:translateY(20px);} to { opacity:1; transform:translateY(0);} }
     .fade-up { animation: fadeUp 0.7s ease both; }
+    
+    .input-focus:focus-within {
+      border-color: #1B5E3B !important;
+      box-shadow: 0 0 0 1px #1B5E3B;
+    }
   </style>
 </head>
 <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto flex flex-col font-['DM_Sans']">
   <div class="flex flex-col flex-1 px-6 pt-10 pb-10 fade-up">
 
-    <!-- Back -->
-    <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] mb-8 hover:bg-gray-50 transition-colors">
-      <svg class="w-4 h-4 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] mb-8 hover:bg-gray-50 transition-colors shadow-sm">
+      <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
 
-    <h1 class="font-['Fraunces'] text-3xl font-bold text-black mb-1">Add a debit card</h1>
-    <p class="text-sm text-[#6B6B6B] mb-7 leading-relaxed">Enter your card details to link it to your account.</p>
+    <h1 class="font-['Fraunces'] text-3xl font-black text-[#1A1A1A] mb-1">Add a debit card</h1>
+    <p class="text-sm text-[#6B6B6B] mb-7 leading-relaxed font-medium">Enter your card details to link it to your account.</p>
 
-    <!-- Card preview -->
-    <div class="w-full h-44 bg-[#3A3A3A] rounded-3xl p-6 mb-7 relative overflow-hidden">
+    <div class="w-full h-44 bg-[#1B5E3B] rounded-[32px] p-7 mb-8 relative overflow-hidden shadow-xl shadow-green-900/20">
       <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-5 rounded-full -translate-y-10 translate-x-10"></div>
       <div class="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full translate-y-10 -translate-x-10"></div>
-      <p class="text-white text-xs opacity-60 mb-6">Smart Ajo Card</p>
-      <p id="cardDisplay" class="text-white text-xl font-mono tracking-widest mb-4">•••• •••• •••• ••••</p>
+      
+      <div class="flex justify-between items-start mb-6">
+        <p class="text-white text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Smart Ajo Secure</p>
+        <svg class="w-8 h-8 text-white opacity-20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+      </div>
+
+      <p id="cardDisplay" class="text-white text-xl font-mono tracking-[0.15em] mb-5">•••• •••• •••• ••••</p>
+      
       <div class="flex justify-between items-end">
         <div>
-          <p class="text-white text-xs opacity-60 mb-0.5">Expires</p>
-          <p id="expiryDisplay" class="text-white text-sm font-mono">MM/YY</p>
+          <p class="text-white text-[9px] font-black uppercase tracking-widest opacity-50 mb-0.5">Expires</p>
+          <p id="expiryDisplay" class="text-white text-sm font-bold font-mono">MM/YY</p>
         </div>
         <div class="text-right">
-          <p class="text-white text-xs opacity-60 mb-0.5">CVV</p>
-          <p class="text-white text-sm font-mono">•••</p>
+          <p class="text-white text-[9px] font-black uppercase tracking-widest opacity-50 mb-0.5">CVV</p>
+          <p class="text-white text-sm font-bold font-mono">•••</p>
         </div>
       </div>
     </div>
 
-    <!-- Form -->
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-5">
 
-      <!-- Card Number -->
       <div>
-        <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block">Card Number</label>
-        <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5">
-          <svg class="w-4 h-4 text-[#9E9E9E] shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+        <label class="text-[11px] font-black text-[#1B5E3B] uppercase tracking-widest mb-2 block ml-1">Card Number</label>
+        <div class="flex items-center gap-3 bg-white border border-[#E0E0E0] rounded-2xl px-5 py-4 input-focus transition-all shadow-sm">
+          <svg class="w-4 h-4 text-[#9E9E9E] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
           <input type="text" id="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000"
-            class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD] font-mono"
+            class="flex-1 text-sm bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD] font-bold tracking-wider"
             oninput="formatCard(this)"/>
         </div>
       </div>
 
-      <!-- Expiry + CVV -->
-      <div class="flex gap-3">
+      <div class="flex gap-4">
         <div class="flex-1">
-          <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block">Expiry Date</label>
-          <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5">
+          <label class="text-[11px] font-black text-[#1B5E3B] uppercase tracking-widest mb-2 block ml-1">Expiry Date</label>
+          <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-2xl px-5 py-4 input-focus transition-all shadow-sm">
             <input type="text" id="expiry" maxlength="5" placeholder="MM/YY"
-              class="w-full text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD] font-mono"
+              class="w-full text-sm bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD] font-bold"
               oninput="formatExpiry(this)"/>
           </div>
         </div>
         <div class="flex-1">
-          <label class="text-sm font-medium text-[#3A3A3A] mb-1.5 block">CVV</label>
-          <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5">
+          <label class="text-[11px] font-black text-[#1B5E3B] uppercase tracking-widest mb-2 block ml-1">CVV</label>
+          <div class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-2xl px-5 py-4 input-focus transition-all shadow-sm">
             <input type="password" maxlength="3" placeholder="•••"
-              class="w-full text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD] font-mono"/>
+              class="w-full text-sm bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD] font-bold"/>
           </div>
         </div>
       </div>
 
-      <!-- Scan card -->
-      <button class="flex items-center justify-center gap-2 w-full py-3.5 border border-[#E0E0E0] bg-white rounded-xl text-sm font-medium text-[#3A3A3A] hover:bg-gray-50 transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M17 14v3h3M14 17h3"/></svg>
+      <button class="flex items-center justify-center gap-2 w-full py-4 border-2 border-[#E0E0E0] bg-transparent rounded-2xl text-[11px] font-black uppercase tracking-widest text-[#6B6B6B] hover:bg-white transition-all active:scale-[0.98]">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M17 14v3h3M14 17h3"/></svg>
         Scan Card
       </button>
 
-      <!-- Error message -->
-      <p id="cardError" class="hidden text-xs text-red-500 text-center -mt-1"></p>
+      <p id="cardError" class="hidden text-xs font-bold text-red-500 text-center -mt-1 uppercase tracking-tighter"></p>
 
       <button id="saveCardBtn" onclick="window._saveCard()"
-        class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:bg-black active:scale-95">
-        Save Card
+        class="w-full py-5 bg-[#1B5E3B] text-white rounded-full text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 hover:bg-[#144d30] active:scale-95 shadow-lg shadow-green-900/20 mt-2">
+        Save Card Details
       </button>
     </div>
   </div>
@@ -116,7 +120,6 @@
       const errorEl   = document.getElementById('cardError');
       const btn       = document.getElementById('saveCardBtn');
 
-      // Basic validation
       if (cardNumber.length !== 16) { showError('Enter a valid 16-digit card number.'); return; }
       if (!expiry.includes('/') || expiry.length !== 5) { showError('Enter a valid expiry date (MM/YY).'); return; }
       if (cvv.length < 3) { showError('Enter a valid CVV.'); return; }
@@ -124,7 +127,7 @@
       const [expMonth, expYear] = expiry.split('/');
 
       btn.disabled = true;
-      btn.textContent = 'Saving…';
+      btn.textContent = 'Linking Card…';
       btn.classList.add('opacity-60');
       errorEl.classList.add('hidden');
 
@@ -135,12 +138,11 @@
           expiryMonth: expMonth,
           expiryYear: `20${expYear}`,
         });
-        // Success — go back to wallet
         window.location.href = 'wallet.html';
       } catch (e) {
-        showError(e.message || 'Failed to save card. Please try again.');
+        showError(e.message || 'Failed to link card.');
         btn.disabled = false;
-        btn.textContent = 'Save Card';
+        btn.textContent = 'Save Card Details';
         btn.classList.remove('opacity-60');
       }
     };
@@ -148,7 +150,7 @@
     function showError(msg) {
       const el = document.getElementById('cardError');
       el.textContent = msg;
-      el.classList.remove('hidden');
+      el.classList.remove("hidden");
     }
   </script>
 </body>
