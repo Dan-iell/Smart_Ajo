@@ -16,7 +16,8 @@
 
   <div class="flex flex-col items-center text-center w-full gap-5">
 
-    <div class="scale-in w-28 h-28 bg-[#3A3A3A] rounded-full flex items-center justify-center mb-2">
+    <!-- Success Checkmark with Deep Green -->
+    <div class="scale-in w-28 h-28 bg-[#1B5E3B] rounded-full flex items-center justify-center mb-2 shadow-xl shadow-green-900/20">
       <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
       </svg>
@@ -25,17 +26,18 @@
     <div class="fade-up w-full">
       <h1 class="font-['Fraunces'] text-3xl font-bold text-black mb-2">Group Created!</h1>
       <p class="text-sm text-[#6B6B6B] leading-relaxed mb-6 max-w-[280px] mx-auto">
-        <span id="displayGroupName" class="font-bold text-[#1A1A1A]">Your group</span> is ready. Invite members to start the smart savings cycle.
+        <span id="displayGroupName" class="font-bold text-[#1B5E3B]">Your group</span> is ready. Invite members to start the smart savings cycle.
       </p>
 
+      <!-- Invite Link Section with Gold Accents -->
       <div class="mb-6">
-        <label class="text-xs font-medium text-[#9E9E9E] mb-2 block text-left">Invite Link</label>
+        <label class="text-xs font-bold text-[#1B5E3B] mb-2 block text-left">Invite Link</label>
         <div class="flex gap-2">
           <div class="flex-1 bg-white border border-[#E0E0E0] rounded-xl px-4 py-3 text-left overflow-hidden">
-            <p id="inviteLinkText" class="text-xs text-[#6B6B6B] truncate">https://smartajo.app/join/GENERATING...</p>
+            <p id="inviteLinkText" class="text-xs text-[#6B6B6B] truncate font-medium">https://smartajo.app/join/GENERATING...</p>
           </div>
           <button onclick="copyLink()" id="copyBtn"
-            class="w-12 h-12 bg-[#3A3A3A] rounded-xl flex items-center justify-center hover:bg-black transition-colors active:scale-95 shrink-0">
+            class="w-12 h-12 bg-[#F2A83B] rounded-xl flex items-center justify-center hover:bg-[#d99635] transition-colors active:scale-95 shrink-0 shadow-lg shadow-orange-900/20">
             <svg id="copyIcon" class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
               <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
             </svg>
@@ -43,13 +45,14 @@
         </div>
       </div>
 
+      <!-- Action Buttons -->
       <div class="flex flex-col gap-3">
         <button onclick="window.location.href='dashboard.html'"
-          class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide transition-all duration-200 hover:bg-black active:scale-95">
+          class="w-full py-4 bg-[#1B5E3B] text-white rounded-full text-sm font-bold tracking-wide transition-all duration-200 hover:bg-[#14452b] active:scale-95 shadow-lg shadow-green-900/20">
           Go to Dashboard
         </button>
         <button onclick="window.location.href='groups.html'"
-          class="w-full py-4 bg-white border border-[#E0E0E0] text-[#3A3A3A] rounded-full text-sm font-semibold transition-all duration-200 hover:bg-gray-50 active:scale-95">
+          class="w-full py-4 bg-white border-2 border-[#1B5E3B]/10 text-[#1B5E3B] rounded-full text-sm font-bold transition-all duration-200 hover:bg-[#1B5E3B]/5 active:scale-95">
           Discover Other Groups
         </button>
       </div>

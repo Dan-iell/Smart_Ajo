@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo – Payment Status</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes scaleIn { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+      @keyframes checkDraw { to { stroke-dashoffset: 0; } }
+      .fade-up { animation: fadeUp 0.5s ease both; }
+      .scale-in { animation: scaleIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+      .check-draw { stroke-dasharray: 50; stroke-dashoffset: 50; animation: checkDraw 0.4s 0.3s ease forwards; }
+      body { font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; }
+    </style>
+  </head>
+  <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto flex flex-col items-center justify-center px-5">
+
+    <!-- Success State -->
+    <div id="successState" class="hidden flex flex-col items-center text-center">
+      <div class="scale-in w-24 h-24 bg-[#2A2A2A] rounded-full flex items-center justify-center mb-6">
+        <svg class="w-10 h-10" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+          <path class="check-draw" d="M20 6L9 17l-5-5"/>
+        </svg>
+      </div>
+      <h1 class="fade-up font-['Fraunces'] text-3xl font-bold text-[#1A1A1A] mb-2">Payment Done!</h1>
+      <p class="fade-up text-sm text-[#9E9E9E] mb-1">Your contribution has been recorded.</p>
+      <p id="successAmount" class="fade-up text-2xl font-bold text-[#2A2A2A] my-4">₦0</p>
+      <div id="successMeta" class="fade-up w-full bg-white rounded-2xl border border-[#F5F5F5] mb-8">
+        <div class="flex justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
+          <span class="text-sm text-[#9E9E9E]">Group</span>
+          <span id="successGroup" class="text-sm font-semibold text-[#1A1A1A]">—</span>
+        </div>
+        <div class="flex justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
+          <span class="text-sm text-[#9E9E9E]">Round</span>
+          <span id="successRound" class="text-sm font-semibold text-[#1A1A1A]">—</span>
+        </div>
+        <div class="flex justify-between px-4 py-3.5">
+          <span class="text-sm text-[#9E9E9E]">Reference</span>
+          <span id="successRef" class="text-sm font-semibold text-[#1A1A1A] font-mono text-xs">—</span>
+        </div>
+      </div>
+      <button onclick="window.location.href='dashboard.html'" class="w-full bg-[#2A2A2A] text-white font-bold py-4 rounded-2xl text-sm active:scale-[0.98] transition-transform mb-3">
+        Back to Home
+      </button>
+      <button id="viewGroupBtn" class="w-full bg-white border border-[#E8E8E4] text-[#2A2A2A] font-semibold py-4 rounded-2xl text-sm active:scale-[0.98] transition-transform">
+        View Group
+      </button>
+    </div>
+
+    <!-- Failed State -->
+    <div id="failedState" class="hidden flex flex-col items-center text-center">
+      <div class="scale-in w-24 h-24 bg-[#FFF1F0] rounded-full flex items-center justify-center mb-6 border-2 border-[#FECACA]">
+        <svg class="w-10 h-10 text-[#EF4444]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </div>
+      <h1 class="fade-up font-['Fraunces'] text-3xl font-bold text-[#1A1A1A] mb-2">Payment Failed</h1>
+      <p class="fade-up text-sm text-[#9E9E9E] mb-8">Your payment was not completed. No charges were made.</p>
+      <button id="retryBtn" class="w-full bg-[#2A2A2A] text-white font-bold py-4 rounded-2xl text-sm active:scale-[0.98] transition-transform mb-3">
+        Try Again
+      </button>
+      <button onclick="window.location.href='dashboard.html'" class="w-full bg-white border border-[#E8E8E4] text-[#2A2A2A] font-semibold py-4 rounded-2xl text-sm active:scale-[0.98] transition-transform">
+        Back to Home
+      </button>
+    </div>
+
+    <!-- Loading State (shown first) -->
+    <div id="loadingState" class="flex flex-col items-center text-center">
+      <div class="w-16 h-16 border-2 border-[#E8E8E4] border-t-[#2A2A2A] rounded-full animate-spin mb-6"></div>
+      <p class="text-sm text-[#9E9E9E]">Verifying your payment...</p>
+    </div>
+
+    <script type="module">
+      import { requireAuth } from "../js/api.js";
+
+      if (!requireAuth()) throw new Error("Not authenticated");
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const status = urlParams.get("status");           // Squad passes this
+      const transactionRef = urlParams.get("transaction_ref");
+      const groupId = urlParams.get("group_id");        // we pass this ourselves
+
+      function showSuccess(ref, groupName, round, amount) {
+        document.getElementById("loadingState").classList.add("hidden");
+        const el = document.getElementById("successState");
+        el.classList.remove("hidden");
+        document.getElementById("successAmount").textContent = `₦${Number(amount).toLocaleString()}`;
+        document.getElementById("successGroup").textContent = groupName || "—";
+        document.getElementById("successRound").textContent = round ? `Round ${round}` : "—";
+        document.getElementById("successRef").textContent = ref || "—";
+        if (groupId) {
+          document.getElementById("viewGroupBtn").onclick = () => {
+            window.location.href = `group-detail.html?id=${groupId}`;
+          };
+        }
+      }
+
+      function showFailed() {
+        document.getElementById("loadingState").classList.add("hidden");
+        document.getElementById("failedState").classList.remove("hidden");
+        if (groupId) {
+          document.getElementById("retryBtn").onclick = () => {
+            window.location.href = `contribute.html?id=${groupId}`;
+          };
+        } else {
+          document.getElementById("retryBtn").onclick = () => {
+            window.location.href = "groups.html";
+          };
+        }
+      }
+
+      async function verifyAndShow() {
+        // Squad redirects with ?status=success or ?status=failed
+        // Our backend webhook already processed it — we just show the result
+
+        if (!status || !transactionRef) {
+          showFailed();
+          return;
+        }
+
+        if (status === "success") {
+          // Parse ref: AJO-{userId}-{groupId}-{round}
+          const parts = transactionRef.split("-");
+          const round = parts[parts.length - 1];
+          const amount = localStorage.getItem("ajo_last_contribution_amount") || "0";
+          const groupName = localStorage.getItem("ajo_last_group_name") || "—";
+          showSuccess(transactionRef, groupName, round, amount);
+          // Clean up
+          localStorage.removeItem("ajo_last_contribution_amount");
+          localStorage.removeItem("ajo_last_group_name");
+        } else {
+          showFailed();
+        }
+      }
+
+      verifyAndShow();
+    </script>
+  </body>
+</html>

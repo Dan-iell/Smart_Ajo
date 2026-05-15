@@ -1,176 +1,363 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Ajo – Member Profile</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    .fade-up{animation:fadeUp 0.5s ease both;}
-    .fade-up-2{animation:fadeUp 0.5s ease 0.1s both;}
-    body { 
-        padding-bottom:90px; 
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-    .font-brand { font-family: 'Fraunces', serif; }
-  </style>
-</head>
-<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto">
-
-  <div id="loadingState" class="fixed inset-0 bg-[#F5F4EF] z-[60] flex items-center justify-center">
-    <p class="text-sm font-medium text-[#9E9E9E] animate-pulse">Loading profile...</p>
-  </div>
-
-  <div class="px-5 pt-10">
-    <!-- Header -->
-    <div class="flex items-center gap-3 mb-7 fade-up">
-      <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0]">
-        <svg class="w-4 h-4 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <h1 class="font-brand text-xl font-bold text-[#1A1A1A]">Member Profile</h1>
-    </div>
-
-    <!-- Profile Card -->
-    <div class="bg-white rounded-3xl p-6 mb-5 text-center fade-up">
-      <div id="memberInitials" class="w-20 h-20 bg-[#B0B5AC] rounded-full mx-auto mb-3 flex items-center justify-center font-brand text-white text-2xl font-bold">
-        --
-      </div>
-      <h2 id="memberName" class="font-brand text-xl font-bold text-[#1A1A1A] mb-1">Loading...</h2>
-      <span id="riskBadge" class="text-xs font-semibold px-3 py-1 rounded-full bg-[#F5F4EF] text-[#9E9E9E]">Calculated Risk</span>
-
-      <!-- Stats row -->
-      <div class="flex items-center justify-around mt-5 pt-5 border-t border-[#F5F5F5]">
-        <div class="text-center">
-          <p id="statCycles" class="font-brand text-2xl font-bold text-[#1A1A1A]">0</p>
-          <p class="text-[10px] text-[#9E9E9E] mt-0.5">Cycles</p>
-        </div>
-        <div class="w-px h-8 bg-[#E0E0E0]"></div>
-        <div class="text-center">
-          <p id="statOnTime" class="font-brand text-2xl font-bold text-[#22C55E]">0</p>
-          <p class="text-[10px] text-[#9E9E9E] mt-0.5">On Time</p>
-        </div>
-        <div class="w-px h-8 bg-[#E0E0E0]"></div>
-        <div class="text-center">
-          <p id="statMissed" class="font-brand text-2xl font-bold text-[#EF4444]">0</p>
-          <p class="text-[10px] text-[#9E9E9E] mt-0.5">Missed</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Payment History -->
-    <div class="bg-white rounded-3xl p-5 mb-5 fade-up-2">
-      <p class="text-sm font-semibold text-[#1A1A1A] mb-4">Payment History</p>
-      <div id="historyList" class="flex flex-col gap-3 text-center py-4 text-xs text-[#9E9E9E]">
-        No history available.
-      </div>
-    </div>
-
-    <!-- AI Risk note -->
-    <div id="riskNoteContainer" class="bg-[#FFF8E7] border border-[#F5E6B0] rounded-2xl p-4 mb-4 fade-up-2 hidden">
-      <p class="text-xs font-semibold text-[#7A5500] mb-1">🤖 AI Risk Note</p>
-      <p id="riskNoteText" class="text-xs text-[#9A7020] leading-relaxed">Analyzing performance...</p>
-    </div>
-  </div>
-
-  <!-- Bottom Nav -->
-  <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
-    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px]">Home</span></button>
-    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#3A3A3A]"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span class="text-[10px] font-semibold">Groups</span></button>
-    <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center -mt-6 shadow-lg"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-    <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px]">Alerts</span></button>
-    <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg><span class="text-[10px] font-medium">Profile</span></button>
-  </div>
-
-  <script type="module">
-    import { getMemberProfile } from "../js/api.js";
-
-    async function initProfile() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const memberId = urlParams.get("id");
-      const groupId = urlParams.get("groupId");
-      
-      if (!memberId || !groupId) {
-        document.getElementById("loadingState").innerHTML = 
-          `<p class="text-xs text-red-500">Required parameters missing.</p>`;
-        return;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo – Member Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
+      .fade-up {
+        animation: fadeUp 0.5s ease both;
+      }
+      .fade-up-2 {
+        animation: fadeUp 0.5s ease 0.1s both;
+      }
+      body {
+        padding-bottom: 90px;
+        font-family: "DM Sans", sans-serif;
+      }
+      .font-brand {
+        font-family: "Fraunces", serif;
+      }
+    </style>
+  </head>
+  <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto">
+    <div
+      id="loadingState"
+      class="fixed inset-0 bg-[#F5F4EF] z-[60] flex items-center justify-center"
+    >
+      <div class="text-center">
+        <div
+          class="w-8 h-8 border-4 border-[#1B5E3B] border-t-transparent rounded-full animate-spin mx-auto mb-3"
+        ></div>
+        <p class="text-xs font-bold text-[#1B5E3B] uppercase tracking-widest">
+          Fetching Profile
+        </p>
+      </div>
+    </div>
 
-      try {
-        const data = await getMemberProfile(groupId, memberId);
-        
-        // Handle names that might be nested in a user object or direct
-        const fullName = data.full_name || (data.user && data.user.full_name) || "Unknown Member";
-        document.getElementById("memberName").textContent = fullName;
-        
-        // Initials Logic
-        document.getElementById("memberInitials").textContent = fullName
-          .split(' ').filter(n => n).map(n => n[0]).join('').toUpperCase().substring(0, 2);
-        
-        // Stats Mapping (Using optional chaining for safety)
-        document.getElementById("statCycles").textContent = data.stats?.total_cycles ?? 0;
-        document.getElementById("statOnTime").textContent = data.stats?.on_time ?? 0;
-        document.getElementById("statMissed").textContent = data.stats?.missed ?? 0;
+    <div class="px-5 pt-10">
+      <!-- Header -->
+      <div class="flex items-center gap-3 mb-7 fade-up">
+        <button
+          onclick="history.back()"
+          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] shadow-sm active:scale-90 transition-transform"
+        >
+          <svg
+            class="w-4 h-4 text-[#1B5E3B]"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <h1 class="font-brand text-xl font-bold text-[#1A1A1A]">
+          Member Profile
+        </h1>
+      </div>
 
-        // Risk Badge Logic
-        const riskBadge = document.getElementById("riskBadge");
-        const risk = (data.risk_level || "low").toLowerCase();
-        riskBadge.textContent = risk.charAt(0).toUpperCase() + risk.slice(1);
-        
-        if(risk === 'low') {
-            riskBadge.className = "text-xs bg-[#F0FDF4] text-[#16A34A] font-semibold px-3 py-1 rounded-full capitalize";
-        } else if (risk === 'medium') {
-            riskBadge.className = "text-xs bg-[#FFF8E7] text-[#F5A623] font-semibold px-3 py-1 rounded-full capitalize";
-        } else {
-            riskBadge.className = "text-xs bg-[#FFF1F0] text-[#EF4444] font-semibold px-3 py-1 rounded-full capitalize";
+      <!-- Profile Card -->
+      <div
+        class="bg-white rounded-3xl p-7 mb-5 text-center fade-up shadow-sm border border-white"
+      >
+        <div
+          id="memberInitials"
+          class="w-20 h-20 bg-[#1B5E3B] rounded-full mx-auto mb-4 flex items-center justify-center font-brand text-white text-2xl font-bold shadow-lg shadow-green-900/20"
+        >
+          --
+        </div>
+        <h2
+          id="memberName"
+          class="font-brand text-xl font-bold text-[#1A1A1A] mb-1"
+        >
+          Loading...
+        </h2>
+        <span
+          id="riskBadge"
+          class="text-[10px] font-black px-4 py-1.5 rounded-full bg-[#F5F4EF] text-[#9E9E9E] uppercase tracking-tighter"
+          >Calculating Risk...</span
+        >
+
+        <!-- Stats row -->
+        <div
+          class="flex items-center justify-around mt-7 pt-6 border-t border-[#F5F5F5]"
+        >
+          <div class="text-center">
+            <p
+              id="statCycles"
+              class="font-brand text-2xl font-bold text-[#1A1A1A]"
+            >
+              0
+            </p>
+            <p
+              class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide"
+            >
+              Cycles
+            </p>
+          </div>
+          <div class="w-px h-8 bg-[#E0E0E0]"></div>
+          <div class="text-center">
+            <p
+              id="statOnTime"
+              class="font-brand text-2xl font-bold text-[#1B5E3B]"
+            >
+              0
+            </p>
+            <p
+              class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide"
+            >
+              On Time
+            </p>
+          </div>
+          <div class="w-px h-8 bg-[#E0E0E0]"></div>
+          <div class="text-center">
+            <p
+              id="statMissed"
+              class="font-brand text-2xl font-bold text-[#EF4444]"
+            >
+              0
+            </p>
+            <p
+              class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide"
+            >
+              Missed
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Risk note (Themed) -->
+      <div
+        id="riskNoteContainer"
+        class="bg-[#1B5E3B]/5 border border-[#1B5E3B]/10 rounded-2xl p-4 mb-5 fade-up-2 hidden"
+      >
+        <p
+          class="text-xs font-bold text-[#1B5E3B] mb-2 flex items-center gap-2"
+        >
+          <span class="text-base">🤖</span> AI TRUST ASSESSMENT
+        </p>
+        <p
+          id="riskNoteText"
+          class="text-xs text-[#6B6B6B] leading-relaxed font-medium"
+        >
+          Analyzing performance history...
+        </p>
+      </div>
+
+      <!-- Payment History -->
+      <div
+        class="bg-white rounded-3xl p-6 mb-5 fade-up-2 shadow-sm border border-white"
+      >
+        <p
+          class="text-sm font-bold text-[#1A1A1A] mb-5 flex items-center gap-2"
+        >
+          <span class="w-1.5 h-4 bg-[#F2A83B] rounded-full"></span>
+          Recent History
+        </p>
+        <div
+          id="historyList"
+          class="flex flex-col gap-4 text-center py-4 text-xs text-[#9E9E9E] font-medium"
+        >
+          No contribution history available.
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div
+      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50"
+    >
+      <button
+        onclick="window.location.href = 'dashboard.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M3 12L12 3l9 9" />
+          <path d="M9 21V12h6v9" /></svg
+        ><span class="text-[10px]">Home</span>
+      </button>
+      <button
+        onclick="window.location.href = 'groups.html'"
+        class="flex flex-col items-center gap-1 text-[#1B5E3B]"
+      >
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
+          /></svg
+        ><span class="text-[10px] font-bold">Groups</span>
+      </button>
+      <button
+        onclick="window.location.href = 'make-payment.html'"
+        class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 active:scale-95 transition-all"
+      >
+        <svg
+          class="w-6 h-6 text-white"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+      <button
+        onclick="window.location.href = 'alerts.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg
+        ><span class="text-[10px]">Alerts</span>
+      </button>
+      <button
+        onclick="window.location.href = 'profile.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="7" r="4" />
+          <path d="M5.5 20a7 7 0 0 1 13 0" /></svg
+        ><span class="text-[10px]">Profile</span>
+      </button>
+    </div>
+
+    <script type="module">
+      import { getMemberProfile } from "../js/api.js";
+
+      async function initProfile() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const memberId = urlParams.get("id");
+        const groupId = urlParams.get("groupId");
+
+        if (!memberId || !groupId) {
+          document.getElementById("loadingState").innerHTML =
+            `<p class="text-xs font-bold text-red-500">Parameters Missing</p>`;
+          return;
         }
 
-        // AI Note
-        if (data.ai_note) {
-            document.getElementById("riskNoteContainer").classList.remove("hidden");
+        try {
+          const data = await getMemberProfile(groupId, memberId);
+          const fullName =
+            data.full_name ||
+            (data.user && data.user.full_name) ||
+            "Unknown Member";
+          document.getElementById("memberName").textContent = fullName;
+
+          document.getElementById("memberInitials").textContent = fullName
+            .split(" ")
+            .filter((n) => n)
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .substring(0, 2);
+
+          document.getElementById("statCycles").textContent =
+            data.stats?.total_cycles ?? 0;
+          document.getElementById("statOnTime").textContent =
+            data.stats?.on_time ?? 0;
+          document.getElementById("statMissed").textContent =
+            data.stats?.missed ?? 0;
+
+          const riskBadge = document.getElementById("riskBadge");
+          const risk = (data.risk_level || "low").toLowerCase();
+          riskBadge.textContent = `${risk} risk`;
+
+          if (risk === "low") {
+            riskBadge.className =
+              "text-[10px] bg-[#1B5E3B]/10 text-[#1B5E3B] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-sm";
+          } else if (risk === "medium") {
+            riskBadge.className =
+              "text-[10px] bg-[#F2A83B]/10 text-[#F2A83B] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-sm";
+          } else {
+            riskBadge.className =
+              "text-[10px] bg-[#EF4444]/10 text-[#EF4444] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-sm";
+          }
+
+          if (data.ai_note) {
+            document
+              .getElementById("riskNoteContainer")
+              .classList.remove("hidden");
             document.getElementById("riskNoteText").textContent = data.ai_note;
-        }
+          }
 
-        // History
-        if (data.history && data.history.length > 0) {
-            document.getElementById("historyList").innerHTML = data.history.map(h => {
-                let iconBg = '#F5F4EF', iconColor = '#9E9E9E', svgPath = 'M12 8v4l3 3', statusColor = '#9E9E9E';
+          if (data.history && data.history.length > 0) {
+            document.getElementById("historyList").innerHTML = data.history
+              .map((h) => {
+                let iconBg = "#F5F4EF",
+                  iconColor = "#9E9E9E",
+                  svgPath = "M12 8v4l3 3",
+                  statusColor = "#9E9E9E";
                 const status = h.status.toLowerCase();
-                
-                if (status === 'paid' || status === 'on-time') {
-                    iconBg = '#F0FDF4'; iconColor = '#22C55E'; statusColor = '#22C55E';
-                    svgPath = 'M5 13l4 4L19 7';
-                } else if (status === 'missed' || status === 'overdue') {
-                    iconBg = '#FFF1F0'; iconColor = '#EF4444'; statusColor = '#EF4444';
-                    svgPath = 'M18 6L6 18M6 6l12 12';
+
+                if (status === "paid" || status === "on-time") {
+                  iconBg = "#1B5E3B/10";
+                  iconColor = "#1B5E3B";
+                  statusColor = "#1B5E3B";
+                  svgPath = "M5 13l4 4L19 7";
+                } else if (status === "missed" || status === "overdue") {
+                  iconBg = "#FFF1F0";
+                  iconColor = "#EF4444";
+                  statusColor = "#EF4444";
+                  svgPath = "M18 6L6 18M6 6l12 12";
                 }
 
                 return `
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style="background-color: ${iconBg}">
-                            <svg class="w-4 h-4" style="color: ${iconColor}" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="${svgPath}"/></svg>
+                    <div class="flex items-center gap-4 py-1">
+                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0" style="background-color: ${iconBg.includes("/") ? "#1B5E3B15" : iconBg}">
+                            <svg class="w-4 h-4" style="color: ${iconColor}" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="${svgPath}"/></svg>
                         </div>
                         <div class="flex-1 text-left">
-                            <p class="text-sm font-medium text-[#1A1A1A]">Cycle ${h.cycle_number || '#'}</p>
-                            <p class="text-[10px] text-[#9E9E9E]">${h.date || 'No date'}</p>
+                            <p class="text-sm font-bold text-[#1A1A1A]">Cycle ${h.cycle_number || "#"}</p>
+                            <p class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-tight">${h.date || "Pending"}</p>
                         </div>
-                        <span class="text-xs font-semibold capitalize" style="color: ${statusColor}">${h.status}</span>
+                        <span class="text-[10px] font-black uppercase tracking-tighter" style="color: ${statusColor}">${h.status}</span>
                     </div>
                 `;
-            }).join('');
-        } else {
-            document.getElementById("historyList").innerHTML = `<p class="py-4">No recent payments recorded.</p>`;
+              })
+              .join("");
+          }
+
+          document.getElementById("loadingState").classList.add("hidden");
+        } catch (error) {
+          document.getElementById("loadingState").innerHTML =
+            `<div class="text-center px-5"><p class="text-sm font-bold text-red-500 mb-4">Connection Error</p><button onclick="location.reload()" class="bg-[#1B5E3B] text-white px-6 py-2 rounded-full text-xs font-bold">Retry</button></div>`;
         }
-
-        document.getElementById("loadingState").classList.add("hidden");
-
-      } catch (error) {
-        console.error("Profile Load Error:", error);
-        document.getElementById("loadingState").innerHTML = `<div class="text-center px-5"><p class="text-sm text-red-500 mb-2">Failed to load profile</p><button onclick="location.reload()" class="text-xs font-bold text-[#3A3A3A] underline">Try Again</button></div>`;
       }
-    }
 
-    initProfile();
-  </script>
-</body>
+      initProfile();
+    </script>
+  </body>
 </html>

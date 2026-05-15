@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Ajo – Create Group Step 2</title>
+    <title>Smart Ajo – Contribution Setup</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
@@ -26,10 +26,12 @@
       body {
         padding-bottom: 90px;
       }
-
-      /* Custom smooth transition for the pill buttons */
       .freq-btn {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .input-focus:focus-within {
+        border-color: #1B5E3B;
+        box-shadow: 0 0 0 1px #1B5E3B;
       }
     </style>
   </head>
@@ -37,16 +39,17 @@
     class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
   >
     <div class="px-5 pt-10 fade-up">
+      <!-- Header -->
       <div class="flex items-center gap-3 mb-6">
         <button
           onclick="history.back()"
-          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] active:scale-90 transition-transform"
+          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] active:scale-90 transition-transform shadow-sm"
         >
           <svg
-            class="w-4 h-4 text-[#3A3A3A]"
+            class="w-4 h-4 text-[#1B5E3B]"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             viewBox="0 0 24 24"
           >
             <path d="M15 18l-6-6 6-6" />
@@ -57,27 +60,28 @@
         </h1>
       </div>
 
+      <!-- Stepper (Progressing) -->
       <div class="flex items-center gap-2 mb-8 px-2">
         <div
-          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center shadow-sm"
+          class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm"
         >
           <svg
             class="w-4 h-4 text-white"
             fill="none"
             stroke="currentColor"
-            stroke-width="2.5"
+            stroke-width="3"
             viewBox="0 0 24 24"
           >
             <path d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <div class="flex-1 h-0.5 bg-[#3A3A3A]"></div>
+        <div class="flex-1 h-1 bg-[#1B5E3B] rounded-full"></div>
         <div
-          class="w-8 h-8 bg-[#3A3A3A] rounded-full flex items-center justify-center shadow-sm"
+          class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm"
         >
           <span class="text-white text-xs font-bold">2</span>
         </div>
-        <div class="flex-1 h-0.5 bg-[#E0E0E0]"></div>
+        <div class="flex-1 h-1 bg-[#E0E0E0] rounded-full"></div>
         <div
           class="w-8 h-8 bg-[#E0E0E0] rounded-full flex items-center justify-center"
         >
@@ -89,34 +93,39 @@
         Contribution Setup
       </h2>
       <p class="text-sm text-[#6B6B6B] mb-7">
-        Set the savings amount and frequency.
+        Define the financial rhythm of your group.
       </p>
 
       <p
         id="setupError"
-        class="text-xs text-red-500 mb-4 hidden bg-red-50 p-3 rounded-xl border border-red-100 text-center"
-      ></p>
+        class="text-xs font-bold text-red-600 mb-4 hidden bg-red-50 p-4 rounded-xl border border-red-100 text-center flex items-center justify-center gap-2"
+      >
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+        All fields are required.
+      </p>
 
       <div class="flex flex-col gap-6">
+        <!-- Amount Input -->
         <div>
-          <label class="text-sm font-medium text-[#3A3A3A] mb-2 block"
+          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
             >Contribution Amount</label
           >
           <div
-            class="flex items-center gap-2 bg-white border border-[#E0E0E0] rounded-2xl px-4 py-4 focus-within:border-[#3A3A3A] transition-colors shadow-sm"
+            class="flex items-center gap-3 bg-white border border-[#E0E0E0] rounded-2xl px-5 py-4 input-focus transition-all shadow-sm"
           >
-            <span class="text-sm font-bold text-[#3A3A3A]">₦</span>
+            <span class="text-base font-black text-[#1B5E3B]">₦</span>
             <input
               type="number"
               id="amount"
-              placeholder="25000"
-              class="flex-1 text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD] font-medium"
+              placeholder="e.g. 50,000"
+              class="flex-1 text-sm bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD] font-bold"
             />
           </div>
         </div>
 
+        <!-- Frequency Toggle -->
         <div>
-          <label class="text-sm font-medium text-[#3A3A3A] mb-2 block"
+          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
             >Payment Frequency</label
           >
           <div
@@ -125,66 +134,73 @@
             <button
               id="freq-daily"
               onclick="setFreq('daily')"
-              class="freq-btn py-3.5 rounded-full text-[13px] font-medium text-[#9E9E9E]"
+              class="freq-btn py-3 rounded-full text-[12px] font-bold text-[#9E9E9E]"
             >
               Daily
             </button>
             <button
               id="freq-weekly"
               onclick="setFreq('weekly')"
-              class="freq-btn py-3.5 rounded-full text-[13px] font-medium text-[#9E9E9E]"
+              class="freq-btn py-3 rounded-full text-[12px] font-bold text-[#9E9E9E]"
             >
               Weekly
             </button>
             <button
               id="freq-biweekly"
               onclick="setFreq('biweekly')"
-              class="freq-btn py-3.5 rounded-full text-[13px] font-semibold bg-[#3A3A3A] text-white shadow-md"
+              class="freq-btn py-3 rounded-full text-[12px] font-bold bg-[#1B5E3B] text-white shadow-md"
             >
               Bi-weekly
             </button>
             <button
               id="freq-monthly"
               onclick="setFreq('monthly')"
-              class="freq-btn py-3.5 rounded-full text-[13px] font-medium text-[#9E9E9E]"
+              class="freq-btn py-3 rounded-full text-[12px] font-bold text-[#9E9E9E]"
             >
               Monthly
             </button>
           </div>
         </div>
 
+        <!-- Max Members Input -->
         <div>
-          <label class="text-sm font-medium text-[#3A3A3A] mb-2 block"
+          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
             >Maximum Members</label
           >
           <div
-            class="bg-white border border-[#E0E0E0] rounded-2xl px-4 py-4 focus-within:border-[#3A3A3A] transition-colors shadow-sm"
+            class="bg-white border border-[#E0E0E0] rounded-2xl px-5 py-4 input-focus transition-all shadow-sm"
           >
             <input
               type="number"
               id="maxMembers"
-              placeholder="e.g. 12"
-              class="w-full text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD] font-medium"
+              placeholder="Total number of participants"
+              class="w-full text-sm bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD] font-bold"
             />
           </div>
         </div>
       </div>
 
+      <!-- Action Button -->
       <button
         id="step2Btn"
-        class="w-full py-5 bg-[#3A3A3A] text-white rounded-full text-base font-bold tracking-wide mt-10 transition-all duration-300 hover:bg-black active:scale-[0.98] shadow-lg flex items-center justify-center gap-2"
+        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-black tracking-wide mt-10 transition-all duration-300 hover:brightness-105 active:scale-[0.98] shadow-lg shadow-orange-900/20 flex items-center justify-center gap-3"
       >
-        Continue
+        Review Group
         <svg
           class="w-5 h-5"
           fill="none"
           stroke="currentColor"
-          stroke-width="2.5"
+          stroke-width="3"
           viewBox="0 0 24 24"
         >
           <path d="M9 18l6-6-6-6" />
         </svg>
       </button>
+    </div>
+
+    <!-- Decorative Background Shape -->
+    <div class="fixed -bottom-10 -left-10 -z-10 opacity-5">
+        <svg width="250" height="250" viewBox="0 0 200 200" fill="none"><circle cx="50" cy="150" r="120" fill="#F2A83B"/></svg>
     </div>
 
     <script>
@@ -195,11 +211,11 @@
         const buttons = document.querySelectorAll('button[id^="freq-"]');
         buttons.forEach((btn) => {
           if (btn.id === `freq-${val}`) {
-            btn.classList.add("bg-[#3A3A3A]", "text-white", "font-semibold", "shadow-md");
-            btn.classList.remove("text-[#9E9E9E]", "font-medium");
+            btn.classList.add("bg-[#1B5E3B]", "text-white", "shadow-md");
+            btn.classList.remove("text-[#9E9E9E]");
           } else {
-            btn.classList.remove("bg-[#3A3A3A]", "text-white", "font-semibold", "shadow-md");
-            btn.classList.add("text-[#9E9E9E]", "font-medium");
+            btn.classList.remove("bg-[#1B5E3B]", "text-white", "shadow-md");
+            btn.classList.add("text-[#9E9E9E]");
           }
         });
       }
@@ -210,12 +226,12 @@
         const errorEl = document.getElementById("setupError");
 
         if (!amount || !maxMembers) {
-          errorEl.textContent = "Please fill in all contribution details.";
           errorEl.classList.remove("hidden");
           return;
         }
 
-        // Save specifically as Step 2 data
+        errorEl.classList.add("hidden");
+
         const step2Data = {
           contribution_amount: parseFloat(amount),
           frequency: selectedFrequency,
