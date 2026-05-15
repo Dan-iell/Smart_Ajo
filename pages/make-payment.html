@@ -11,100 +11,100 @@
     .fade-up-2 { animation: fadeUp 0.5s ease 0.1s both; }
     .fade-up-3 { animation: fadeUp 0.5s ease 0.2s both; }
     body { padding-bottom: 90px; }
+
+    /* Themed select arrow color */
+    #groupSelector {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right center;
+      background-size: 1em;
+    }
   </style>
 </head>
 <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
 
   <div class="px-5 pt-10">
 
-    <!-- Header -->
     <div class="flex items-center gap-3 mb-7 fade-up">
-      <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] hover:bg-gray-50 transition-colors">
-        <svg class="w-4 h-4 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] hover:bg-gray-50 transition-all active:scale-95 shadow-sm">
+        <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
       <h1 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A]">Make Payment</h1>
     </div>
 
-    <!-- Amount Card -->
-    <div class="bg-[#2A2A2A] rounded-3xl px-6 py-8 mb-5 text-center fade-up relative overflow-hidden">
+    <div class="bg-[#1B5E3B] rounded-[32px] px-6 py-8 mb-5 text-center fade-up relative overflow-hidden shadow-xl shadow-green-900/20">
       <div class="absolute -top-8 -right-8 w-32 h-32 bg-white opacity-5 rounded-full"></div>
       <div class="absolute -bottom-10 -left-8 w-40 h-40 bg-white opacity-5 rounded-full"></div>
 
-      <p class="text-[#9E9E9E] text-xs mb-2 relative">Contribution Amount</p>
+      <p class="text-white opacity-70 text-xs mb-2 relative font-bold uppercase tracking-widest">Contribution Amount</p>
       <div class="flex items-end justify-center gap-1 mb-4 relative">
-        <span id="contributionAmount" class="font-['Fraunces'] text-5xl font-bold text-white tracking-tight">₦—</span>
+        <span id="contributionAmount" class="font-['Fraunces'] text-5xl font-black text-white tracking-tight">₦—</span>
       </div>
 
-      <!-- Group selector -->
-      <div class="flex items-center gap-1.5 mx-auto w-fit bg-white bg-opacity-10 text-white px-4 py-2 rounded-full relative">
-        <span class="opacity-60 text-sm">For:</span>
-        <select id="groupSelector" class="bg-transparent text-white text-sm font-semibold appearance-none border-none outline-none cursor-pointer pr-4">
-          <option>Loading…</option>
+      <div class="flex items-center gap-1.5 mx-auto w-fit bg-white/10 text-white px-5 py-2.5 rounded-2xl relative border border-white/10 shadow-sm backdrop-blur-sm">
+        <span class="opacity-70 text-[11px] font-bold uppercase tracking-wider">For:</span>
+        <select id="groupSelector" class="bg-transparent text-white text-sm font-bold appearance-none border-none outline-none cursor-pointer pr-5">
+          <option class="text-gray-900">Loading…</option>
         </select>
-        <svg class="w-3.5 h-3.5 opacity-60 pointer-events-none absolute right-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
       </div>
     </div>
 
-    <!-- Payment Summary -->
-    <div class="bg-white rounded-2xl overflow-hidden mb-5 fade-up-2">
+    <div class="bg-white rounded-2xl overflow-hidden mb-5 fade-up-2 shadow-sm border border-white">
       <div class="divide-y divide-[#F5F5F5]">
-        <div class="flex items-center justify-between px-5 py-3.5">
-          <span class="text-sm text-[#9E9E9E]">Group</span>
-          <span id="groupLabel" class="text-sm font-semibold text-[#1A1A1A]">—</span>
+        <div class="flex items-center justify-between px-5 py-4">
+          <span class="text-sm text-[#9E9E9E] font-medium">Group</span>
+          <span id="groupLabel" class="text-sm font-bold text-[#1A1A1A]">—</span>
         </div>
-        <div class="flex items-center justify-between px-5 py-3.5">
-          <span class="text-sm text-[#9E9E9E]">Cycle</span>
-          <span id="cycleDisplay" class="text-sm font-semibold text-[#1A1A1A]">—</span>
+        <div class="flex items-center justify-between px-5 py-4">
+          <span class="text-sm text-[#9E9E9E] font-medium">Cycle</span>
+          <span id="cycleDisplay" class="text-sm font-bold text-[#1A1A1A]">—</span>
         </div>
-        <div class="flex items-center justify-between px-5 py-3.5">
-          <span class="text-sm text-[#9E9E9E]">Due Date</span>
-          <span id="dueDateDisplay" class="text-sm font-semibold text-[#F5A623]">—</span>
+        <div class="flex items-center justify-between px-5 py-4">
+          <span class="text-sm text-[#9E9E9E] font-medium">Due Date</span>
+          <span id="dueDateDisplay" class="text-sm font-bold text-[#F2A83B]">—</span>
         </div>
-        <div class="flex items-center justify-between px-5 py-3.5">
-          <span class="text-sm text-[#9E9E9E]">Amount</span>
-          <span id="summaryAmount" class="text-sm font-bold text-[#1A1A1A]">—</span>
+        <div class="flex items-center justify-between px-5 py-4">
+          <span class="text-sm text-[#9E9E9E] font-medium">Amount</span>
+          <span id="summaryAmount" class="text-sm font-black text-[#1B5E3B]">—</span>
         </div>
       </div>
     </div>
 
-    <!-- Squad payment info -->
-    <div class="bg-white rounded-2xl px-5 py-4 mb-6 fade-up-2">
-      <p class="text-xs font-semibold text-[#3A3A3A] mb-3">How it works</p>
-      <div class="flex flex-col gap-3">
+    <div class="bg-white rounded-2xl px-5 py-5 mb-6 fade-up-2 shadow-sm border border-white">
+      <p class="text-[10px] font-black text-[#1B5E3B] uppercase tracking-[0.15em] mb-4">How it works</p>
+      <div class="flex flex-col gap-4">
         <div class="flex items-start gap-3">
-          <div class="w-6 h-6 bg-[#3A3A3A] rounded-full flex items-center justify-center shrink-0 mt-0.5">
-            <span class="text-white text-[10px] font-bold">1</span>
+          <div class="w-6 h-6 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5">
+            <span class="text-white text-[10px] font-black">1</span>
           </div>
           <p class="text-xs text-[#6B6B6B] leading-relaxed">Tap "Pay with Squad" to be redirected to Squad's secure payment page.</p>
         </div>
         <div class="flex items-start gap-3">
-          <div class="w-6 h-6 bg-[#3A3A3A] rounded-full flex items-center justify-center shrink-0 mt-0.5">
-            <span class="text-white text-[10px] font-bold">2</span>
+          <div class="w-6 h-6 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5">
+            <span class="text-white text-[10px] font-black">2</span>
           </div>
           <p class="text-xs text-[#6B6B6B] leading-relaxed">Complete payment with your card or bank transfer on Squad's page.</p>
         </div>
         <div class="flex items-start gap-3">
-          <div class="w-6 h-6 bg-[#3A3A3A] rounded-full flex items-center justify-center shrink-0 mt-0.5">
-            <span class="text-white text-[10px] font-bold">3</span>
+          <div class="w-6 h-6 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5">
+            <span class="text-white text-[10px] font-black">3</span>
           </div>
           <p class="text-xs text-[#6B6B6B] leading-relaxed">You'll be redirected back to Smart Ajo and your contribution will be recorded automatically.</p>
         </div>
       </div>
     </div>
 
-    <!-- Secured by Squad -->
-    <div class="flex items-center justify-center gap-2 mb-5 fade-up-2">
-      <svg class="w-4 h-4 text-[#22C55E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <div class="flex items-center justify-center gap-2 mb-6 fade-up-2">
+      <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
-      <p class="text-xs text-[#9E9E9E]">Secured by <span class="font-semibold text-[#6B6B6B]">Squad / GTCO</span></p>
+      <p class="text-[10px] font-black text-[#9E9E9E] uppercase tracking-wider">Secured by <span class="text-[#6B6B6B]">Squad / GTCO</span></p>
     </div>
 
-    <!-- Pay with Squad button -->
     <button id="payBtn" onclick="window._proceedToConfirm()"
-      class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-base font-semibold tracking-wide
-             transition-all duration-200 hover:bg-black active:scale-95 fade-up-3 flex items-center justify-center gap-2">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+      class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-sm font-black tracking-widest uppercase
+             transition-all duration-300 hover:brightness-110 active:scale-95 fade-up-3 flex items-center justify-center gap-2 shadow-lg shadow-orange-900/20">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
         <rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/>
       </svg>
       Pay with Squad
@@ -118,13 +118,12 @@
     initMakePayment();
   </script>
 
-  <!-- Bottom Nav -->
   <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
-    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px]">Home</span></button>
-    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="text-[10px]">Groups</span></button>
-    <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center -mt-6 shadow-lg hover:bg-black transition-colors active:scale-95"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-    <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px]">Alerts</span></button>
-    <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg><span class="text-[10px]">Profile</span></button>
+    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px] font-medium">Home</span></button>
+    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="text-[10px] font-medium">Groups</span></button>
+    <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#1B5E3B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-green-900/30 active:scale-95 transition-all"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px] font-medium">Alerts</span></button>
+    <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg><span class="text-[10px] font-medium">Profile</span></button>
   </div>
 
 </body>
