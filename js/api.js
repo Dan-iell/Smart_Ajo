@@ -12,19 +12,23 @@ export function getToken() {
   if (!token || token === "undefined" || token === "null") return null;
   return token;
 }
+
 function getRefreshToken() {
   const token = localStorage.getItem("ajo_refresh_token");
   if (!token || token === "undefined" || token === "null") return null;
   return token;
 }
+
 function saveToken(token) {
   if (!token || token === "undefined" || token === "null") return;
   localStorage.setItem("ajo_token", token);
 }
+
 function saveRefreshToken(token) {
   if (!token || token === "undefined" || token === "null") return;
   localStorage.setItem("ajo_refresh_token", token);
 }
+
 function clearToken() {
   localStorage.removeItem("ajo_token");
   localStorage.removeItem("ajo_refresh_token");
@@ -106,7 +110,18 @@ export async function loginUser(email, password) {
   return data;
 }
 
-// This function was missing, causing the Sign In error
+export async function registerUser(userData) {
+  return request("POST", "api/auth/register/", userData);
+}
+
+export async function verifyOtp(email, otp) {
+  return request("POST", "api/auth/verify-otp/", { email, otp });
+}
+
+export async function resendOtp(email) {
+  return request("POST", "api/auth/resend-otp/", { email });
+}
+
 export function redirectIfLoggedIn() {
   if (getToken()) {
     window.location.replace("dashboard.html");
@@ -116,33 +131,14 @@ export function redirectIfLoggedIn() {
 export async function getMe() {
   return request("GET", "api/auth/me/", null, true);
 }
-export async function updateProfile(userData) {
-  return request("PATCH", "api/auth/profile/", userData, true);
-}
 
 // ─────────────────────────────────────────────
-// GROUPS
-// ─────────────────────────────────────────────
-export async function getMyGroups() {
-  return request("GET", "api/groups/my-groups/", null, true);
-}
-export async function discoverGroups() {
-  return request("GET", "api/groups/discover/", null, true);
-}
-export async function joinGroup(groupId) {
-  return request("POST", `api/groups/${groupId}/join/`, null, true);
-}
-
-// ─────────────────────────────────────────────
-// ALERTS / NOTIFICATIONS (The missing exports from image_fae625.png)
+// ALERTS & RISK
 // ─────────────────────────────────────────────
 export async function getRiskAlerts() {
   return request("GET", "api/auth/risk/", null, true);
 }
 export async function getPaymentAlerts() {
-  return request("GET", "api/contributions/mine/", null, true);
-}
-export async function getPayoutAlerts() {
   return request("GET", "api/contributions/mine/", null, true);
 }
 export async function getAlerts() {
@@ -156,6 +152,7 @@ export function logoutUser() {
   clearToken();
   window.location.href = window.location.origin + "/index.html";
 }
+
 export function requireAuth() {
   if (!getToken()) {
     window.location.replace("../index.html");

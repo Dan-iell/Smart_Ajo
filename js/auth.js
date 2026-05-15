@@ -14,7 +14,7 @@ import {
   getToken,
 } from "./api.js";
 
-// Re-exporting this function for HTML imports
+// Re-exporting for direct HTML imports
 export { redirectIfLoggedIn };
 
 // ─────────────────────────────────────────────
@@ -36,22 +36,17 @@ function hideError(elementId) {
 function setLoading(buttonId, isLoading, defaultText) {
   const btn = document.getElementById(buttonId);
   if (!btn) return;
-
   btn.disabled = isLoading;
-
   if (isLoading) {
     btn.innerHTML = `
-      <div class="flex items-center justify-center gap-3">
-        <div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-        <span>Processing...</span>
+      <div class="flex items-center justify-center gap-2">
+        <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <span>Wait...</span>
       </div>
     `;
   } else {
     btn.innerHTML = defaultText;
   }
-
-  btn.classList.toggle("opacity-70", isLoading);
-  btn.classList.toggle("cursor-not-allowed", isLoading);
 }
 
 // ─────────────────────────────────────────────
@@ -59,19 +54,33 @@ function setLoading(buttonId, isLoading, defaultText) {
 // ─────────────────────────────────────────────
 
 /**
- * Toggles input between 'password' and 'text'
+ * Toggles password visibility and updates the eye icon
  */
-export function togglePasswordVisibility(inputId) {
+export function togglePasswordVisibility(inputId, iconId) {
   const passwordInput = document.getElementById(inputId);
+  const eyeIcon = document.getElementById(iconId);
   if (!passwordInput) return;
 
-  passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    if (eyeIcon) {
+      eyeIcon.innerHTML = `
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+        <line x1="1" y1="1" x2="23" y2="23"></line>`;
+    }
+  } else {
+    passwordInput.type = "password";
+    if (eyeIcon) {
+      eyeIcon.innerHTML = `
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        <circle cx="12" cy="12" r="3"></circle>`;
+    }
+  }
 }
 
 export async function handleSignIn() {
   const email = document.getElementById("email")?.value?.trim();
   const password = document.getElementById("password")?.value;
-
   hideError("authError");
 
   if (!email || !password) {
@@ -80,7 +89,6 @@ export async function handleSignIn() {
   }
 
   setLoading("signInBtn", true, "Sign In");
-
   try {
     await loginUser(email, password);
     window.location.replace("dashboard.html");
@@ -109,31 +117,31 @@ export async function handleSignUp() {
     return;
   }
   if (!termsChecked) {
-    showError("authError", "Please accept the terms to continue.");
+    showError("authError", "Please accept the terms.");
     return;
   }
 
   setLoading("signUpBtn", true, "Create Account");
-
   try {
     await registerUser({
-      email: email,
-      username: email.split("@")[0],
+      email,
+      username: email.split("@")[0] + Math.floor(Math.random() * 1000),
       full_name: fullName,
       phone_number: phone,
-      password: password,
+      password,
       password_again: confirmPassword,
     });
-
     localStorage.setItem("ajo_pending_email", email);
     window.location.href = "verify-signup.html";
   } catch (error) {
-    console.error("Registration Error Details:", error);
     showError("authError", error.message || "Registration failed.");
     setLoading("signUpBtn", false, "Create Account");
   }
 }
 
+/**
+ * Handles OTP verification for Signup
+ */
 export async function handleVerifySignup() {
   hideError("authError");
   const otpInputs = document.querySelectorAll(".otp-input");
@@ -152,8 +160,6 @@ export async function handleVerifySignup() {
   try {
     await verifyOtp(email, otpCode);
     localStorage.removeItem("ajo_pending_email");
-
-    // UPDATED: Redirect to the "Account Created" success page
     window.location.replace("success.html");
   } catch (error) {
     showError("authError", error.message || "Invalid OTP code.");
@@ -161,6 +167,9 @@ export async function handleVerifySignup() {
   }
 }
 
+/**
+ * Handles OTP Resend
+ */
 export async function handleResendOTP() {
   const email = localStorage.getItem("ajo_pending_email");
   if (!email) {
@@ -170,9 +179,9 @@ export async function handleResendOTP() {
 
   try {
     await resendOtp(email);
-    alert("A new OTP code has been sent to your email.");
+    alert("A new code has been sent to your email.");
   } catch (error) {
-    showError("authError", "Failed to resend code. Please try again.");
+    showError("authError", "Failed to resend code.");
   }
 }
 
@@ -180,54 +189,40 @@ export function handleLogout() {
   logoutUser();
 }
 
+/**
+ * Initial Profile Setup (Targets /api/auth/profile/)
+ */
 export async function handleSetupProfile() {
   const displayName = document.getElementById("displayName")?.value?.trim();
   const dateOfBirth = document.getElementById("dateOfBirth")?.value;
-  const errorEl = document.getElementById("authError");
+  hideError("authError");
 
   if (!displayName) {
-    if (errorEl) {
-      errorEl.textContent = "Please enter a display name.";
-      errorEl.classList.remove("hidden");
-    }
+    showError("authError", "Please enter a display name.");
     return;
   }
 
-  const btn = document.getElementById("profileBtn");
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = "Saving...";
-  }
+  setLoading("profileBtn", true, "CONTINUE");
 
   try {
     const token = getToken();
-    const response = await fetch(
-      `${BASE_URL}/api/auth/profile/`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          first_name: displayName.split(" ")[0],
-          last_name: displayName.split(" ").slice(1).join(" ") || "",
-          date_of_birth: dateOfBirth || null,
-        }),
-      }
-    );
+    const response = await fetch(`${BASE_URL}/api/auth/profile/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        full_name: displayName,
+        date_of_birth: dateOfBirth || null,
+      }),
+    });
 
     if (!response.ok) throw new Error("Failed to update profile.");
     window.location.replace("dashboard.html");
   } catch (error) {
-    if (errorEl) {
-      errorEl.textContent = error.message || "Something went wrong.";
-      errorEl.classList.remove("hidden");
-    }
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = "CONTINUE";
-    }
+    showError("authError", error.message || "Something went wrong.");
+    setLoading("profileBtn", false, "CONTINUE");
   }
 }
 
@@ -240,6 +235,7 @@ if (typeof window !== "undefined") {
   window.handleVerifySignup = handleVerifySignup;
   window.handleResendOTP = handleResendOTP;
   window.handleLogout = handleLogout;
-  window.togglePassword = () => togglePasswordVisibility("password");
   window.handleSetupProfile = handleSetupProfile;
+  window.togglePasswordVisibility = togglePasswordVisibility;
+  window.redirectIfLoggedIn = redirectIfLoggedIn;
 }

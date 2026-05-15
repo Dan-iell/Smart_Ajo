@@ -26,10 +26,9 @@
       .otp-input {
         transition: all 0.2s ease-in-out;
       }
-      /* Focus state updated to Green shadow */
       .otp-input:focus {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(27, 94, 59, 0.1);
+        box-shadow: 0 4px 12px rgba(27, 94, 59, 0.15);
       }
       .spinner {
         border: 2px solid rgba(255, 255, 255, 0.3);
@@ -53,16 +52,14 @@
     class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto flex flex-col font-['DM_Sans']"
   >
     <div class="flex flex-col flex-1 px-6 pt-10 pb-10 fade-up">
-      <!-- Progress Steps (Updated to Green) -->
       <div class="flex gap-1.5 mb-8">
         <div class="h-1 flex-1 bg-[#1B5E3B] rounded-full"></div>
         <div class="h-1 flex-1 bg-[#1B5E3B] rounded-full"></div>
         <div class="h-1 flex-1 bg-[#E0E0E0] rounded-full"></div>
       </div>
 
-      <!-- Icon (Updated to Green) -->
       <div
-        class="w-14 h-14 bg-[#1B5E3B] rounded-2xl flex items-center justify-center mb-6 shadow-sm"
+        class="w-14 h-14 bg-[#1B5E3B] rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-green-900/20"
       >
         <svg
           class="w-7 h-7 text-white"
@@ -76,33 +73,35 @@
         </svg>
       </div>
 
-      <h1 class="font-['Fraunces'] text-3xl font-bold text-black mb-2">
+      <h1 class="font-['Fraunces'] text-3xl font-black text-black mb-2">
         Verify Your Account
       </h1>
       <p class="text-sm text-[#6B6B6B] mb-2 leading-relaxed">
         We've sent a 6-digit code to
-        <span id="displayEmail" class="text-black font-semibold"
-          >your email</span
+        <span id="displayEmail" class="text-[#1B5E3B] font-bold"
+          >loading...</span
         >
       </p>
-      <p class="text-sm text-[#6B6B6B] mb-8">
+      <p
+        class="text-xs text-[#6B6B6B] mb-8 uppercase tracking-widest font-bold"
+      >
         Wrong email?
         <button
           onclick="window.history.back()"
-          class="text-[#1B5E3B] font-semibold underline underline-offset-2"
+          class="text-[#1B5E3B] underline underline-offset-4"
         >
           Change it
         </button>
       </p>
 
       <div class="mb-3">
-        <!-- Label highlighted with Green -->
-        <label class="text-sm font-medium text-[#1B5E3B] mb-4 block"
-          >Resend code in:
-          <span id="timer" class="text-black font-bold">01:23</span></label
+        <label
+          class="text-[11px] font-black text-[#1B5E3B] uppercase tracking-[0.1em] mb-4 block"
         >
+          Resend code in: <span id="timer" class="text-black">01:23</span>
+        </label>
+
         <div class="flex gap-2 justify-between" id="otp-container">
-          <!-- OTP Inputs focus color updated to Green -->
           <input
             type="text"
             maxlength="1"
@@ -144,23 +143,25 @@
 
       <p
         id="authError"
-        class="text-red-500 text-xs mt-2 mb-4 hidden text-center font-medium"
+        class="text-red-500 text-xs mt-2 mb-4 hidden text-center font-bold uppercase tracking-tighter"
       ></p>
-      <p class="text-sm text-[#6B6B6B] mb-8">
+
+      <p
+        class="text-xs font-bold text-[#6B6B6B] mb-8 uppercase tracking-widest"
+      >
         Didn't get the code?
         <button
           id="resendBtn"
           disabled
-          class="text-gray-400 font-semibold underline underline-offset-2 disabled:cursor-not-allowed"
+          class="text-gray-400 underline underline-offset-4 disabled:opacity-50"
         >
           Resend
         </button>
       </p>
 
-      <!-- Main Button updated to Gold -->
       <button
         id="verifyBtn"
-        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-bold tracking-wide transition-all duration-300 hover:bg-[#d99635] active:scale-[0.98] shadow-lg flex items-center justify-center gap-3"
+        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 hover:brightness-110 active:scale-[0.98] shadow-lg shadow-orange-900/20 flex items-center justify-center gap-3"
       >
         <span id="btnText">Verify & Continue</span>
         <div id="btnLoader" class="spinner hidden"></div>
@@ -168,57 +169,103 @@
     </div>
 
     <script type="module">
-      import { handleVerifySignup, handleResendOTP } from "../js/auth.js";
+  import { handleVerifySignup, handleResendOTP } from "../js/auth.js";
 
-      const otpInputs = document.querySelectorAll(".otp-input");
-      const timerEl = document.getElementById("timer");
-      const resendBtn = document.getElementById("resendBtn");
-      const verifyBtn = document.getElementById("verifyBtn");
+  const otpInputs = document.querySelectorAll(".otp-input");
+  const timerEl = document.getElementById("timer");
+  const resendBtn = document.getElementById("resendBtn");
+  const verifyBtn = document.getElementById("verifyBtn");
+  const emailDisplay = document.getElementById("displayEmail");
 
-      const email = localStorage.getItem("ajo_pending_email") || "";
-      document.getElementById("displayEmail").textContent =
-        email || "your email";
+  // 1. Fixed Email Display Logic
+  const pendingEmail = localStorage.getItem("ajo_pending_email");
+  if (pendingEmail) {
+    emailDisplay.textContent = pendingEmail;
+  } else {
+    emailDisplay.textContent = "your registered email";
+    console.warn("No pending email found in localStorage");
+  }
 
-      otpInputs.forEach((input, i) => {
-        input.addEventListener("input", (e) => {
-          if (e.inputType === "deleteContentBackward") return;
-          if (input.value && i < otpInputs.length - 1) otpInputs[i + 1].focus();
-        });
-        input.addEventListener("keydown", (e) => {
-          if (e.key === "Backspace" && !input.value && i > 0)
-            otpInputs[i - 1].focus();
-        });
-      });
-
-      verifyBtn.addEventListener("click", handleVerifySignup);
-      resendBtn.addEventListener("click", async () => {
-        await handleResendOTP();
-        resetTimer();
-      });
-
-      let countdown;
-      function resetTimer() {
-        let seconds = 83;
-        resendBtn.disabled = true;
-        resendBtn.classList.add("text-gray-400");
-        resendBtn.classList.remove("text-[#1B5E3B]");
-        if (countdown) clearInterval(countdown);
-        countdown = setInterval(() => {
-          seconds--;
-          if (seconds <= 0) {
-            clearInterval(countdown);
-            timerEl.textContent = "00:00";
-            resendBtn.disabled = false;
-            resendBtn.classList.remove("text-gray-400");
-            resendBtn.classList.add("text-[#1B5E3B]");
-            return;
-          }
-          const m = Math.floor(seconds / 60);
-          const s = seconds % 60;
-          timerEl.textContent = `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-        }, 1000);
+  // 2. Optimized Auto-focus & Movement Logic
+  otpInputs.forEach((input, index) => {
+    // Force numbers only and move forward
+    input.addEventListener("keyup", (e) => {
+      const val = e.target.value;
+      
+      // If a number is entered, move to next
+      if (val.match(/^[0-9]$/)) {
+        if (index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
       }
+    });
+
+    // Handle Backspace properly
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace") {
+        if (!input.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      }
+    });
+
+    // Handle Paste (Auto-fill all 6 boxes)
+    input.addEventListener("paste", (e) => {
+      const pasteData = e.clipboardData.getData("text").trim();
+      if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+        const digits = pasteData.split("");
+        otpInputs.forEach((inp, i) => {
+          inp.value = digits[i];
+        });
+        otpInputs[5].focus(); // Focus last box
+        e.preventDefault();
+      }
+    });
+  });
+
+  // 3. API Handlers
+  verifyBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    handleVerifySignup();
+  });
+  
+  resendBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+      await handleResendOTP();
       resetTimer();
-    </script>
+    } catch (err) {
+      console.error("Resend failed", err);
+    }
+  });
+
+  // 4. Timer Logic
+  let countdown;
+  function resetTimer() {
+    let seconds = 60; 
+    resendBtn.disabled = true;
+    resendBtn.classList.remove("text-[#1B5E3B]");
+    resendBtn.classList.add("text-gray-400");
+    
+    if (countdown) clearInterval(countdown);
+    
+    countdown = setInterval(() => {
+      seconds--;
+      if (seconds <= 0) {
+        clearInterval(countdown);
+        timerEl.textContent = "00:00";
+        resendBtn.disabled = false;
+        resendBtn.classList.remove("text-gray-400");
+        resendBtn.classList.add("text-[#1B5E3B]");
+        return;
+      }
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      timerEl.textContent = `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+    }, 1000);
+  }
+  
+  resetTimer();
+</script>
   </body>
 </html>

@@ -207,15 +207,19 @@
         togglePasswordVisibility,
       } from "../js/auth.js";
 
+      // Check if already logged in
       redirectIfLoggedIn();
 
+      // Eye Toggle logic
       const toggleBtn = document.getElementById("togglePasswordBtn");
       if (toggleBtn) {
-        toggleBtn.addEventListener("click", () => {
+        toggleBtn.addEventListener("click", (e) => {
+          e.preventDefault();
           togglePasswordVisibility("password", "eyeIcon");
         });
       }
 
+      // Sign In Click
       const loginBtn = document.getElementById("signInBtn");
       if (loginBtn) {
         loginBtn.addEventListener("click", (e) => {
@@ -224,10 +228,14 @@
         });
       }
 
-      document.addEventListener("keypress", (e) => {
+      // Support for 'Enter' key
+      document.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
-          e.preventDefault();
-          handleSignIn();
+          const emailValue = document.getElementById("email").value;
+          const passValue = document.getElementById("password").value;
+          if (emailValue && passValue) {
+            handleSignIn();
+          }
         }
       });
     </script>
