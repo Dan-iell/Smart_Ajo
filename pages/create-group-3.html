@@ -217,6 +217,16 @@
 
           await createGroup(finalData);
 
+          const result = await createGroup(finalData);
+
+          // Save the real group code for the success page
+          if (result.code) {
+            localStorage.setItem("ajo_last_group_code", result.code);
+          }
+          if (result.name || finalData.name) {
+            localStorage.setItem("lastCreatedGroup", JSON.stringify({ name: result.name || finalData.name }));
+          }
+
           // Clear cache
           localStorage.removeItem("group_step_1");
           localStorage.removeItem("group_step_2");

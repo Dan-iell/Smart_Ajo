@@ -34,6 +34,7 @@
 
       <div class="bg-white rounded-[32px] overflow-hidden mb-6 shadow-sm border border-white">
         <div class="divide-y divide-[#F5F5F5]">
+<<<<<<< HEAD
           <div class="flex items-center justify-between px-6 py-5">
             <span class="text-sm text-[#9E9E9E] font-medium">Amount Paid</span>
             <span id="finalAmount" class="text-base font-black text-[#1B5E3B]">₦ 0.00</span>
@@ -55,6 +56,30 @@
           </div>
           <div class="h-2 bg-[#E0E0E0] rounded-full overflow-hidden">
             <div class="bar h-full bg-[#F2A83B] rounded-full" style="--w:100%; width:100%"></div>
+=======
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Amount Paid</span>
+            <span id="receiptAmount" class="text-sm font-bold text-[#1A1A1A]">—</span>
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Group</span>
+            <span id="receiptGroup" class="text-sm font-bold text-[#1A1A1A]">—</span>
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Transaction ID</span>
+            <span id="receiptTxId" class="text-xs font-bold text-[#1A1A1A] font-mono">—</span>
+          </div>
+        </div>
+
+        <!-- Contribution progress -->
+        <div class="px-5 py-4 border-t border-[#F5F5F5]">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs text-[#9E9E9E]">Your Contribution Progress</span>
+            <span id="progressLabel" class="text-xs font-bold text-[#1A1A1A]">—</span>
+          </div>
+          <div class="h-2.5 bg-[#F0F0F0] rounded-full overflow-hidden">
+            <div id="progressBar" class="bar h-full bg-[#3A3A3A] rounded-full" style="--w:0%; width:0%"></div>
+>>>>>>> 6954a13819754ba52e68e55c8088e27181cb7249
           </div>
         </div>
       </div>
@@ -75,6 +100,15 @@
     </div>
   </div>
 
+  <script type="module">
+    import { handleSquadRedirect, initPaymentSuccess } from '../js/payment.js';
+    (async () => {
+      await handleSquadRedirect(); // handles ?transaction_ref= from Squad redirect
+      await initPaymentSuccess();
+    })();
+  </script>
+
+  <!-- Bottom Nav -->
   <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
     <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#1B5E3B]"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="text-[10px] font-bold">Home</span></button>
     <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="text-[10px]">Groups</span></button>

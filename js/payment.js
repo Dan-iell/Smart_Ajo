@@ -7,10 +7,10 @@
 import {
   requireAuth,
   getMyGroups,
-  getCards,
   initiatePayment,
   verifyPayment,
-  getPaymentHistory
+  getPaymentHistory,
+  getRoundSummary,
 } from './api.js';
 
 
@@ -20,90 +20,90 @@ import {
 
 export async function initMakePayment() {
   if (!requireAuth()) return;
-
-  await Promise.all([
-    loadGroupSelector(),
-    loadPaymentMethods(),
-  ]);
+  await loadGroupSelector();
 }
 
 async function loadGroupSelector() {
   try {
     const data = await getMyGroups();
-    const groups = data.groups || [];
+    // Handle both { groups: [] } and direct array responses
+    const groups = Array.isArray(data) ? data : (data.groups || data.results || []);
 
     const selector = document.getElementById('groupSelector');
     const amountEl = document.getElementById('contributionAmount');
     const groupLabel = document.getElementById('groupLabel');
 
-    if (!selector || groups.length === 0) return;
+    if (!selector || groups.length === 0) {
+      if (amountEl) amountEl.textContent = '₦0';
+      if (groupLabel) groupLabel.textContent = 'No groups';
+      return;
+    }
 
-    // Build dropdown options
-    selector.innerHTML = groups.map(g =>
-      `<option value="${g.id}" data-amount="${g.contributionAmount}">${g.name}</option>`
-    ).join('');
+    // Build dropdown options — handle snake_case or camelCase from backend
+    selector.innerHTML = groups.map(g => {
+      const amount = g.contribution_amount ?? g.contributionAmount ?? 0;
+      return `<option value="${g.id}" data-amount="${amount}">${g.name}</option>`;
+    }).join('');
 
-    // Set initial amount from first group
     const first = groups[0];
-    if (amountEl) amountEl.textContent = `₦${first.contributionAmount?.toLocaleString('en-NG')}`;
-    if (groupLabel) groupLabel.textContent = first.name;
+    const firstAmount = first.contribution_amount ?? first.contributionAmount ?? 0;
 
-    // Save to session for confirm page
+    if (amountEl) amountEl.textContent = `₦${Number(firstAmount).toLocaleString('en-NG')}`;
+    if (groupLabel) groupLabel.textContent = first.name;
+    setValue('summaryAmount', `₦ ${Number(firstAmount).toLocaleString('en-NG')}`);
+    updateCycleDue(first);
+
     sessionStorage.setItem('ajo_pay_groupId', first.id);
-    sessionStorage.setItem('ajo_pay_amount', first.contributionAmount);
+    sessionStorage.setItem('ajo_pay_amount', firstAmount);
     sessionStorage.setItem('ajo_pay_groupName', first.name);
 
-    // Update on change
+    updatePayButton(firstAmount);
+
     selector.addEventListener('change', () => {
-      const selected = selector.options[selector.selectedIndex];
-      const amount = selected.dataset.amount;
-      const name = selected.text;
+      const opt = selector.options[selector.selectedIndex];
+      const amount = opt.dataset.amount;
+      const name = opt.text;
+      const idx = selector.selectedIndex;
       if (amountEl) amountEl.textContent = `₦${Number(amount).toLocaleString('en-NG')}`;
       if (groupLabel) groupLabel.textContent = name;
-      sessionStorage.setItem('ajo_pay_groupId', selected.value);
+      setValue('summaryAmount', `₦ ${Number(amount).toLocaleString('en-NG')}`);
+      updateCycleDue(groups[idx]);
+      sessionStorage.setItem('ajo_pay_groupId', opt.value);
       sessionStorage.setItem('ajo_pay_amount', amount);
       sessionStorage.setItem('ajo_pay_groupName', name);
       updatePayButton(amount);
     });
-
-    updatePayButton(first.contributionAmount);
 
   } catch (error) {
     console.error('loadGroupSelector error:', error.message);
   }
 }
 
-async function loadPaymentMethods() {
-  try {
-    const data = await getCards();
-    const cards = data.cards || [];
-
-    const cardLabel = document.getElementById('cardLabel');
-    if (cardLabel && cards.length > 0) {
-      const card = cards[0];
-      cardLabel.textContent = `Pay instantly · ••••${card.last4}`;
-      sessionStorage.setItem('ajo_pay_method', `Debit Card(•••••${card.last4})`);
-    }
-  } catch (error) {
-    console.error('loadPaymentMethods error:', error.message);
-  }
-}
-
 function updatePayButton(amount) {
   const btn = document.getElementById('payBtn');
-  if (btn) btn.textContent = `Pay ₦${Number(amount).toLocaleString('en-NG')}`;
+  if (btn) btn.textContent = `Pay ₦${Number(amount).toLocaleString('en-NG')} with Squad`;
 }
 
-export function selectPaymentMethod(method) {
-  // Update radio UI
-  document.querySelectorAll('.pay-method').forEach(el => {
-    const isSelected = el.dataset.method === method;
-    el.classList.toggle('border-[#3A3A3A]', isSelected);
-    el.classList.toggle('border-[#E0E0E0]', !isSelected);
-    const dot = el.querySelector('.radio-dot');
-    if (dot) dot.classList.toggle('hidden', !isSelected);
-  });
-  sessionStorage.setItem('ajo_pay_method_type', method);
+function updateCycleDue(group) {
+  if (!group) return;
+  // Cycle: e.g. "Round 3 of 8"
+  const current = group.current_round ?? group.round_number ?? null;
+  const total   = group.total_rounds ?? group.members_count ?? group.member_count ?? null;
+  setValue('cycleDisplay', current != null && total != null ? `Round ${current} of ${total}` : '—');
+
+  // Due date
+  const raw = group.next_due_date ?? group.due_date ?? null;
+  if (raw) {
+    const date = new Date(raw);
+    const today = new Date();
+    const diffDays = Math.round((date - today) / 86400000);
+    const label = diffDays === 0 ? 'Today' : diffDays === 1 ? 'Tomorrow'
+      : diffDays < 0 ? 'Overdue'
+      : date.toLocaleDateString('en-NG', { month: 'short', day: 'numeric' });
+    setValue('dueDateDisplay', label);
+  } else {
+    setValue('dueDateDisplay', '—');
+  }
 }
 
 export function proceedToConfirm() {
@@ -126,37 +126,38 @@ export function initConfirmPayment() {
 
   const amount = sessionStorage.getItem('ajo_pay_amount');
   const groupName = sessionStorage.getItem('ajo_pay_groupName');
-  const method = sessionStorage.getItem('ajo_pay_method') || 'Debit Card';
 
-  // Populate summary
   setValue('summaryAmount', `₦ ${Number(amount).toLocaleString('en-NG')}`);
   setValue('summaryGroup', groupName);
-  setValue('summaryMethod', method);
+  setValue('summaryMethod', 'Squad (GTCO)');
   setValue('summaryDate', new Date().toLocaleDateString('en-NG', { year: 'numeric', month: 'long', day: 'numeric' }));
-
-  // Update warning text
-  const warningEl = document.getElementById('warningAmount');
-  if (warningEl) warningEl.textContent = `₦${Number(amount).toLocaleString('en-NG')}`;
+  setValue('warningAmount', `₦${Number(amount).toLocaleString('en-NG')}`);
 }
 
 export async function handleConfirmPayment() {
   const groupId = sessionStorage.getItem('ajo_pay_groupId');
   const amount = sessionStorage.getItem('ajo_pay_amount');
-  const email = localStorage.getItem('ajo_user_email') || '';
+
+  if (!groupId) {
+    alert('Session expired. Please start again.');
+    window.location.href = 'make-payment.html';
+    return;
+  }
 
   const btn = document.getElementById('confirmBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'Processing...'; btn.classList.add('opacity-60'); }
 
   try {
-    const data = await initiatePayment({ amount: Number(amount), groupId, email });
+    const data = await initiatePayment(groupId);
 
-    if (data.paymentUrl) {
-      // Squad redirects externally — save ref for verify step
-      sessionStorage.setItem('ajo_pay_ref', data.transactionRef || '');
-      window.location.href = data.paymentUrl;
+    // Store the transaction ref before redirecting to Squad
+    sessionStorage.setItem('ajo_pay_ref', data.transaction_ref || '');
+
+    const checkoutUrl = data.checkout_url || data.paymentUrl;
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl;
     } else {
-      // Direct success (test/sandbox mode)
-      sessionStorage.setItem('ajo_pay_ref', data.transactionRef || 'TEST-REF');
+      // Sandbox / test mode — no redirect URL returned
       window.location.href = 'payment-success.html';
     }
   } catch (error) {
@@ -176,58 +177,66 @@ export async function initPaymentSuccess() {
   const transactionRef = sessionStorage.getItem('ajo_pay_ref');
   const amount = sessionStorage.getItem('ajo_pay_amount');
   const groupName = sessionStorage.getItem('ajo_pay_groupName');
+  const groupId = sessionStorage.getItem('ajo_pay_groupId');
 
-  // Show receipt from session (instant)
   setValue('receiptAmount', `₦ ${Number(amount).toLocaleString('en-NG')}`);
   setValue('receiptGroup', groupName);
   setValue('receiptTxId', transactionRef || '—');
 
-  // Verify payment with backend if we have a real ref
-  if (transactionRef && transactionRef !== 'TEST-REF') {
+  // Fetch round progress from backend
+  if (groupId) {
     try {
-      const data = await verifyPayment({ transactionRef });
-
-      // Update progress bar
+      const summary = await getRoundSummary(groupId);
       const progressEl = document.getElementById('progressBar');
       const progressLabel = document.getElementById('progressLabel');
-      if (progressEl && data.cycleProgress) {
-        progressEl.style.width = `${data.cycleProgress}%`;
+
+      const paid = summary.paid_count ?? summary.paid ?? null;
+      const total = summary.total_members ?? summary.total ?? null;
+
+      if (progressEl && paid != null && total != null && total > 0) {
+        const pct = Math.round((paid / total) * 100);
+        progressEl.style.width = `${pct}%`;
+        progressEl.style.setProperty('--w', `${pct}%`);
       }
-      if (progressLabel && data.paid && data.total) {
-        progressLabel.textContent = `${data.paid}/${data.total} paid`;
+      if (progressLabel && paid != null && total != null) {
+        progressLabel.textContent = `${paid}/${total} paid`;
       }
     } catch (error) {
-      console.error('verifyPayment error:', error.message);
+      console.error('getRoundSummary error:', error.message);
     }
   }
 
   // Clear payment session data
   ['ajo_pay_groupId', 'ajo_pay_amount', 'ajo_pay_groupName',
-   'ajo_pay_method', 'ajo_pay_method_type', 'ajo_pay_ref']
+   'ajo_pay_method', 'ajo_pay_ref']
     .forEach(k => sessionStorage.removeItem(k));
 }
 
 
 // ─────────────────────────────────────────────
 // SQUAD REDIRECT HANDLER
-// Call this on page load if Squad redirects back with a transaction ref
+// Called on payment-success.html load when Squad
+// redirects back with ?transaction_ref=...
 // ─────────────────────────────────────────────
 
 export async function handleSquadRedirect() {
   const params = new URLSearchParams(window.location.search);
   const transactionRef = params.get('transaction_ref') || params.get('ref');
 
-  if (!transactionRef) return;
+  if (!transactionRef) return false;
 
   sessionStorage.setItem('ajo_pay_ref', transactionRef);
 
+  // Clean up URL so refreshing doesn't re-trigger verification
+  history.replaceState({}, '', window.location.pathname);
+
   try {
     await verifyPayment({ transactionRef });
-    window.location.href = 'payment-success.html';
   } catch (error) {
-    alert('Payment verification failed. Contact support with ref: ' + transactionRef);
-    window.location.href = 'dashboard.html';
+    console.error('verifyPayment error:', error.message);
   }
+
+  return true;
 }
 
 
