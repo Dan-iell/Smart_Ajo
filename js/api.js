@@ -1,3 +1,165 @@
-git add .
-git commit -m "update"
-git push
+// ============================================================
+//  Smart Ajo — api.js (FINAL STABLE VERSION)
+// ============================================================
+
+const BASE_URL = "https://smartajo.up.railway.app";
+
+// ─────────────────────────────────────────────
+// TOKEN HELPERS
+// ─────────────────────────────────────────────
+export function getToken() {
+  const token = localStorage.getItem("ajo_token");
+  if (!token || token === "undefined" || token === "null") return null;
+  return token;
+}
+function getRefreshToken() {
+  const token = localStorage.getItem("ajo_refresh_token");
+  if (!token || token === "undefined" || token === "null") return null;
+  return token;
+}
+function saveToken(token) {
+  if (!token || token === "undefined" || token === "null") return;
+  localStorage.setItem("ajo_token", token);
+}
+function saveRefreshToken(token) {
+  if (!token || token === "undefined" || token === "null") return;
+  localStorage.setItem("ajo_refresh_token", token);
+}
+function clearToken() {
+  localStorage.removeItem("ajo_token");
+  localStorage.removeItem("ajo_refresh_token");
+}
+
+// ─────────────────────────────────────────────
+// REQUEST HELPER
+// ─────────────────────────────────────────────
+async function request(method, endpoint, body = null, isAuth = false) {
+  const token = getToken();
+  if (isAuth && !token) {
+    logoutUser();
+    return;
+  }
+
+  const headers = isAuth
+    ? { "Content-Type": "application/json", Authorization: `Bearer ${token}` }
+    : { "Content-Type": "application/json" };
+
+  const options = { method, headers };
+  if (body) options.body = JSON.stringify(body);
+
+  let cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  if (!cleanEndpoint.endsWith("/")) cleanEndpoint += "/";
+  const url = `${BASE_URL}${cleanEndpoint}`;
+
+  try {
+    const response = await fetch(url, options);
+    if (response.status === 401 && isAuth) {
+      const refreshed = await attemptTokenRefresh();
+      if (refreshed) return request(method, endpoint, body, isAuth);
+      logoutUser();
+      return;
+    }
+    if (!response.ok) {
+      const errorData = await response
+        .json()
+        .catch(() => ({ message: "Server Error" }));
+      throw new Error(
+        errorData.message || errorData.detail || `Error ${response.status}`,
+      );
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`[API ERROR] ${method} ${url}`, error);
+    throw error;
+  }
+}
+
+async function attemptTokenRefresh() {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) return false;
+  try {
+    const response = await fetch(`${BASE_URL}/api/auth/token/refresh/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh: refreshToken }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      saveToken(data.access || data.token);
+      return true;
+    }
+  } catch (e) {
+    console.error("Refresh failed", e);
+  }
+  return false;
+}
+
+// ─────────────────────────────────────────────
+// AUTH ACTIONS
+// ─────────────────────────────────────────────
+export async function loginUser(email, password) {
+  const data = await request("POST", "api/auth/login/", { email, password });
+  if (data.access || data.token) {
+    saveToken(data.access || data.token);
+    if (data.refresh) saveRefreshToken(data.refresh);
+  }
+  return data;
+}
+
+// This function was missing, causing the Sign In error
+export function redirectIfLoggedIn() {
+  if (getToken()) {
+    window.location.replace("dashboard.html");
+  }
+}
+
+export async function getMe() {
+  return request("GET", "api/auth/me/", null, true);
+}
+export async function updateProfile(userData) {
+  return request("PATCH", "api/auth/profile/", userData, true);
+}
+
+// ─────────────────────────────────────────────
+// GROUPS
+// ─────────────────────────────────────────────
+export async function getMyGroups() {
+  return request("GET", "api/groups/my-groups/", null, true);
+}
+export async function discoverGroups() {
+  return request("GET", "api/groups/discover/", null, true);
+}
+export async function joinGroup(groupId) {
+  return request("POST", `api/groups/${groupId}/join/`, null, true);
+}
+
+// ─────────────────────────────────────────────
+// ALERTS / NOTIFICATIONS (The missing exports from image_fae625.png)
+// ─────────────────────────────────────────────
+export async function getRiskAlerts() {
+  return request("GET", "api/auth/risk/", null, true);
+}
+export async function getPaymentAlerts() {
+  return request("GET", "api/contributions/mine/", null, true);
+}
+export async function getPayoutAlerts() {
+  return request("GET", "api/contributions/mine/", null, true);
+}
+export async function getAlerts() {
+  return getRiskAlerts();
+}
+
+// ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+export function logoutUser() {
+  clearToken();
+  window.location.href = window.location.origin + "/index.html";
+}
+export function requireAuth() {
+  if (!getToken()) {
+    window.location.replace("../index.html");
+    return false;
+  }
+  return true;
+}
