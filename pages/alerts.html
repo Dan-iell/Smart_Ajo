@@ -202,44 +202,49 @@
     </div>
 
     <script type="module">
-      import {
-        initAlertsPage,
-        filterAlerts,
-        handleAlertRead,
-        fundWallet,
-        viewRiskOptions,
-        viewReceipt,
-      } from "../js/alerts.js";
+      import { getRiskAlerts, getPaymentAlerts } from "../js/api.js";
 
-      // WRAPPER: This ensures when you click a filter, it stays brand green
-      window.filterNotifs = (type) => {
-        // 1. Run the original backend logic
-        filterAlerts(type);
+      window.filterNotifs = async (type) => {
+        const container = document.getElementById("notif-list");
+        container.innerHTML = `<div class="h-20 bg-white rounded-2xl animate-pulse"></div>`; // Loading state
 
-        // 2. Immediate UI correction to keep it Deep Green (#1B5E3B)
-        const allChips = document.querySelectorAll(".chip");
-        allChips.forEach((chip) => {
-          // Reset all to inactive style
-          chip.classList.remove("active");
-          chip.classList.add("inactive");
-        });
+        // UI Chip logic
+        document
+          .querySelectorAll(".chip")
+          .forEach((c) => c.classList.replace("active", "inactive"));
+        document
+          .getElementById(`chip-${type}`)
+          .classList.replace("inactive", "active");
 
-        // 3. Set the clicked one to Brand Green
-        const activeChip = document.getElementById(`chip-${type}`);
-        if (activeChip) {
-          activeChip.classList.remove("inactive");
-          activeChip.classList.add("active");
+        try {
+          let data = [];
+          if (type === "risk") {
+            data = await getRiskAlerts();
+          } else if (type === "payment") {
+            data = await getPaymentAlerts();
+          } else {
+            // For 'all', fetch both or use a default
+            const risk = await getRiskAlerts();
+            data = Array.isArray(risk) ? risk : risk.results || [];
+          }
+
+          renderAlerts(data);
+        } catch (error) {
+          container.innerHTML = `<p class="text-center py-10 text-xs text-red-500">Failed to load ${type} alerts.</p>`;
         }
       };
 
-      // Keep other functions exposed as they were
-      window.handleAlertRead = handleAlertRead;
-      window.fundWallet = fundWallet;
-      window.viewRiskOptions = viewRiskOptions;
-      window.viewReceipt = viewReceipt;
+      function renderAlerts(list) {
+        const container = document.getElementById("notif-list");
+        const items = Array.isArray(list) ? list : list.results || [];
 
-      // Initialize page
-      initAlertsPage();
+        if (items.length === 0) {
+          container.innerHTML = `<p class="text-center py-10 text-xs text-[#9E9E9E]">No notifications found.</p>`;
+          return;
+        }
+
+        // Your existing render mapping code here...
+      }
     </script>
   </body>
 </html>
