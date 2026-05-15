@@ -205,8 +205,9 @@
           viewBox="0 0 24 24"
         >
           <path d="M3 12L12 3l9 9" />
-          <path d="M9 21V12h6v9" /></svg
-        ><span class="text-[10px] font-medium">Home</span>
+          <path d="M9 21V12h6v9" />
+        </svg>
+        <span class="text-[10px] font-medium">Home</span>
       </button>
       <button
         onclick="window.location.href = 'groups.html'"
@@ -220,8 +221,9 @@
           viewBox="0 0 24 24"
         >
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" /></svg
-        ><span class="text-[10px] font-medium">Groups</span>
+          <circle cx="9" cy="7" r="4" />
+        </svg>
+        <span class="text-[10px] font-medium">Groups</span>
       </button>
       <button
         onclick="window.location.href = 'make-payment.html'"
@@ -249,8 +251,9 @@
           viewBox="0 0 24 24"
         >
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg
-        ><span class="text-[10px] font-medium">Alerts</span>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <span class="text-[10px] font-medium">Alerts</span>
       </button>
       <button
         onclick="window.location.href = 'profile.html'"
@@ -264,8 +267,9 @@
           viewBox="0 0 24 24"
         >
           <circle cx="12" cy="7" r="4" />
-          <path d="M5.5 20a7 7 0 0 1 13 0" /></svg
-        ><span class="text-[10px] font-medium">Profile</span>
+          <path d="M5.5 20a7 7 0 0 1 13 0" />
+        </svg>
+        <span class="text-[10px] font-medium">Profile</span>
       </button>
     </nav>
 
@@ -276,6 +280,7 @@
         handleConfirmPayment,
       } from "../js/payment.js";
 
+      // Capture Group ID from URL
       const urlParams = new URLSearchParams(window.location.search);
       const groupId = urlParams.get("groupId");
 
@@ -284,7 +289,6 @@
         const modal = document.getElementById("memberModal");
         const modalMsg = document.getElementById("modalMsg");
 
-        // Check for null or empty group ID
         if (!groupId || groupId === "null") {
           alert("Error: No Group Selected.");
           return;
@@ -301,23 +305,24 @@
           const max = group.max_members || 0;
 
           if (current < max) {
-            // Trigger Smart Ajo UI Popup
             modalMsg.innerHTML = `This circle needs <span class="text-[#1B5E3B] font-bold">${max} members</span> to begin contributions.<br>Currently at <span class="text-[#F2A83B] font-bold">${current}/${max}</span>.`;
             modal.classList.remove("hidden");
-
             btn.innerText = "Confirm & Pay Now";
             btn.disabled = false;
             return;
           }
 
-          handleConfirmPayment(groupId);
+          handleConfirmPayment();
         } catch (e) {
           console.error("Member check failed:", e);
-          handleConfirmPayment(groupId);
+          handleConfirmPayment();
         }
       };
 
-      initConfirmPayment();
+      // Run initialization with the specific Group ID
+      if (groupId) {
+        initConfirmPayment(groupId);
+      }
     </script>
   </body>
 </html>

@@ -13,17 +13,23 @@
     body { padding-bottom: 90px; }
 
     #groupSelector {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right center;
-      background-size: 1em;
+      background-position: right 0px center;
+      background-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    #groupSelector option {
+      background-color: white;
+      color: #1A1A1A;
+      font-family: 'DM Sans', sans-serif;
     }
   </style>
 </head>
 <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
 
   <div class="px-5 pt-10">
-
     <div class="flex items-center gap-3 mb-7 fade-up">
       <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] hover:bg-gray-50 transition-all active:scale-95 shadow-sm">
         <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
@@ -40,10 +46,10 @@
         <span id="contributionAmount" class="font-['Fraunces'] text-5xl font-black text-white tracking-tight">₦—</span>
       </div>
 
-      <div class="flex items-center gap-1.5 mx-auto w-fit bg-white/10 text-white px-5 py-2.5 rounded-2xl relative border border-white/10 shadow-sm backdrop-blur-sm">
-        <span class="opacity-70 text-[11px] font-bold uppercase tracking-wider">For:</span>
-        <select id="groupSelector" class="bg-transparent text-white text-sm font-bold appearance-none border-none outline-none cursor-pointer pr-5">
-          <option class="text-gray-900">Loading…</option>
+      <div class="flex items-center gap-2 mx-auto w-fit bg-white/10 text-white pl-4 pr-3 py-3 rounded-2xl relative border border-white/20 shadow-sm backdrop-blur-md">
+        <span class="opacity-60 text-[10px] font-black uppercase tracking-[0.15em] border-r border-white/20 pr-2">Group</span>
+        <select id="groupSelector" class="bg-transparent text-white text-sm font-black appearance-none border-none outline-none cursor-pointer pr-6 min-w-[110px]">
+          <option value="" disabled selected>Select Group</option>
         </select>
       </div>
     </div>
@@ -93,13 +99,6 @@
       </div>
     </div>
 
-    <div class="flex items-center justify-center gap-2 mb-6 fade-up-2">
-      <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-      <p class="text-[10px] font-black text-[#9E9E9E] uppercase tracking-wider">Secured by <span class="text-[#6B6B6B]">Squad / GTCO</span></p>
-    </div>
-
     <button id="payBtn" onclick="window._proceedToConfirm()"
       class="w-full py-5 bg-[#1B5E3B] text-white rounded-full text-sm font-black tracking-widest uppercase
              transition-all duration-300 hover:bg-[#144d30] active:scale-95 fade-up-3 flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
@@ -108,22 +107,52 @@
       </svg>
       Pay with Squad
     </button>
-
   </div>
 
   <script type="module">
+    import { getGroupDetail, getMyGroups } from '../js/api.js';
     import { initMakePayment, proceedToConfirm } from '../js/payment.js';
+    
     window._proceedToConfirm = proceedToConfirm;
+
+    // DATA FETCHING LOGIC
+    const selector = document.getElementById('groupSelector');
+    
+    selector.addEventListener('change', async (e) => {
+      const groupId = e.target.value;
+      if (!groupId) return;
+
+      try {
+        // Update UI to show loading
+        document.getElementById('contributionAmount').innerText = "₦...";
+        
+        // Fetch detailed info for the specific group
+        const group = await getGroupDetail(groupId);
+        
+        // Update the On-Screen Data
+        document.getElementById('contributionAmount').innerText = `₦${Number(group.contribution_amount).toLocaleString()}`;
+        document.getElementById('summaryAmount').innerText = `₦${Number(group.contribution_amount).toLocaleString()}`;
+        document.getElementById('groupLabel').innerText = group.name;
+        document.getElementById('cycleDisplay').innerText = group.frequency || "Monthly";
+        
+        // Handle Due Date (If backend provides it)
+        const dueDate = group.next_payment_date ? new Date(group.next_payment_date).toLocaleDateString() : "TBD";
+        document.getElementById('dueDateDisplay').innerText = dueDate;
+
+      } catch (error) {
+        console.error("Error updating group info:", error);
+      }
+    });
+
     initMakePayment();
   </script>
 
   <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
     <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px] font-medium">Home</span></button>
-    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="text-[10px] font-medium">Groups</span></button>
+    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="text-[10px] font-medium">Groups</span></button>
     <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#1B5E3B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-green-900/30 active:scale-95 transition-all"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
     <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px] font-medium">Alerts</span></button>
     <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg><span class="text-[10px] font-medium">Profile</span></button>
   </div>
-
 </body>
 </html>
