@@ -12,25 +12,26 @@
       body { padding-bottom: 100px; font-family: 'DM Sans', sans-serif; }
       .tab-content { display: none; }
       .tab-content.active { display: block; animation: fadeUp 0.35s ease both; }
-      .circle-bg   { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 10; }
-      .circle-fill { fill: none; stroke: #F2A83B; stroke-width: 10; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1s ease-out; }
+      .circle-bg        { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 10; }
+      .circle-fill      { fill: none; stroke: #F2A83B; stroke-width: 10; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1.2s ease-out; }
       .risk-circle-bg   { fill: none; stroke: #E0E0E0; stroke-width: 10; }
-      .risk-circle-fill { fill: none; stroke: #1B5E3B; stroke-width: 10; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1s ease-out; }
+      .risk-circle-fill { fill: none; stroke: #1B5E3B; stroke-width: 10; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1.2s ease-out; }
       .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
   </head>
   <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto">
 
-    <!-- Header -->
+    <!-- ── Header ──────────────────────────────────────────── -->
     <div class="bg-[#1B5E3B] px-5 pt-10 pb-20 relative overflow-hidden">
       <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10"></div>
-
       <div class="flex items-center justify-between mb-6 relative z-10">
-        <button onclick="window.location.href = 'groups.html'"
-          class="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 transition-colors">
+        <button onclick="window.location.href='groups.html'" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/10">
           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
-        <h1 id="groupTitle" class="text-lg font-bold text-white font-['Fraunces']">Loading…</h1>
+        <div class="text-center">
+          <h1 id="groupTitle" class="text-lg font-bold text-white font-['Fraunces']">Loading…</h1>
+          <span id="adminBadge" class="hidden text-[10px] font-bold bg-[#F2A83B] text-white px-2 py-0.5 rounded-full">Admin</span>
+        </div>
         <div class="w-9"></div>
       </div>
 
@@ -42,22 +43,20 @@
             <circle id="progressCircle" class="circle-fill" cx="55" cy="55" r="50" stroke-dasharray="314" stroke-dashoffset="314"/>
           </svg>
           <div class="absolute inset-0 flex flex-col items-center justify-center px-3 text-center">
-            <p class="text-white text-[10px] opacity-60 mb-0.5">Current Pool</p>
+            <p class="text-white/60 text-[10px] mb-0.5">Collected so far</p>
             <p id="currentPool" class="text-white text-xl font-bold leading-tight">₦0</p>
-            <span id="progressText" class="mt-1.5 bg-[#F2A83B] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-lg">0%</span>
+            <span id="progressText" class="mt-1.5 bg-[#F2A83B] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">0%</span>
           </div>
         </div>
-
-        <!-- Target pool + frequency label -->
-        <p class="text-white/60 text-xs">Total Target Pool</p>
+        <p class="text-white/60 text-xs">Target Pool</p>
         <p id="targetPool" class="text-white text-xl font-bold">₦0</p>
         <p id="poolFormula" class="text-white/50 text-[10px] mt-1 font-medium">—</p>
       </div>
     </div>
 
-    <!-- Tabs -->
+    <!-- ── Tab bar ──────────────────────────────────────────── -->
     <div class="bg-[#F5F4EF] rounded-t-3xl -mt-8 px-5 pt-5 relative z-20">
-      <div class="flex border-b border-[#E0E0E0] mb-5 overflow-x-auto scrollbar-hide">
+      <div class="flex border-b border-[#E0E0E0] mb-5 overflow-x-auto scrollbar-hide gap-1">
         <button id="tab-overview"      onclick="switchTab('overview')"      class="shrink-0 px-3 py-3 text-xs font-bold   text-[#1B5E3B] border-b-2 border-[#1B5E3B]  transition-all">Overview</button>
         <button id="tab-members"       onclick="switchTab('members')"       class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">Members</button>
         <button id="tab-contributions" onclick="switchTab('contributions')" class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">Contributions</button>
@@ -68,58 +67,83 @@
       <!-- Overview -->
       <div id="content-overview" class="tab-content active">
         <p class="text-[11px] font-bold text-[#9E9E9E] uppercase mb-3 tracking-wider">Group Summary</p>
-        <div class="bg-white rounded-2xl overflow-hidden border border-[#F5F5F5] shadow-sm">
+        <div class="bg-white rounded-2xl overflow-hidden border border-[#F5F5F5] shadow-sm mb-4">
 
           <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
             <span class="text-sm text-[#6B6B6B]">Contribution / cycle</span>
-            <span id="summaryContribution" class="text-sm font-bold text-[#F2A83B]">₦0</span>
+            <span id="summaryContribution" class="text-sm font-bold text-[#F2A83B]">—</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
             <span class="text-sm text-[#6B6B6B]">Frequency</span>
             <span id="summaryFrequency" class="text-sm font-bold text-[#1A1A1A] capitalize">—</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
-            <span class="text-sm text-[#6B6B6B]">Max members</span>
-            <span id="summaryMembers" class="text-sm font-bold text-[#1A1A1A]">0</span>
+            <span class="text-sm text-[#6B6B6B]">Members</span>
+            <span id="summaryMembers" class="text-sm font-bold text-[#1A1A1A]">—</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
-            <span class="text-sm text-[#6B6B6B]">Total pool (target)</span>
-            <span id="summaryTotalPool" class="text-sm font-bold text-[#1B5E3B]">₦0</span>
+            <span class="text-sm text-[#6B6B6B]">Target pool</span>
+            <span id="summaryTotalPool" class="text-sm font-bold text-[#1B5E3B]">—</span>
+          </div>
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
+            <span class="text-sm text-[#6B6B6B]">Status</span>
+            <span id="summaryStatus" class="text-sm font-bold capitalize">—</span>
+          </div>
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
+            <span class="text-sm text-[#6B6B6B]">Start date</span>
+            <span id="summaryStartDate" class="text-sm font-bold text-[#1A1A1A]">—</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3.5">
-            <span class="text-sm text-[#6B6B6B]">Current round</span>
-            <span id="summaryRound" class="text-sm font-bold text-[#1A1A1A]">—</span>
+            <span class="text-sm text-[#6B6B6B]">Due date</span>
+            <span id="summaryDueDate" class="text-sm font-bold text-[#1A1A1A]">—</span>
           </div>
         </div>
 
-        <!-- Start date -->
-        <div class="mt-4 bg-white rounded-2xl px-4 py-3.5 border border-[#F5F5F5] shadow-sm flex items-center justify-between">
-          <span class="text-sm text-[#6B6B6B]">Start date</span>
-          <span id="summaryStartDate" class="text-sm font-bold text-[#1A1A1A]">—</span>
+        <!-- Invite code — hidden by default, visible to admin only -->
+        <div id="codeSection" class="hidden bg-white rounded-2xl px-4 py-4 border border-[#F5F5F5] shadow-sm">
+          <p class="text-[11px] font-bold text-[#9E9E9E] uppercase tracking-wider mb-3">Invite Code</p>
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex-1 bg-[#F5F4EF] rounded-xl px-4 py-3 font-mono font-bold text-[#1B5E3B] tracking-widest text-sm" id="codeDisplay">
+              ••••••••••
+            </div>
+            <button id="toggleCodeBtn" class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center shrink-0 hover:bg-[#E8F5EE] transition-colors">
+              <svg id="eyeOpenIcon" class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+            <button id="copyCodeBtn" class="w-10 h-10 bg-[#1B5E3B] rounded-xl flex items-center justify-center shrink-0 hover:bg-[#14452b] transition-colors">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Members -->
       <div id="content-members" class="tab-content">
         <div id="membersList" class="flex flex-col gap-3">
-          <p class="text-center py-10 text-[#9E9E9E] text-xs">Loading members…</p>
+          <p class="text-center py-10 text-[#9E9E9E] text-xs animate-pulse">Loading members…</p>
         </div>
       </div>
 
       <!-- Contributions -->
       <div id="content-contributions" class="tab-content">
-        <p class="text-center py-10 text-[#9E9E9E] text-xs">Loading contributions…</p>
+        <div id="contributionsList">
+          <p class="text-center py-10 text-[#9E9E9E] text-xs animate-pulse">Loading contributions…</p>
+        </div>
       </div>
 
       <!-- Rotation -->
       <div id="content-rotation" class="tab-content">
-        <p class="text-center py-10 text-[#9E9E9E] text-xs">Loading schedule…</p>
+        <div id="rotationList">
+          <p class="text-center py-10 text-[#9E9E9E] text-xs animate-pulse">Loading schedule…</p>
+        </div>
       </div>
 
       <!-- AI Risk -->
       <div id="content-risk" class="tab-content">
-        <div onclick="navigateToHealthReport()"
-          class="bg-white rounded-3xl border border-[#F5F5F5] p-8 flex flex-col items-center mb-6 cursor-pointer active:scale-95 transition-transform shadow-sm">
+        <div onclick="navigateToHealthReport()" class="bg-white rounded-3xl border border-[#F5F5F5] p-8 flex flex-col items-center mb-6 cursor-pointer active:scale-95 transition-transform shadow-sm">
           <p class="text-xs font-bold text-[#1A1A1A] mb-6">Group Health Score</p>
           <div class="relative w-32 h-32 mb-4">
             <svg viewBox="0 0 110 110" class="w-full h-full">
@@ -131,8 +155,10 @@
               <span class="text-[10px] text-[#9E9E9E]">out of 100</span>
             </div>
           </div>
-          <p id="healthStatusText" class="text-xs font-bold text-[#F2A83B]">Calculating…</p>
+          <p id="healthStatusText" class="text-xs font-bold text-[#F2A83B]">Tap to view full report</p>
         </div>
+        <p class="text-[11px] font-bold text-[#9E9E9E] uppercase mb-3 tracking-wider">Member Risk Levels</p>
+        <div id="memberRiskList" class="flex flex-col gap-2"></div>
       </div>
     </div>
 
@@ -146,8 +172,7 @@
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         <span class="text-[10px] font-bold">Groups</span>
       </button>
-      <button onclick="window.location.href='make-payment.html'"
-        class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 active:scale-90 transition-transform">
+      <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 active:scale-90 transition-transform">
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
       </button>
       <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
@@ -161,106 +186,159 @@
     </div>
 
     <script type="module">
-      import { getGroupDetail, getCycleContributions, getNextPayout, getGroupHealthScore } from "../js/api.js";
+      import { getMe, getGroupDetail, getCycleContributions, getGroupHealthScore } from "../js/api.js";
 
       const urlParams = new URLSearchParams(window.location.search);
       const groupId   = urlParams.get("id");
-      const loaded    = { contributions: false, rotation: false, risk: false };
+      const loaded    = { contributions: false, risk: false };
 
-      // ─── Frequency label helper ───────────────────────────────
-      const FREQ_LABEL = {
-        daily:     "day",
-        weekly:    "week",
-        biweekly:  "2 weeks",
-        monthly:   "month",
+      // ─── Helpers ──────────────────────────────────────────────
+
+      function memberDisplayName(m) {
+        if (m.full_name?.trim()) return m.full_name.trim();
+        if (m.phone_number)      return m.phone_number;
+        return `Member #${m.id}`;
+      }
+
+      function memberInitials(m) {
+        if (m.full_name?.trim()) {
+          return m.full_name.trim().split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
+        }
+        if (m.phone_number) return m.phone_number.slice(-2);
+        return "??";
+      }
+
+      // Friendly frequency label
+      const FREQ_MAP = {
+        daily: "Daily", weekly: "Weekly",
+        biweekly: "Bi-weekly", monthly: "Monthly",
       };
-
       function freqLabel(f) {
-        return FREQ_LABEL[f?.toLowerCase()] ?? f ?? "cycle";
+        if (!f || f.trim() === "") return "Not set";
+        return FREQ_MAP[f.toLowerCase()] ?? (f.charAt(0).toUpperCase() + f.slice(1));
+      }
+
+      // Friendly date — returns "Not set" if null/empty
+      function fmtDate(d) {
+        if (!d) return "Not set";
+        return new Date(d).toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
+      }
+
+      // Due date with urgency colour
+      function dueDateEl(d) {
+        if (!d) return `<span class="text-sm font-bold text-[#9E9E9E]">Not set</span>`;
+        const diff = Math.ceil((new Date(d) - new Date()) / 86400000);
+        const cls  = diff < 0  ? "text-[#EF4444]" :
+                     diff <= 1 ? "text-[#F2A83B]" : "text-[#1A1A1A]";
+        const label = diff < 0  ? `Overdue (${fmtDate(d)})` :
+                      diff === 0 ? `Today` :
+                      diff === 1 ? `Tomorrow` : fmtDate(d);
+        return `<span class="text-sm font-bold ${cls}">${label}</span>`;
+      }
+
+      const RISK_CONFIG = {
+        low:    { label: "Low Risk",    color: "text-[#22C55E]", bg: "bg-[#F0FDF4]", border: "border-[#BBF7D0]" },
+        medium: { label: "Medium Risk", color: "text-[#F5A623]", bg: "bg-[#FFF9ED]", border: "border-[#FDE6B1]" },
+        high:   { label: "High Risk",   color: "text-[#EF4444]", bg: "bg-[#FEF2F2]", border: "border-[#FECACA]" },
+      };
+      function riskBadge(level) {
+        const cfg = RISK_CONFIG[level?.toLowerCase()] || RISK_CONFIG.low;
+        return `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${cfg.bg} ${cfg.border} ${cfg.color}">${cfg.label}</span>`;
       }
 
       // ─── Main init ────────────────────────────────────────────
       async function initDetails() {
         if (!groupId) return;
-
         try {
-          const group = await getGroupDetail(groupId);
+          // Fetch group + current user in parallel
+          const [group, me] = await Promise.all([getGroupDetail(groupId), getMe()]);
 
-          // ── Raw fields from API ──────────────────────────────
+          // ── Determine if current user is admin ───────────────
+          // group.admin is the admin's username — compare against me.username
+          const isAdmin = group.admin && (
+            group.admin === me.username ||
+            group.admin === me.email   ||
+            group.admin === String(me.id)
+          );
+
+          // ── Raw fields ───────────────────────────────────────
           const contributionAmount = parseFloat(group.contribution_amount) || 0;
-          const maxMembers         = group.max_members    || 0;
-          const currentRound       = group.current_round  || 0;
-          const frequency          = group.contribution_frequency || "monthly";
+          const maxMembers         = group.max_members   || 0;
+          const totalMembers       = group.total_members || 0;
+          const currentRound       = group.current_round || 0;
+          const poolAmount         = parseFloat(group.pool_amount) || 0; // money collected so far
+          const frequency          = group.contribution_frequency || "";
+          const members            = group.members || [];
 
-          // ── Calculated values ────────────────────────────────
-          // Total pool = what everyone pays in × number of members
-          const totalPool   = contributionAmount * maxMembers;
-          // Current pool = contributions collected so far (rounds completed × amount)
-          const currentPool = contributionAmount * currentRound;
-          // Progress = how many rounds done out of total members (each member gets 1 round)
-          const pct = maxMembers > 0
-            ? Math.min(Math.round((currentRound / maxMembers) * 100), 100)
+          // ── Calculated ───────────────────────────────────────
+          const targetPool = contributionAmount * maxMembers;
+          const pct = targetPool > 0
+            ? Math.min(Math.round((poolAmount / targetPool) * 100), 100)
             : 0;
 
           // ── Header ───────────────────────────────────────────
           document.getElementById("groupTitle").textContent = group.name;
+          if (isAdmin) document.getElementById("adminBadge").classList.remove("hidden");
 
-          document.getElementById("currentPool").textContent =
-            `₦${currentPool.toLocaleString("en-NG")}`;
+          document.getElementById("currentPool").textContent  = `₦${poolAmount.toLocaleString("en-NG")}`;
+          document.getElementById("targetPool").textContent   = `₦${targetPool.toLocaleString("en-NG")}`;
+          document.getElementById("poolFormula").textContent  =
+            `₦${contributionAmount.toLocaleString("en-NG")} × ${maxMembers} members`;
+          document.getElementById("progressText").textContent = `${pct}% filled`;
+          // Animate after a short delay so the transition plays
+          setTimeout(() => {
+            document.getElementById("progressCircle").style.strokeDashoffset = 314 - (pct / 100) * 314;
+          }, 200);
 
-          document.getElementById("targetPool").textContent =
-            `₦${totalPool.toLocaleString("en-NG")}`;
+          // ── Overview ─────────────────────────────────────────
+          document.getElementById("summaryContribution").textContent = `₦${contributionAmount.toLocaleString("en-NG")}`;
+          document.getElementById("summaryFrequency").textContent    = freqLabel(frequency);
+          document.getElementById("summaryMembers").textContent      = `${totalMembers} / ${maxMembers}`;
+          document.getElementById("summaryTotalPool").textContent    = `₦${targetPool.toLocaleString("en-NG")}`;
+          document.getElementById("summaryStartDate").textContent    = fmtDate(group.start_date);
+          document.getElementById("summaryDueDate").innerHTML        = dueDateEl(group.due_date);
 
-          // e.g. "₦50,000/month × 10 members"
-          document.getElementById("poolFormula").textContent =
-            `₦${contributionAmount.toLocaleString("en-NG")}/${freqLabel(frequency)} × ${maxMembers} members`;
+          const statusEl = document.getElementById("summaryStatus");
+          statusEl.textContent = group.status || "—";
+          statusEl.className = `text-sm font-bold capitalize px-2 py-0.5 rounded-full ${
+            group.status === "active" ? "text-[#22C55E] bg-[#F0FDF4]" :
+            group.status === "open"   ? "text-[#2563EB] bg-[#EFF6FF]" :
+                                        "text-[#9E9E9E] bg-[#F5F5F5]"
+          }`;
 
-          document.getElementById("progressText").textContent = `${pct}% Complete`;
-          document.getElementById("progressCircle").style.strokeDashoffset =
-            314 - (pct / 100) * 314;
+          // ── Invite code — admin only ──────────────────────────
+          if (isAdmin && group.code) {
+            const codeSection = document.getElementById("codeSection");
+            codeSection.classList.remove("hidden");
 
-          // ── Overview tab ─────────────────────────────────────
-          document.getElementById("summaryContribution").textContent =
-            `₦${contributionAmount.toLocaleString("en-NG")}`;
+            const codeDisplay  = document.getElementById("codeDisplay");
+            const toggleBtn    = document.getElementById("toggleCodeBtn");
+            const copyBtn      = document.getElementById("copyCodeBtn");
+            let   codeVisible  = false;
 
-          document.getElementById("summaryFrequency").textContent =
-            frequency.charAt(0).toUpperCase() + frequency.slice(1);
+            // Toggle show/hide
+            toggleBtn.addEventListener("click", () => {
+              codeVisible = !codeVisible;
+              codeDisplay.textContent = codeVisible ? group.code : "••••••••••";
+              document.getElementById("eyeOpenIcon").innerHTML = codeVisible
+                ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
+                : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+            });
 
-          document.getElementById("summaryMembers").textContent = maxMembers;
+            // Copy
+            copyBtn.addEventListener("click", () => {
+              navigator.clipboard.writeText(group.code).catch(() => {});
+              copyBtn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>`;
+              setTimeout(() => {
+                copyBtn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+              }, 2000);
+            });
+          }
 
-          document.getElementById("summaryTotalPool").textContent =
-            `₦${totalPool.toLocaleString("en-NG")}`;
-
-          document.getElementById("summaryRound").textContent =
-            currentRound ? `${currentRound} of ${maxMembers}` : "Not started";
-
-          document.getElementById("summaryStartDate").textContent =
-            group.start_date
-              ? new Date(group.start_date).toLocaleDateString("en-NG", { year: "numeric", month: "long", day: "numeric" })
-              : "—";
-
-          // ── Members tab ──────────────────────────────────────
-          const members = group.members || [];
-          document.getElementById("membersList").innerHTML = members.length
-            ? members.map((m) => {
-                const name     = m.full_name || m.name || "Member";
-                const initials = name.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
-                return `
-                  <a href="member-profile.html?id=${m.id}&groupId=${groupId}"
-                    class="bg-white border border-[#F5F5F5] rounded-2xl p-3.5 flex items-center justify-between active:scale-[0.98] transition-transform">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-full bg-[#1B5E3B]/10 flex items-center justify-center">
-                        <span class="text-[10px] font-bold text-[#1B5E3B]">${initials}</span>
-                      </div>
-                      <div>
-                        <p class="text-sm font-bold text-[#1A1A1A]">${name}</p>
-                        <p class="text-[10px] text-[#9E9E9E]">View Performance</p>
-                      </div>
-                    </div>
-                    <svg class="w-3 h-3 text-[#9E9E9E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-                  </a>`;
-              }).join("")
-            : '<p class="text-center py-10 text-[#9E9E9E] text-xs">No members yet.</p>';
+          // ── Render member-based tabs ──────────────────────────
+          renderMembers(members, groupId);
+          renderRotation(members, contributionAmount, maxMembers);
+          renderMemberRisk(members);
 
         } catch (e) {
           console.error(e);
@@ -268,16 +346,110 @@
         }
       }
 
-      // ─── Lazy tab loaders ─────────────────────────────────────
+      // ─── Members tab ──────────────────────────────────────────
+      function renderMembers(members, groupId) {
+        const el = document.getElementById("membersList");
+        if (!members.length) {
+          el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No members yet.</p>';
+          return;
+        }
+        el.innerHTML = members.map((m) => {
+          const name     = memberDisplayName(m);
+          const initials = memberInitials(m);
+          const joined   = fmtDate(m.joined_at?.split("T")[0]);
+          const cfg      = RISK_CONFIG[m.risk_level?.toLowerCase()] || RISK_CONFIG.low;
+          return `
+            <a href="member-profile.html?memberId=${m.id}&groupId=${groupId}"
+              class="bg-white border border-[#F5F5F5] rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform cursor-pointer hover:border-[#1B5E3B]/20">
 
+              <!-- Avatar -->
+              <div class="w-11 h-11 rounded-full bg-[#1B5E3B]/10 flex items-center justify-center shrink-0">
+                <span class="text-sm font-bold text-[#1B5E3B]">${initials}</span>
+              </div>
+
+              <!-- Info -->
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-[#1A1A1A] truncate">${name}</p>
+                <p class="text-[11px] text-[#9E9E9E] mt-0.5">Slot #${m.rotation_order} · Joined ${joined}</p>
+              </div>
+
+              <!-- Right side -->
+              <div class="flex flex-col items-end gap-1.5 shrink-0">
+                ${riskBadge(m.risk_level)}
+                <span class="text-[10px] ${m.has_received_payout ? "text-[#22C55E] font-bold" : "text-[#9E9E9E]"}">
+                  ${m.has_received_payout ? "Paid out ✓" : "Awaiting"}
+                </span>
+              </div>
+            </a>`;
+        }).join("");
+      }
+
+      // ─── Rotation tab ─────────────────────────────────────────
+      function renderRotation(members, contributionAmount, maxMembers) {
+        const el = document.getElementById("rotationList");
+        if (!members.length) {
+          el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No rotation schedule yet.</p>';
+          return;
+        }
+        const sorted      = [...members].sort((a, b) => a.rotation_order - b.rotation_order);
+        const payoutTotal = contributionAmount * maxMembers;
+        const nextMember  = sorted.find(m => !m.has_received_payout);
+
+        el.innerHTML = `
+          <p class="text-[11px] font-bold text-[#9E9E9E] uppercase mb-3 tracking-wider">Payout Schedule</p>
+          <div class="flex flex-col gap-2">
+            ${sorted.map((m) => {
+              const name     = memberDisplayName(m);
+              const initials = memberInitials(m);
+              const isPaid   = m.has_received_payout;
+              const isNext   = !isPaid && m.id === nextMember?.id;
+              const dotBg    = isPaid ? "bg-[#22C55E]" : isNext ? "bg-[#F2A83B]" : "bg-[#E0E0E0]";
+              const subtext  = isPaid ? "Received payout ✓" : isNext ? "⏳ Next to receive" : `Position #${m.rotation_order}`;
+              return `
+                <div class="bg-white rounded-2xl px-4 py-3 flex items-center gap-3 border border-[#F5F5F5] ${isNext ? "border-[#F2A83B]/30 bg-[#FFF9ED]/50" : ""}">
+                  <div class="w-8 h-8 ${dotBg} rounded-full flex items-center justify-center shrink-0">
+                    <span class="text-white text-[11px] font-bold">${isPaid ? "✓" : m.rotation_order}</span>
+                  </div>
+                  <div class="w-8 h-8 rounded-full bg-[#1B5E3B]/10 flex items-center justify-center shrink-0">
+                    <span class="text-[10px] font-bold text-[#1B5E3B]">${initials}</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-[#1A1A1A] truncate">${name}</p>
+                    <p class="text-xs text-[#9E9E9E]">${subtext}</p>
+                  </div>
+                  <span class="text-sm font-bold text-[#1B5E3B] shrink-0">₦${payoutTotal.toLocaleString("en-NG")}</span>
+                </div>`;
+            }).join("")}
+          </div>`;
+      }
+
+      // ─── AI Risk tab ──────────────────────────────────────────
+      function renderMemberRisk(members) {
+        const el = document.getElementById("memberRiskList");
+        if (!members.length) { el.innerHTML = ""; return; }
+        el.innerHTML = members.map((m) => {
+          const name = memberDisplayName(m);
+          const cfg  = RISK_CONFIG[m.risk_level?.toLowerCase()] || RISK_CONFIG.low;
+          return `
+            <div class="flex items-center gap-3 p-3 rounded-xl border ${cfg.bg} ${cfg.border}">
+              <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm">
+                <span class="text-[10px] font-bold ${cfg.color}">${memberInitials(m)}</span>
+              </div>
+              <span class="font-bold text-xs ${cfg.color} flex-1 truncate">${name}</span>
+              <span class="${cfg.color} text-xs font-bold shrink-0">${cfg.label}</span>
+              <span class="text-[#9E9E9E] text-xs shrink-0">Score: ${m.risk_score ?? 0}</span>
+            </div>`;
+        }).join("");
+      }
+
+      // ─── Contributions (lazy) ─────────────────────────────────
       async function loadContributions() {
-        const el = document.getElementById("content-contributions");
-        el.innerHTML = '<p class="text-center py-6 text-[#9E9E9E] text-xs">Loading…</p>';
+        const el = document.getElementById("contributionsList");
         try {
           const data = await getCycleContributions(groupId);
           const list = Array.isArray(data) ? data : (data.results || data.contributions || []);
           if (!list.length) {
-            el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No contributions yet.</p>';
+            el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No contributions recorded yet.</p>';
             return;
           }
           const statusMap = {
@@ -286,13 +458,13 @@
             pending: `<span class="text-xs text-[#F5A623] font-semibold">Pending</span>`,
           };
           el.innerHTML = `<div class="flex flex-col gap-2">${list.map((c) => {
-            const name   = c.user_name || c.userName || "Member";
+            const name   = c.user_name || c.full_name || "Member";
             const status = statusMap[c.status?.toLowerCase()] || statusMap.pending;
             const date   = c.paid_at
               ? new Date(c.paid_at).toLocaleDateString("en-NG", { month: "short", day: "numeric" })
               : "—";
             return `
-              <div class="bg-white rounded-2xl px-4 py-3 flex items-center justify-between">
+              <div class="bg-white rounded-2xl px-4 py-3 flex items-center justify-between border border-[#F5F5F5]">
                 <div>
                   <p class="text-sm font-semibold text-[#1A1A1A]">${name}</p>
                   <p class="text-xs text-[#9E9E9E]">Round ${c.round_number ?? "—"} · ${date}</p>
@@ -305,52 +477,21 @@
         }
       }
 
-      async function loadRotation() {
-        const el = document.getElementById("content-rotation");
-        el.innerHTML = '<p class="text-center py-6 text-[#9E9E9E] text-xs">Loading…</p>';
-        try {
-          const data    = await getNextPayout(groupId);
-          const payouts = Array.isArray(data) ? data : (data.results || data.payouts || []);
-          if (!payouts.length) {
-            el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No payout schedule yet.</p>';
-            return;
-          }
-          el.innerHTML = `<div class="flex flex-col gap-2">${payouts.map((p, i) => {
-            const name      = p.recipient_name || p.userName || `Member ${i + 1}`;
-            const dotColor  = p.status === "paid" ? "bg-[#22C55E]" : i === 0 ? "bg-[#F5A623]" : "bg-[#E0E0E0]";
-            return `
-              <div class="bg-white rounded-2xl px-4 py-3 flex items-center gap-3">
-                <div class="w-7 h-7 ${dotColor} rounded-full flex items-center justify-center shrink-0">
-                  <span class="text-white text-[10px] font-bold">${i + 1}</span>
-                </div>
-                <div class="flex-1">
-                  <p class="text-sm font-semibold text-[#1A1A1A]">${name}</p>
-                  <p class="text-xs text-[#9E9E9E]">Round ${p.round_number ?? i + 1}</p>
-                </div>
-                <span class="text-sm font-bold text-[#1A1A1A]">₦${Number(p.amount || 0).toLocaleString("en-NG")}</span>
-              </div>`;
-          }).join("")}</div>`;
-        } catch (e) {
-          el.innerHTML = `<p class="text-center py-6 text-red-400 text-xs">${e.message}</p>`;
-        }
-      }
-
+      // ─── Health score (lazy) ──────────────────────────────────
       async function loadRisk() {
         try {
           const h     = await getGroupHealthScore(groupId);
           const score = h.score ?? 75;
-          document.getElementById("healthScoreValue").textContent  = score;
-          document.getElementById("healthStatusText").textContent  =
+          document.getElementById("healthScoreValue").textContent = score;
+          document.getElementById("healthStatusText").textContent =
             h.label || (score >= 80 ? "Healthy 💚" : score >= 50 ? "Moderate ⚠️" : "At Risk 🚨");
-          document.getElementById("riskCircleFill").style.strokeDashoffset =
-            314 - (score / 100) * 314;
-        } catch (e) {
-          console.error("loadRisk:", e.message);
-        }
+          setTimeout(() => {
+            document.getElementById("riskCircleFill").style.strokeDashoffset = 314 - (score / 100) * 314;
+          }, 200);
+        } catch (e) { console.error("loadRisk:", e.message); }
       }
 
       // ─── Tab switcher ─────────────────────────────────────────
-
       window.switchTab = function (tabId) {
         document.querySelectorAll("[id^='tab-']").forEach((btn) => {
           btn.classList.remove("border-[#1B5E3B]", "text-[#1B5E3B]", "font-bold");
@@ -359,16 +500,14 @@
         const active = document.getElementById(`tab-${tabId}`);
         active.classList.add("border-[#1B5E3B]", "text-[#1B5E3B]", "font-bold");
         active.classList.remove("text-[#9E9E9E]", "font-medium", "border-transparent");
-
-        document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
         document.getElementById(`content-${tabId}`).classList.add("active");
 
         if (tabId === "contributions" && !loaded.contributions) { loaded.contributions = true; loadContributions(); }
-        if (tabId === "rotation"      && !loaded.rotation)      { loaded.rotation      = true; loadRotation(); }
         if (tabId === "risk"          && !loaded.risk)          { loaded.risk          = true; loadRisk(); }
       };
 
-      window.navigateToHealthReport = function () {
+      window.navigateToHealthReport = () => {
         window.location.href = groupId ? `health-report.html?id=${groupId}` : "health-report.html";
       };
 
