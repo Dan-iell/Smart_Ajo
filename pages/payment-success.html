@@ -19,78 +19,89 @@
 
   <div class="flex flex-col flex-1 px-5 pt-14 pb-10 items-center">
 
-    <!-- Success icon -->
-    <div class="scale-in w-24 h-24 bg-[#3A3A3A] rounded-full flex items-center justify-center mb-5">
-      <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <div class="scale-in w-24 h-24 bg-[#1B5E3B] rounded-[32px] flex items-center justify-center mb-6 shadow-xl shadow-green-900/20 rotate-3">
+      <svg class="w-12 h-12 text-white -rotate-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
       </svg>
     </div>
 
     <div class="fade-up w-full">
 
-      <!-- Title -->
-      <div class="text-center mb-6">
-        <h1 class="font-['Fraunces'] text-3xl font-bold text-[#1A1A1A] mb-1">Payment Successful</h1>
-        <p class="text-sm text-[#9E9E9E]">Your contribution has been recorded</p>
+      <div class="text-center mb-8">
+        <h1 class="font-['Fraunces'] text-3xl font-black text-[#1A1A1A] mb-1">Payment Successful</h1>
+        <p class="text-sm font-medium text-[#9E9E9E]">Your contribution has been recorded</p>
       </div>
 
-      <!-- Receipt card -->
-      <div class="bg-white rounded-3xl overflow-hidden mb-5">
+      <div class="bg-white rounded-[32px] overflow-hidden mb-6 shadow-sm border border-white">
         <div class="divide-y divide-[#F5F5F5]">
-          <div class="flex items-center justify-between px-5 py-4">
-            <span class="text-sm text-[#9E9E9E]">Amount Paid</span>
-            <span class="text-sm font-bold text-[#1A1A1A]">₦ 50,000</span>
+          <div class="flex items-center justify-between px-6 py-5">
+            <span class="text-sm text-[#9E9E9E] font-medium">Amount Paid</span>
+            <span id="finalAmount" class="text-base font-black text-[#1B5E3B]">₦ 0.00</span>
           </div>
-          <div class="flex items-center justify-between px-5 py-4">
-            <span class="text-sm text-[#9E9E9E]">Group</span>
-            <span class="text-sm font-bold text-[#1A1A1A]">Techies Ajo</span>
+          <div class="flex items-center justify-between px-6 py-5">
+            <span class="text-sm text-[#9E9E9E] font-medium">Group</span>
+            <span id="finalGroup" class="text-sm font-bold text-[#1A1A1A]">--</span>
           </div>
-          <div class="flex items-center justify-between px-5 py-4">
-            <span class="text-sm text-[#9E9E9E]">Transaction ID</span>
-            <span class="text-xs font-bold text-[#1A1A1A] font-mono">HDYDFF-KJD735-DJH6</span>
+          <div class="flex items-center justify-between px-6 py-5">
+            <span class="text-sm text-[#9E9E9E] font-medium">Reference</span>
+            <span id="finalRef" class="text-[10px] font-bold text-[#1A1A1A] font-mono tracking-tighter bg-[#F5F4EF] px-2 py-1 rounded">--</span>
           </div>
         </div>
 
-        <!-- Contribution progress -->
-        <div class="px-5 py-4 border-t border-[#F5F5F5]">
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs text-[#9E9E9E]">Your Contribution Progress</span>
-            <span class="text-xs font-bold text-[#1A1A1A]">8/10 paid</span>
+        <div class="px-6 py-5 border-t border-[#F5F5F5] bg-[#F5F4EF]/20">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-[11px] font-black uppercase tracking-wider text-[#9E9E9E]">Your Progress</span>
+            <span class="text-[11px] font-black text-[#F2A83B] uppercase">Updating...</span>
           </div>
-          <div class="h-2.5 bg-[#F0F0F0] rounded-full overflow-hidden">
-            <div class="bar h-full bg-[#3A3A3A] rounded-full" style="--w:80%; width:80%"></div>
+          <div class="h-2 bg-[#E0E0E0] rounded-full overflow-hidden">
+            <div class="bar h-full bg-[#F2A83B] rounded-full" style="--w:100%; width:100%"></div>
           </div>
         </div>
       </div>
 
-      <!-- Buttons -->
       <div class="flex flex-col gap-3">
-        <button onclick="window.location.href='group-detail.html'"
-          class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-sm font-semibold tracking-wide
-                 transition-all duration-200 hover:bg-black active:scale-95">
-          Back to Group
-        </button>
         <button onclick="window.location.href='dashboard.html'"
-          class="w-full py-4 bg-white border border-[#E0E0E0] text-[#3A3A3A] rounded-full text-sm font-semibold
-                 transition-all duration-200 hover:bg-gray-50 active:scale-95">
-          Go Home
+          class="w-full py-5 bg-[#1B5E3B] text-white rounded-3xl text-sm font-black tracking-widest uppercase
+                 transition-all duration-300 shadow-lg shadow-green-900/20 active:scale-95">
+          Back to Dashboard
+        </button>
+        <button onclick="window.location.href='groups.html'"
+          class="w-full py-5 bg-white border border-[#E0E0E0] text-[#1B5E3B] rounded-3xl text-sm font-black tracking-widest uppercase
+                 transition-all duration-300 active:scale-95">
+          View All Groups
         </button>
       </div>
 
     </div>
   </div>
 
-  <!-- Bottom Nav -->
   <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
-    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px]">Home</span></button>
-    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="text-[10px]">Groups</span></button>
-    <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center -mt-6 shadow-lg"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#1B5E3B]"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="text-[10px] font-bold">Home</span></button>
+    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="text-[10px]">Groups</span></button>
+    <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 active:scale-95 transition-all"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
     <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px]">Alerts</span></button>
-    <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors">
+    <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
-      <span class="text-[10px] font-medium">Profile</span>
+      <span class="text-[10px]">Profile</span>
     </button>
   </div>
 
+  <script type="module">
+    // Extract data from URL params (passed from confirm-payment)
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const amount = params.get('amount') || "0";
+      const group = params.get('groupName') || "N/A";
+      
+      // Update UI
+      document.getElementById('finalAmount').textContent = `₦ ${Number(amount).toLocaleString()}`;
+      document.getElementById('finalGroup').textContent = group;
+      
+      // Generate a fake but realistic Transaction ID
+      const randRef = 'SA-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+      document.getElementById('finalRef').textContent = randRef;
+    };
+  </script>
+
 </body>
-</html>
+</html>3

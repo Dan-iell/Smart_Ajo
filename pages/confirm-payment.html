@@ -1,85 +1,247 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Ajo – Confirm Payment</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    .fade-up{animation:fadeUp 0.5s ease both;}
-    .fade-up-2{animation:fadeUp 0.5s ease 0.1s both;}
-    body{padding-bottom:90px;}
-  </style>
-</head>
-<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo – Confirm Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.5s ease both;
+      }
+      .fade-up-2 {
+        animation: fadeUp 0.5s ease 0.1s both;
+      }
+      body {
+        padding-bottom: 90px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
+  >
+    <div class="px-5 pt-10">
+      <div class="flex items-center gap-3 mb-7 fade-up">
+        <button
+          onclick="history.back()"
+          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] active:scale-90 transition-transform"
+        >
+          <svg
+            class="w-4 h-4 text-[#1B5E3B]"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <h1 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A]">
+          Confirm Payment
+        </h1>
+      </div>
 
-  <div class="px-5 pt-10">
+      <div
+        class="bg-white rounded-3xl overflow-hidden mb-5 fade-up shadow-sm border border-white"
+      >
+        <div class="px-5 py-4 border-b border-[#F5F5F5] bg-[#F5F4EF]/30">
+          <p class="text-xs font-bold text-[#1B5E3B] uppercase tracking-widest">
+            Payment Summary
+          </p>
+        </div>
 
-    <div class="flex items-center gap-3 mb-7 fade-up">
-      <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] active:scale-90 transition-transform">
-        <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        <div class="divide-y divide-[#F5F5F5]">
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Amount</span>
+            <span id="confirmAmount" class="text-sm font-bold text-[#1A1A1A]"
+              >₦ 0.00</span
+            >
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Group</span>
+            <span id="confirmGroup" class="text-sm font-bold text-[#1A1A1A]"
+              >--</span
+            >
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Cycle</span>
+            <span id="confirmCycle" class="text-sm font-bold text-[#1A1A1A]"
+              >Active Cycle</span
+            >
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Payment Method</span>
+            <span id="confirmMethod" class="text-sm font-bold text-[#1A1A1A]"
+              >Squad / Card</span
+            >
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E]">Date</span>
+            <span id="confirmDate" class="text-sm font-bold text-[#1A1A1A]"
+              >--</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex items-start gap-3 bg-[#FFF9ED] border border-[#FDE6B1] rounded-2xl px-4 py-4 mb-8 fade-up-2"
+      >
+        <svg
+          class="w-5 h-5 text-[#F2A83B] shrink-0 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
+        </svg>
+        <p class="text-[11px] text-[#8C5E00] leading-relaxed font-medium">
+          This action will deduct
+          <span id="warningAmount" class="font-bold">₦0</span> from your linked
+          account via <span class="font-bold">Squad</span>. This transaction is
+          processed securely and cannot be reversed once confirmed.
+        </p>
+      </div>
+
+      <button
+        id="btnConfirm"
+        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-bold tracking-wide transition-all duration-300 hover:brightness-110 active:scale-95 fade-up-2 shadow-lg shadow-orange-900/20"
+      >
+        Confirm & Pay Now
       </button>
-      <h1 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A]">Confirm Payment</h1>
     </div>
 
-    <div class="bg-white rounded-3xl overflow-hidden mb-5 fade-up shadow-sm border border-white">
-      <div class="px-5 py-4 border-b border-[#F5F5F5] bg-[#F5F4EF]/30">
-        <p class="text-xs font-bold text-[#1B5E3B] uppercase tracking-widest">Payment Summary</p>
-      </div>
-
-      <div class="divide-y divide-[#F5F5F5]">
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Amount</span>
-          <span id="confirmAmount" class="text-sm font-bold text-[#1A1A1A]">--</span>
-        </div>
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Group</span>
-          <span id="confirmGroup" class="text-sm font-bold text-[#1A1A1A]">--</span>
-        </div>
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Cycle</span>
-          <span id="confirmCycle" class="text-sm font-bold text-[#1A1A1A]">--</span>
-        </div>
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Payment Method</span>
-          <span id="confirmMethod" class="text-sm font-bold text-[#1A1A1A]">--</span>
-        </div>
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Date</span>
-          <span id="confirmDate" class="text-sm font-bold text-[#1A1A1A]">--</span>
-        </div>
-      </div>
+    <div
+      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50"
+    >
+      <button
+        onclick="window.location.href = 'dashboard.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M3 12L12 3l9 9" />
+          <path d="M9 21V12h6v9" /></svg
+        ><span class="text-[10px]">Home</span>
+      </button>
+      <button
+        onclick="window.location.href = 'groups.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" /></svg
+        ><span class="text-[10px]">Groups</span>
+      </button>
+      <button
+        onclick="window.location.href = 'make-payment.html'"
+        class="w-14 h-14 bg-[#1B5E3B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-green-900/30 active:scale-95 transition-all"
+      >
+        <svg
+          class="w-6 h-6 text-white"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+      <button
+        onclick="window.location.href = 'alerts.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg
+        ><span class="text-[10px]">Alerts</span>
+      </button>
+      <button
+        onclick="window.location.href = 'profile.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="7" r="4" />
+          <path d="M5.5 20a7 7 0 0 1 13 0" />
+        </svg>
+        <span class="text-[10px]">Profile</span>
+      </button>
     </div>
 
-    <div class="flex items-start gap-3 bg-[#FFF9ED] border border-[#FDE6B1] rounded-2xl px-4 py-4 mb-8 fade-up-2">
-      <svg class="w-5 h-5 text-[#F2A83B] shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        <path d="M12 8v4"/><path d="M12 16h.01"/>
-      </svg>
-      <p class="text-[11px] text-[#8C5E00] leading-relaxed font-medium">
-        This action will deduct the specified amount from your linked account via <span class="font-bold">Squad</span>. This transaction is processed securely and cannot be reversed once confirmed.
-      </p>
-    </div>
+    <script type="module">
+      import { requireAuth } from "../js/api.js";
 
-    <button id="btnConfirm" onclick="window.location.href='payment-success.html'"
-      class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-bold tracking-wide
-             transition-all duration-300 hover:brightness-110 active:scale-95 fade-up-2 shadow-lg shadow-orange-900/20">
-      Confirm & Pay Now
-    </button>
+      if (requireAuth()) {
+        initConfirmPage();
+      }
 
-  </div>
+      function initConfirmPage() {
+        // 1. Get Params from URL
+        const params = new URLSearchParams(window.location.search);
+        const amount = params.get("amount") || "0";
+        const groupName = params.get("groupName") || "Unknown Group";
 
-  <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
-    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px]">Home</span></button>
-    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="text-[10px]">Groups</span></button>
-    <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#1B5E3B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-green-900/30 active:scale-95 transition-all"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-    <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px]">Alerts</span></button>
-    <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
-      <span class="text-[10px]">Profile</span>
-    </button>
-  </div>
+        // 2. Format Money
+        const formattedAmount = `₦ ${Number(amount).toLocaleString()}`;
 
-</body>
+        // 3. Update UI
+        document.getElementById("confirmAmount").textContent = formattedAmount;
+        document.getElementById("warningAmount").textContent = formattedAmount;
+        document.getElementById("confirmGroup").textContent = groupName;
+
+        // 4. Auto-set Date
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        document.getElementById("confirmDate").textContent =
+          new Date().toLocaleDateString("en-US", options);
+
+        // 5. Handle Final Button
+        const btn = document.getElementById("btnConfirm");
+        btn.addEventListener("click", () => {
+          // Here you would normally call your payment API
+          console.log(`Processing payment of ${amount} for ${groupName}`);
+          window.location.href = "payment-success.html";
+        });
+      }
+    </script>
+  </body>
 </html>
