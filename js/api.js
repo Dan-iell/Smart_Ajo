@@ -329,9 +329,6 @@ export async function getGroupById(groupId) {
   return getGroupDetail(groupId);
 }
 
-export async function getGroupMembers(groupId) {
-  return request("GET", `api/groups/${groupId}/members/`, null, true);
-}
 
 export async function getCycleContributions(groupId) {
   return request("GET", `api/contributions/group/${groupId}/`, null, true);
