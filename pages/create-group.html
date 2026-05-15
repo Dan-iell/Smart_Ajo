@@ -11,85 +11,44 @@
     />
     <style>
       @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(16px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-      .fade-up {
-        animation: fadeUp 0.5s ease both;
-      }
-      body {
-        padding-bottom: 90px;
-      }
-      /* Custom focus styles for brand consistency */
+      .fade-up { animation: fadeUp 0.5s ease both; }
+      body { padding-bottom: 90px; }
       .input-focus:focus-within {
         border-color: #1B5E3B;
         box-shadow: 0 0 0 1px #1B5E3B;
       }
     </style>
   </head>
-  <body
-    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
-  >
+  <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
     <div class="px-5 pt-10 fade-up">
-      <!-- Header -->
       <div class="flex items-center gap-3 mb-6">
-        <button
-          onclick="history.back()"
-          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] hover:bg-gray-50 transition-colors"
-        >
-          <svg
-            class="w-4 h-4 text-[#1B5E3B]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
+        <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] hover:bg-gray-50 transition-colors">
+          <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <h1 class="font-['Fraunces'] text-xl font-bold text-[#1A1A1A]">
-          Create Group
-        </h1>
+        <h1 class="font-['Fraunces'] text-xl font-bold text-[#1A1A1A]">Create Group</h1>
       </div>
 
-      <!-- Stepper Component -->
       <div class="flex items-center gap-2 mb-8 px-2">
-        <div
-          class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm"
-        >
+        <div class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm">
           <span class="text-white text-xs font-bold">1</span>
         </div>
-        <div class="flex-1 h-1 bg-[#E0E0E0] rounded-full">
-            <div class="h-full bg-[#1B5E3B] rounded-full w-0"></div>
-        </div>
-        <div
-          id="step2"
-          class="w-8 h-8 bg-[#E0E0E0] rounded-full flex items-center justify-center"
-        >
+        <div class="flex-1 h-1 bg-[#E0E0E0] rounded-full"></div>
+        <div class="w-8 h-8 bg-[#E0E0E0] rounded-full flex items-center justify-center">
           <span class="text-[#9E9E9E] text-xs font-bold">2</span>
         </div>
         <div class="flex-1 h-1 bg-[#E0E0E0] rounded-full"></div>
-        <div
-          id="step3"
-          class="w-8 h-8 bg-[#E0E0E0] rounded-full flex items-center justify-center"
-        >
+        <div class="w-8 h-8 bg-[#E0E0E0] rounded-full flex items-center justify-center">
           <span class="text-[#9E9E9E] text-xs font-bold">3</span>
         </div>
       </div>
 
-      <!-- Content -->
-      <h2 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A] mb-1">
-        Group Details
-      </h2>
-      <p class="text-sm text-[#6B6B6B] mb-7 leading-relaxed">
-        Establish the identity of your new savings circle.
-      </p>
+      <h2 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A] mb-1">Group Details</h2>
+      <p class="text-sm text-[#6B6B6B] mb-7 leading-relaxed">Establish the identity of your new savings circle.</p>
 
       <p id="groupError" class="text-xs font-semibold text-red-600 mb-4 hidden flex items-center gap-1">
         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
@@ -98,45 +57,22 @@
 
       <div class="flex flex-col gap-6">
         <div>
-          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
-            >Group Name</label
-          >
+          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block">Group Name</label>
           <div class="bg-white border border-[#E0E0E0] rounded-xl px-4 py-3.5 input-focus transition-all">
-            <input
-              type="text"
-              id="groupName"
-              placeholder="e.g. Uni Savings Collective"
-              class="w-full text-sm font-medium bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD]"
-            />
+            <input type="text" id="groupName" placeholder="e.g. Uni Savings Collective" class="w-full text-sm font-medium bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD]" />
           </div>
         </div>
         <div>
-          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
-            >Description</label
-          >
+          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block">Description</label>
           <div class="bg-white border border-[#E0E0E0] rounded-xl px-4 py-3 input-focus transition-all">
-            <textarea
-              id="groupDesc"
-              rows="4"
-              placeholder="What is the goal of this Ajo group?"
-              class="w-full text-sm font-medium bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD] resize-none leading-relaxed"
-            ></textarea>
+            <textarea id="groupDesc" rows="4" placeholder="What is the goal of this Ajo group?" class="w-full text-sm font-medium bg-transparent outline-none text-[#1A1A1A] placeholder-[#BDBDBD] resize-none leading-relaxed"></textarea>
           </div>
         </div>
       </div>
 
-      <!-- Primary Action -->
-      <button
-        id="nextStepBtn"
-        class="w-full py-4 bg-[#F2A83B] text-white rounded-full text-sm font-bold tracking-wide mt-10 shadow-lg shadow-orange-900/20 transition-all duration-200 hover:brightness-105 active:scale-[0.98]"
-      >
+      <button id="nextStepBtn" class="w-full py-5 bg-[#1B5E3B] text-white rounded-full text-sm font-black tracking-widest uppercase mt-10 shadow-lg shadow-green-900/20 transition-all duration-300 hover:bg-[#144d30] active:scale-[0.98]">
         Continue to Terms
       </button>
-    </div>
-
-    <!-- Background Decoration -->
-    <div class="fixed top-0 right-0 -z-10 opacity-5">
-        <svg width="200" height="200" viewBox="0 0 200 200" fill="none"><circle cx="150" cy="50" r="100" fill="#1B5E3B"/></svg>
     </div>
 
     <script type="module">
@@ -144,21 +80,9 @@
         const name = document.getElementById("groupName").value.trim();
         const desc = document.getElementById("groupDesc").value.trim();
         const errorEl = document.getElementById("groupError");
-
-        if (!name || !desc) {
-          errorEl.classList.remove("hidden");
-          return;
-        }
-
+        if (!name || !desc) { errorEl.classList.remove("hidden"); return; }
         errorEl.classList.add("hidden");
-
-        // Save to localStorage for persistence across the creation wizard
-        const step1Data = {
-          name: name,
-          description: desc,
-        };
-        localStorage.setItem("group_step_1", JSON.stringify(step1Data));
-
+        localStorage.setItem("group_step_1", JSON.stringify({ name, description: desc }));
         window.location.href = "create-group-2.html";
       });
     </script>

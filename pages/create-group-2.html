@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -30,8 +30,8 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .input-focus:focus-within {
-        border-color: #1B5E3B;
-        box-shadow: 0 0 0 1px #1B5E3B;
+        border-color: #1b5e3b;
+        box-shadow: 0 0 0 1px #1b5e3b;
       }
     </style>
   </head>
@@ -39,7 +39,6 @@
     class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
   >
     <div class="px-5 pt-10 fade-up">
-      <!-- Header -->
       <div class="flex items-center gap-3 mb-6">
         <button
           onclick="history.back()"
@@ -60,7 +59,6 @@
         </h1>
       </div>
 
-      <!-- Stepper (Progressing) -->
       <div class="flex items-center gap-2 mb-8 px-2">
         <div
           class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm"
@@ -96,18 +94,10 @@
         Define the financial rhythm of your group.
       </p>
 
-      <p
-        id="setupError"
-        class="text-xs font-bold text-red-600 mb-4 hidden bg-red-50 p-4 rounded-xl border border-red-100 text-center flex items-center justify-center gap-2"
-      >
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
-        All fields are required.
-      </p>
-
       <div class="flex flex-col gap-6">
-        <!-- Amount Input -->
         <div>
-          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
+          <label
+            class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
             >Contribution Amount</label
           >
           <div
@@ -123,9 +113,9 @@
           </div>
         </div>
 
-        <!-- Frequency Toggle -->
         <div>
-          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
+          <label
+            class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
             >Payment Frequency</label
           >
           <div
@@ -148,7 +138,7 @@
             <button
               id="freq-biweekly"
               onclick="setFreq('biweekly')"
-              class="freq-btn py-3 rounded-full text-[12px] font-bold bg-[#1B5E3B] text-white shadow-md"
+              class="freq-btn py-3 rounded-full text-[12px] font-bold bg-[#F2A83B] text-white shadow-md"
             >
               Bi-weekly
             </button>
@@ -162,9 +152,9 @@
           </div>
         </div>
 
-        <!-- Max Members Input -->
         <div>
-          <label class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
+          <label
+            class="text-xs font-bold text-[#1B5E3B] uppercase tracking-wider mb-2 block"
             >Maximum Members</label
           >
           <div
@@ -180,10 +170,9 @@
         </div>
       </div>
 
-      <!-- Action Button -->
       <button
         id="step2Btn"
-        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-black tracking-wide mt-10 transition-all duration-300 hover:brightness-105 active:scale-[0.98] shadow-lg shadow-orange-900/20 flex items-center justify-center gap-3"
+        class="w-full py-5 bg-[#1B5E3B] text-white rounded-full text-sm font-black tracking-widest uppercase mt-10 transition-all duration-300 hover:bg-[#144d30] active:scale-[0.98] shadow-lg shadow-green-900/20 flex items-center justify-center gap-3"
       >
         Review Group
         <svg
@@ -198,47 +187,32 @@
       </button>
     </div>
 
-    <!-- Decorative Background Shape -->
-    <div class="fixed -bottom-10 -left-10 -z-10 opacity-5">
-        <svg width="250" height="250" viewBox="0 0 200 200" fill="none"><circle cx="50" cy="150" r="120" fill="#F2A83B"/></svg>
-    </div>
-
     <script>
-      let selectedFrequency = "biweekly"; 
-
+      let selectedFrequency = "biweekly";
       function setFreq(val) {
         selectedFrequency = val;
-        const buttons = document.querySelectorAll('button[id^="freq-"]');
-        buttons.forEach((btn) => {
+        document.querySelectorAll('button[id^="freq-"]').forEach((btn) => {
           if (btn.id === `freq-${val}`) {
-            btn.classList.add("bg-[#1B5E3B]", "text-white", "shadow-md");
+            btn.classList.add("bg-[#F2A83B]", "text-white", "shadow-md");
             btn.classList.remove("text-[#9E9E9E]");
           } else {
-            btn.classList.remove("bg-[#1B5E3B]", "text-white", "shadow-md");
+            btn.classList.remove("bg-[#F2A83B]", "text-white", "shadow-md");
             btn.classList.add("text-[#9E9E9E]");
           }
         });
       }
-
       document.getElementById("step2Btn").addEventListener("click", () => {
         const amount = document.getElementById("amount").value;
         const maxMembers = document.getElementById("maxMembers").value;
-        const errorEl = document.getElementById("setupError");
-
-        if (!amount || !maxMembers) {
-          errorEl.classList.remove("hidden");
-          return;
-        }
-
-        errorEl.classList.add("hidden");
-
-        const step2Data = {
-          contribution_amount: parseFloat(amount),
-          frequency: selectedFrequency,
-          max_members: parseInt(maxMembers),
-        };
-
-        localStorage.setItem("group_step_2", JSON.stringify(step2Data));
+        if (!amount || !maxMembers) return;
+        localStorage.setItem(
+          "group_step_2",
+          JSON.stringify({
+            contribution_amount: parseFloat(amount),
+            frequency: selectedFrequency,
+            max_members: parseInt(maxMembers),
+          }),
+        );
         window.location.href = "create-group-3.html";
       });
     </script>

@@ -35,25 +35,21 @@
 
   <div class="flex flex-col flex-1 px-6 pt-14 pb-10 fade-up">
 
-    <!-- Back button -->
     <button onclick="history.back()" class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 mb-8 hover:bg-slate-50 transition-colors shadow-sm">
       <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M15 18l-6-6 6-6"/>
       </svg>
     </button>
 
-    <!-- Icon -->
     <div class="w-14 h-14 bg-brandGreen rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-brandGreen/20">
       <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/>
       </svg>
     </div>
 
-    <!-- Heading -->
     <h1 class="font-display text-4xl font-bold text-slate-900 mb-2 tracking-tighter">Verify Code</h1>
     <p class="text-sm text-slate-500 mb-10 leading-relaxed font-medium">We sent a 4-digit verification code to your email. Enter it below to secure your account.</p>
 
-    <!-- OTP inputs -->
     <div class="mb-6">
       <label class="text-[11px] font-bold uppercase tracking-widest text-brandGreen mb-4 block ml-1">Enter Code</label>
       <div class="flex gap-4 justify-between">
@@ -72,17 +68,15 @@
       </div>
     </div>
 
-    <!-- Resend -->
     <p class="text-xs text-slate-500 mb-10 font-medium">
       Didn't receive a code?
       <button class="text-brandGreen font-bold hover:underline underline-offset-4 ml-1">Resend Code</button>
     </p>
 
-    <!-- Send button -->
     <button
       onclick="window.location.href='new-password.html'"
-      class="w-full py-4.5 bg-brandGold text-white rounded-2xl text-sm font-bold tracking-wide
-             transition-all duration-200 hover:bg-[#e8951c] hover:shadow-lg hover:shadow-brandGold/20 active:scale-95 py-4">
+      class="w-full py-5 bg-brandGreen text-white rounded-2xl text-sm font-black uppercase tracking-[0.2em] 
+             transition-all duration-300 hover:brightness-110 shadow-lg shadow-green-900/20 active:scale-95">
       Verify Account
     </button>
 

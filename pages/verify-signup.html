@@ -145,7 +145,6 @@
         id="authError"
         class="text-red-500 text-xs mt-2 mb-4 hidden text-center font-bold uppercase tracking-tighter"
       ></p>
-
       <p
         class="text-xs font-bold text-[#6B6B6B] mb-8 uppercase tracking-widest"
       >
@@ -161,7 +160,7 @@
 
       <button
         id="verifyBtn"
-        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 hover:brightness-110 active:scale-[0.98] shadow-lg shadow-orange-900/20 flex items-center justify-center gap-3"
+        class="w-full py-5 bg-[#1B5E3B] text-white rounded-full text-sm font-black uppercase tracking-[0.2em] transition-all duration-300 hover:brightness-110 active:scale-[0.98] shadow-lg shadow-green-900/20 flex items-center justify-center gap-3"
       >
         <span id="btnText">Verify & Continue</span>
         <div id="btnLoader" class="spinner hidden"></div>
@@ -169,103 +168,94 @@
     </div>
 
     <script type="module">
-  import { handleVerifySignup, handleResendOTP } from "../js/auth.js";
+      import { handleVerifySignup, handleResendOTP } from "../js/auth.js";
 
-  const otpInputs = document.querySelectorAll(".otp-input");
-  const timerEl = document.getElementById("timer");
-  const resendBtn = document.getElementById("resendBtn");
-  const verifyBtn = document.getElementById("verifyBtn");
-  const emailDisplay = document.getElementById("displayEmail");
+      const otpInputs = document.querySelectorAll(".otp-input");
+      const timerEl = document.getElementById("timer");
+      const resendBtn = document.getElementById("resendBtn");
+      const verifyBtn = document.getElementById("verifyBtn");
+      const emailDisplay = document.getElementById("displayEmail");
 
-  // 1. Fixed Email Display Logic
-  const pendingEmail = localStorage.getItem("ajo_pending_email");
-  if (pendingEmail) {
-    emailDisplay.textContent = pendingEmail;
-  } else {
-    emailDisplay.textContent = "your registered email";
-    console.warn("No pending email found in localStorage");
-  }
-
-  // 2. Optimized Auto-focus & Movement Logic
-  otpInputs.forEach((input, index) => {
-    // Force numbers only and move forward
-    input.addEventListener("keyup", (e) => {
-      const val = e.target.value;
-      
-      // If a number is entered, move to next
-      if (val.match(/^[0-9]$/)) {
-        if (index < otpInputs.length - 1) {
-          otpInputs[index + 1].focus();
-        }
+      const pendingEmail = localStorage.getItem("ajo_pending_email");
+      if (pendingEmail) {
+        emailDisplay.textContent = pendingEmail;
+      } else {
+        emailDisplay.textContent = "your registered email";
+        console.warn("No pending email found in localStorage");
       }
-    });
 
-    // Handle Backspace properly
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace") {
-        if (!input.value && index > 0) {
-          otpInputs[index - 1].focus();
-        }
-      }
-    });
-
-    // Handle Paste (Auto-fill all 6 boxes)
-    input.addEventListener("paste", (e) => {
-      const pasteData = e.clipboardData.getData("text").trim();
-      if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
-        const digits = pasteData.split("");
-        otpInputs.forEach((inp, i) => {
-          inp.value = digits[i];
+      otpInputs.forEach((input, index) => {
+        input.addEventListener("keyup", (e) => {
+          const val = e.target.value;
+          if (val.match(/^[0-9]$/)) {
+            if (index < otpInputs.length - 1) {
+              otpInputs[index + 1].focus();
+            }
+          }
         });
-        otpInputs[5].focus(); // Focus last box
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace") {
+            if (!input.value && index > 0) {
+              otpInputs[index - 1].focus();
+            }
+          }
+        });
+
+        input.addEventListener("paste", (e) => {
+          const pasteData = e.clipboardData.getData("text").trim();
+          if (pasteData.length === 6 && /^\d+$/.test(pasteData)) {
+            const digits = pasteData.split("");
+            otpInputs.forEach((inp, i) => {
+              inp.value = digits[i];
+            });
+            otpInputs[5].focus();
+            e.preventDefault();
+          }
+        });
+      });
+
+      verifyBtn.addEventListener("click", (e) => {
         e.preventDefault();
-      }
-    });
-  });
+        handleVerifySignup();
+      });
 
-  // 3. API Handlers
-  verifyBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    handleVerifySignup();
-  });
-  
-  resendBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    try {
-      await handleResendOTP();
+      resendBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          await handleResendOTP();
+          resetTimer();
+        } catch (err) {
+          console.error("Resend failed", err);
+        }
+      });
+
+      let countdown;
+      function resetTimer() {
+        let seconds = 60;
+        resendBtn.disabled = true;
+        resendBtn.classList.remove("text-[#1B5E3B]");
+        resendBtn.classList.add("text-gray-400");
+
+        if (countdown) clearInterval(countdown);
+
+        countdown = setInterval(() => {
+          seconds--;
+          if (seconds <= 0) {
+            clearInterval(countdown);
+            timerEl.textContent = "00:00";
+            resendBtn.disabled = false;
+            resendBtn.classList.remove("text-gray-400");
+            resendBtn.classList.add("text-[#1B5E3B]");
+            return;
+          }
+          const m = Math.floor(seconds / 60);
+          const s = seconds % 60;
+          timerEl.textContent = `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+        }, 1000);
+      }
+
       resetTimer();
-    } catch (err) {
-      console.error("Resend failed", err);
-    }
-  });
-
-  // 4. Timer Logic
-  let countdown;
-  function resetTimer() {
-    let seconds = 60; 
-    resendBtn.disabled = true;
-    resendBtn.classList.remove("text-[#1B5E3B]");
-    resendBtn.classList.add("text-gray-400");
-    
-    if (countdown) clearInterval(countdown);
-    
-    countdown = setInterval(() => {
-      seconds--;
-      if (seconds <= 0) {
-        clearInterval(countdown);
-        timerEl.textContent = "00:00";
-        resendBtn.disabled = false;
-        resendBtn.classList.remove("text-gray-400");
-        resendBtn.classList.add("text-[#1B5E3B]");
-        return;
-      }
-      const m = Math.floor(seconds / 60);
-      const s = seconds % 60;
-      timerEl.textContent = `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-    }, 1000);
-  }
-  
-  resetTimer();
-</script>
+    </script>
   </body>
 </html>
