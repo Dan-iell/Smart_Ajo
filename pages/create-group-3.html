@@ -11,21 +11,12 @@
     />
     <style>
       @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(16px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
       }
-      .fade-up {
-        animation: fadeUp 0.5s ease both;
-      }
-      body {
-        padding-bottom: 90px;
-      }
+      .fade-up { animation: fadeUp 0.5s ease both; }
+      body { padding-bottom: 90px; }
+
       .option-card {
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
@@ -33,7 +24,6 @@
       }
       .option-card.selected {
         border-color: #1B5E3B;
-        background: #1B5E3B/5;
         transform: translateY(-2px);
       }
       .option-radio {
@@ -45,6 +35,7 @@
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
+        flex-shrink: 0;
       }
       .option-card.selected .option-radio {
         border-color: #1B5E3B;
@@ -58,44 +49,33 @@
         opacity: 0;
         transition: opacity 0.2s;
       }
-      .option-card.selected .option-dot {
-        opacity: 1;
-      }
+      .option-card.selected .option-dot { opacity: 1; }
     </style>
   </head>
-  <body
-    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
-  >
+  <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
     <div class="px-5 pt-10 fade-up">
+
       <!-- Header -->
       <div class="flex items-center gap-3 mb-6">
         <button
           onclick="history.back()"
           class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] shadow-sm active:scale-90 transition-transform"
         >
-          <svg
-            class="w-4 h-4 text-[#1B5E3B]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <h1 class="font-['Fraunces'] text-xl font-bold text-[#1A1A1A]">
-          Create Group
-        </h1>
+        <h1 class="font-['Fraunces'] text-xl font-bold text-[#1A1A1A]">Create Group</h1>
       </div>
 
-      <!-- Full Stepper -->
+      <!-- Stepper — all complete -->
       <div class="flex items-center gap-2 mb-8 px-2">
         <div class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm">
           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
         </div>
         <div class="flex-1 h-1 bg-[#1B5E3B] rounded-full"></div>
         <div class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
         </div>
         <div class="flex-1 h-1 bg-[#1B5E3B] rounded-full"></div>
         <div class="w-8 h-8 bg-[#1B5E3B] rounded-full flex items-center justify-center shadow-sm">
@@ -103,25 +83,18 @@
         </div>
       </div>
 
-      <h2 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A] mb-1">
-        Rotation Method
-      </h2>
-      <p class="text-sm text-[#6B6B6B] mb-7">
-        Determine how payout turns are assigned.
-      </p>
+      <h2 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A] mb-1">Rotation Method</h2>
+      <p class="text-sm text-[#6B6B6B] mb-7">Determine how payout turns are assigned.</p>
 
+      <!-- Error -->
       <p id="finalError" class="text-xs font-bold text-red-600 mb-4 hidden bg-red-50 p-4 rounded-xl border border-red-100 text-center"></p>
 
       <!-- Options -->
       <div class="flex flex-col gap-4 mb-8">
-        <div
-          class="option-card selected bg-white border-[#1B5E3B] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
-          data-method="random"
-          onclick="selectOption(this)"
-        >
-          <div class="option-radio shrink-0 mt-0.5">
-            <div class="option-dot"></div>
-          </div>
+
+        <div class="option-card selected bg-white border-[#1B5E3B] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
+          data-method="random" onclick="selectOption(this)">
+          <div class="option-radio mt-0.5"><div class="option-dot"></div></div>
           <div>
             <p class="text-sm font-bold text-[#1A1A1A]">Random Draw</p>
             <p class="text-xs text-[#9E9E9E] mt-1 font-medium leading-relaxed">
@@ -130,14 +103,9 @@
           </div>
         </div>
 
-        <div
-          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
-          data-method="admin"
-          onclick="selectOption(this)"
-        >
-          <div class="option-radio shrink-0 mt-0.5">
-            <div class="option-dot"></div>
-          </div>
+        <div class="option-card bg-white border-[#E0E0E0] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
+          data-method="admin" onclick="selectOption(this)">
+          <div class="option-radio mt-0.5"><div class="option-dot"></div></div>
           <div>
             <p class="text-sm font-bold text-[#1A1A1A]">Admin Assignment</p>
             <p class="text-xs text-[#9E9E9E] mt-1 font-medium leading-relaxed">
@@ -146,14 +114,9 @@
           </div>
         </div>
 
-        <div
-          class="option-card bg-white border-[#E0E0E0] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
-          data-method="bidding"
-          onclick="selectOption(this)"
-        >
-          <div class="option-radio shrink-0 mt-0.5">
-            <div class="option-dot"></div>
-          </div>
+        <div class="option-card bg-white border-[#E0E0E0] rounded-2xl p-5 flex items-start gap-4 shadow-sm"
+          data-method="bidding" onclick="selectOption(this)">
+          <div class="option-radio mt-0.5"><div class="option-dot"></div></div>
           <div>
             <p class="text-sm font-bold text-[#1A1A1A]">Member Bidding</p>
             <p class="text-xs text-[#9E9E9E] mt-1 font-medium leading-relaxed">
@@ -161,18 +124,17 @@
             </p>
           </div>
         </div>
+
       </div>
 
       <!-- Action Button -->
-      <button
-        id="finalCreateBtn"
-        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-black tracking-wide transition-all duration-300 hover:brightness-105 active:scale-[0.98] shadow-lg shadow-orange-900/20"
-      >
+      <button id="finalCreateBtn"
+        class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-base font-black tracking-wide transition-all duration-300 hover:brightness-105 active:scale-[0.98] shadow-lg shadow-orange-900/20">
         Complete Group Creation
       </button>
+
     </div>
 
-    <!-- Scripting -->
     <script type="module">
       import { createGroup } from "../js/api.js";
 
@@ -188,59 +150,57 @@
         element.classList.remove("border-[#E0E0E0]");
       };
 
-      async function handleCreateGroup() {
+      document.getElementById("finalCreateBtn").addEventListener("click", async () => {
         const errorEl = document.getElementById("finalError");
-        const btn = document.getElementById("finalCreateBtn");
+        const btn     = document.getElementById("finalCreateBtn");
 
+        // ── Pull data from previous steps ──────────────────────
         const step1 = JSON.parse(localStorage.getItem("group_step_1") || "{}");
         const step2 = JSON.parse(localStorage.getItem("group_step_2") || "{}");
-        
-        const finalData = {
-          name: step1.name,
-          description: step1.description,
-          contribution_amount: step2.contribution_amount,
-          max_members: step2.max_members,
-          rotation_method: selectedMethod,
-          frequency: step2.frequency || "monthly"
-        };
 
-        if (!finalData.name || !finalData.max_members) {
-           errorEl.textContent = "Data missing. Please return to Step 1.";
-           errorEl.classList.remove("hidden");
-           return;
+        // Guard: if step 1 data is missing, send user back
+        if (!step1.name || !step2.contribution_amount || !step2.max_members) {
+          errorEl.textContent = "Some details are missing. Please go back to Step 1 and fill everything in.";
+          errorEl.classList.remove("hidden");
+          return;
         }
 
+        const finalData = {
+          name:                step1.name,
+          description:         step1.description || "",
+          contribution_amount: step2.contribution_amount,
+          max_members:         step2.max_members,
+          rotation_method:     selectedMethod,
+          frequency:           step2.frequency || "monthly",
+        };
+
+        // ── Submit ─────────────────────────────────────────────
+        errorEl.classList.add("hidden");
+        btn.textContent = "Creating…";
+        btn.disabled    = true;
+
         try {
-          errorEl.classList.add("hidden");
-          btn.innerText = "Finishing...";
-          btn.disabled = true;
-
-          await createGroup(finalData);
-
+          // ✅ Single API call — result stored in one variable
           const result = await createGroup(finalData);
 
-          // Save the real group code for the success page
-          if (result.code) {
-            localStorage.setItem("ajo_last_group_code", result.code);
-          }
-          if (result.name || finalData.name) {
-            localStorage.setItem("lastCreatedGroup", JSON.stringify({ name: result.name || finalData.name }));
-          }
+          // ── Pass data to success page via localStorage ────────
+          localStorage.setItem("ajo_new_group_name", result.name || finalData.name);
+          localStorage.setItem("ajo_new_group_id",   result.id   || "");
+          localStorage.setItem("ajo_new_group_link", result.invite_link || result.code || "");
 
-          // Clear cache
+          // ── Clean up wizard data ──────────────────────────────
           localStorage.removeItem("group_step_1");
           localStorage.removeItem("group_step_2");
 
-          window.location.href = "groups.html";
-        } catch (error) {
-          errorEl.textContent = error.message;
-          errorEl.classList.remove("hidden");
-          btn.innerText = "Complete Group Creation";
-          btn.disabled = false;
-        }
-      }
+          window.location.href = "group-created.html";
 
-      document.getElementById("finalCreateBtn").addEventListener("click", handleCreateGroup);
+        } catch (error) {
+          errorEl.textContent = error.message || "Something went wrong. Please try again.";
+          errorEl.classList.remove("hidden");
+          btn.textContent = "Complete Group Creation";
+          btn.disabled    = false;
+        }
+      });
     </script>
   </body>
 </html>
