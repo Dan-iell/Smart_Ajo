@@ -158,18 +158,10 @@ export async function resendOtp(email) {
 // USER & PROFILE
 // ─────────────────────────────────────────────
 
-/**
- * Fetches current user basic info.
- * Targets Swagger: GET /api/auth/me/
- */
 export async function getMe() {
   return request("GET", "api/auth/me/", null, true);
 }
 
-/**
- * Updates the current user's profile information.
- * Targets Swagger: PATCH /api/auth/profile/
- */
 export async function updateProfile(userData) {
   return request("PATCH", "api/auth/profile/", userData, true);
 }
@@ -213,7 +205,6 @@ export async function getGroupDetail(groupId) {
   }
 }
 
-// Alias so groups.js can call getGroupById without breaking
 export async function getGroupById(groupId) {
   return getGroupDetail(groupId);
 }
@@ -231,10 +222,6 @@ export async function discoverGroups() {
   }
 }
 
-/**
- * Joins a specific group by ID.
- * Targets Swagger: POST /api/groups/{id}/join/
- */
 export async function joinGroup(groupId) {
   return request("POST", `api/groups/${groupId}/join/`, null, true);
 }
@@ -255,7 +242,6 @@ export async function getGroupHealthScore(groupId) {
   try {
     return await request("GET", `api/groups/${groupId}/health/`, null, true);
   } catch {
-    // Fallback: return a neutral score if endpoint doesn't exist yet
     return { score: 75, label: "Good", details: "Based on payment history." };
   }
 }
@@ -329,8 +315,6 @@ export async function getWalletTransactions() {
 
 // ─────────────────────────────────────────────
 // CARDS
-// Backend endpoint: POST /api/payments/add-card/
-// Body: { card_number, cvv, expiry_month, expiry_year }
 // ─────────────────────────────────────────────
 
 export async function getCards() {
@@ -359,39 +343,22 @@ export async function deleteCard(cardId) {
 // ALERTS / NOTIFICATIONS
 // ─────────────────────────────────────────────
 
-/**
- * Fetches risk-related alerts for the current user.
- * Targets: GET /api/auth/risk/
- */
 export async function getRiskAlerts() {
   return request("GET", "api/auth/risk/", null, true);
 }
 
-/**
- * Fetches payment-related alerts (contributions history).
- * Targets: GET /api/contributions/mine/
- */
 export async function getPaymentAlerts() {
   return request("GET", "api/contributions/mine/", null, true);
 }
 
-/**
- * Fetches payout-related alerts.
- * Targets: GET /api/contributions/mine/ (Fallback)
- */
 export async function getPayoutAlerts() {
   return request("GET", "api/contributions/mine/", null, true);
 }
 
-/**
- * Updated getAlerts to act as a router to prevent 404s
- */
 export async function getAlerts(type = "all") {
   if (type === "risk") return getRiskAlerts();
   if (type === "payment") return getPaymentAlerts();
   if (type === "payout") return getPayoutAlerts();
-
-  // Default: Return Risk alerts if 'all' or empty
   return getRiskAlerts();
 }
 
@@ -415,6 +382,7 @@ export async function deleteAlert(alertId) {
 export function requireAuth() {
   const token = getToken();
   if (!token) {
+    // Relative path for GH Pages
     window.location.replace("../index.html");
     return false;
   }
@@ -429,5 +397,6 @@ export function redirectIfLoggedIn() {
 
 export function logoutUser() {
   clearToken();
-  window.location.href = window.location.origin + "/index.html";
+  // Using relative path to fix GH Pages 404
+  window.location.href = "../index.html";
 }
