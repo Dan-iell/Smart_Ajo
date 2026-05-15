@@ -37,9 +37,15 @@ async function loadAlerts(type = 'all') {
 
   try {
     const data = await getAlerts(type === 'all' ? '' : type);
-    allAlerts = data.alerts || [];
+    // Normalize: backend may return array, { results:[] }, or { alerts:[] }
+    const raw = Array.isArray(data) ? data : (data.results || data.alerts || []);
+    // Normalize snake_case → camelCase
+    allAlerts = raw.map(a => ({
+      ...a,
+      isRead:    a.isRead    ?? a.is_read    ?? false,
+      createdAt: a.createdAt ?? a.created_at ?? null,
+    }));
 
-    // Update "4 New" count badge
     const unread = allAlerts.filter(a => !a.isRead).length;
     if (countEl) countEl.textContent = unread > 0 ? `${unread} New` : 'All Read';
 
@@ -171,8 +177,7 @@ export async function handleAlertRead(alertId) {
 
 export function fundWallet(alertId) {
   handleAlertRead(alertId);
-  // Navigate to payment flow — update with your payment page
-  window.location.href = 'dashboard.html';
+  window.location.href = 'wallet.html';
 }
 
 export function viewRiskOptions(alertId) {

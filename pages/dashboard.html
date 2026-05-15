@@ -140,8 +140,8 @@
         <!-- Quick Actions -->
         <div class="grid grid-cols-3 gap-3 relative">
           <button
-            onclick="window.location.href = 'create-group.html'"
-            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95 border border-white/10"
+            onclick="event.stopPropagation(); window.location.href = 'create-group.html'"
+            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
           >
             <svg
               class="w-5 h-5 text-white"
@@ -155,8 +155,8 @@
             <span class="text-white text-xs font-medium">Create</span>
           </button>
           <button
-            onclick="window.location.href = 'groups.html'"
-            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95 border border-white/10"
+            onclick="event.stopPropagation(); window.location.href = 'groups.html'"
+            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
           >
             <svg
               class="w-5 h-5 text-white"
@@ -172,8 +172,8 @@
           </button>
           <!-- Pay Now Button updated to Gold -->
           <button
-            onclick="window.location.href = 'make-payment.html'"
-            class="flex flex-col items-center gap-2 bg-[#F2A83B] rounded-2xl py-3 px-2 hover:bg-[#d99635] transition-all active:scale-95 shadow-md shadow-orange-900/20"
+            onclick="event.stopPropagation(); window.location.href = 'make-payment.html'"
+            class="flex flex-col items-center gap-2 bg-white rounded-2xl py-3 px-2 hover:bg-gray-100 transition-all active:scale-95"
           >
             <svg
               class="w-5 h-5 text-white"
