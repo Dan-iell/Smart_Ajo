@@ -12,7 +12,6 @@
     .fade-up-3 { animation: fadeUp 0.5s ease 0.2s both; }
     body { padding-bottom: 90px; }
 
-    /* Themed select arrow color */
     #groupSelector {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
@@ -77,19 +76,19 @@
           <div class="w-6 h-6 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5">
             <span class="text-white text-[10px] font-black">1</span>
           </div>
-          <p class="text-xs text-[#6B6B6B] leading-relaxed">Tap "Pay with Squad" to be redirected to Squad's secure payment page.</p>
+          <p class="text-xs text-[#6B6B6B] leading-relaxed font-medium">Tap "Pay with Squad" to be redirected to Squad's secure payment page.</p>
         </div>
         <div class="flex items-start gap-3">
           <div class="w-6 h-6 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5">
             <span class="text-white text-[10px] font-black">2</span>
           </div>
-          <p class="text-xs text-[#6B6B6B] leading-relaxed">Complete payment with your card or bank transfer on Squad's page.</p>
+          <p class="text-xs text-[#6B6B6B] leading-relaxed font-medium">Complete payment with your card or bank transfer on Squad's page.</p>
         </div>
         <div class="flex items-start gap-3">
           <div class="w-6 h-6 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5">
             <span class="text-white text-[10px] font-black">3</span>
           </div>
-          <p class="text-xs text-[#6B6B6B] leading-relaxed">You'll be redirected back to Smart Ajo and your contribution will be recorded automatically.</p>
+          <p class="text-xs text-[#6B6B6B] leading-relaxed font-medium">You'll be redirected back to Smart Ajo and your contribution will be recorded automatically.</p>
         </div>
       </div>
     </div>
@@ -102,8 +101,8 @@
     </div>
 
     <button id="payBtn" onclick="window._proceedToConfirm()"
-      class="w-full py-5 bg-[#F2A83B] text-white rounded-full text-sm font-black tracking-widest uppercase
-             transition-all duration-300 hover:brightness-110 active:scale-95 fade-up-3 flex items-center justify-center gap-2 shadow-lg shadow-orange-900/20">
+      class="w-full py-5 bg-[#1B5E3B] text-white rounded-full text-sm font-black tracking-widest uppercase
+             transition-all duration-300 hover:bg-[#144d30] active:scale-95 fade-up-3 flex items-center justify-center gap-2 shadow-lg shadow-green-900/20">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
         <rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/>
       </svg>

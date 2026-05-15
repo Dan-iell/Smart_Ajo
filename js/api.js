@@ -273,7 +273,12 @@ export async function addCard(cardData) {
 }
 
 export async function initiatePayment(groupId) {
-  return request("POST", `api/contributions/contribute/${groupId}/`, null, true);
+  return request(
+    "POST",
+    `api/contributions/contribute/${groupId}/`,
+    null,
+    true,
+  );
 }
 
 export async function verifyPayment({ transactionRef }) {
@@ -352,30 +357,7 @@ export async function deleteCard(cardId) {
 
 // ─────────────────────────────────────────────
 // ALERTS / NOTIFICATIONS
-// GET  /api/notifications/          → [ { id, type, title, message, is_read, created_at } ]
-// PATCH /api/notifications/{id}/    → mark as read
-// DELETE /api/notifications/{id}/   → delete
 // ─────────────────────────────────────────────
-
-export async function getAlerts(type = "") {
-  const endpoint = type
-    ? `api/notifications/?type=${type}`
-    : "api/notifications/";
-  return request("GET", endpoint, null, true);
-}
-
-export async function markAlertAsRead(alertId) {
-  return request(
-    "PATCH",
-    `api/notifications/${alertId}/`,
-    { is_read: true },
-    true,
-  );
-}
-
-export async function deleteAlert(alertId) {
-  return request("DELETE", `api/notifications/${alertId}/`, null, true);
-}
 
 /**
  * Fetches risk-related alerts for the current user.
@@ -391,6 +373,39 @@ export async function getRiskAlerts() {
  */
 export async function getPaymentAlerts() {
   return request("GET", "api/contributions/mine/", null, true);
+}
+
+/**
+ * Fetches payout-related alerts.
+ * Targets: GET /api/contributions/mine/ (Fallback)
+ */
+export async function getPayoutAlerts() {
+  return request("GET", "api/contributions/mine/", null, true);
+}
+
+/**
+ * Updated getAlerts to act as a router to prevent 404s
+ */
+export async function getAlerts(type = "all") {
+  if (type === "risk") return getRiskAlerts();
+  if (type === "payment") return getPaymentAlerts();
+  if (type === "payout") return getPayoutAlerts();
+
+  // Default: Return Risk alerts if 'all' or empty
+  return getRiskAlerts();
+}
+
+export async function markAlertAsRead(alertId) {
+  return request(
+    "PATCH",
+    `api/notifications/${alertId}/`,
+    { is_read: true },
+    true,
+  );
+}
+
+export async function deleteAlert(alertId) {
+  return request("DELETE", `api/notifications/${alertId}/`, null, true);
 }
 
 // ─────────────────────────────────────────────
