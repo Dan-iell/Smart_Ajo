@@ -168,6 +168,42 @@
             />
           </div>
         </div>
+
+        <div>
+          <label class="text-sm font-medium text-[#3A3A3A] mb-2 block">Start Date</label>
+          <div class="bg-white border border-[#E0E0E0] rounded-2xl px-4 py-4 focus-within:border-[#3A3A3A] transition-colors shadow-sm">
+            <input
+              type="date"
+              id="startDate"
+              class="w-full text-sm bg-transparent outline-none text-[#3A3A3A] font-medium"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-[#3A3A3A] mb-2 block">
+            Duration <span id="durationUnitLabel" class="text-[#9E9E9E] font-normal">(months)</span>
+          </label>
+          <div class="bg-white border border-[#E0E0E0] rounded-2xl px-4 py-4 focus-within:border-[#3A3A3A] transition-colors shadow-sm">
+            <input
+              type="number"
+              id="duration"
+              placeholder="e.g. 6"
+              min="1"
+              class="w-full text-sm bg-transparent outline-none text-[#3A3A3A] placeholder-[#BDBDBD] font-medium"
+            />
+          </div>
+          <!-- Live preview -->
+          <div id="durationPreview" class="hidden mt-3 bg-[#3A3A3A] rounded-2xl px-4 py-3 flex items-center justify-between">
+            <div>
+              <p class="text-white text-xs font-semibold" id="previewRounds">— rounds</p>
+              <p class="text-[#9E9E9E] text-[10px] mt-0.5" id="previewEndDate">Ends —</p>
+            </div>
+            <svg class="w-5 h-5 text-[#9E9E9E]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+          </div>
+        </div>
       </div>
 
       <button
@@ -188,12 +224,19 @@
     </div>
 
     <script>
-      let selectedFrequency = "biweekly"; 
+      let selectedFrequency = "biweekly";
+
+      // Unit label and multiplier per frequency
+      const freqMeta = {
+        daily:     { label: "days",             msPerPeriod: 86400000 },
+        weekly:    { label: "weeks",             msPerPeriod: 7 * 86400000 },
+        biweekly:  { label: "bi-weekly periods", msPerPeriod: 14 * 86400000 },
+        monthly:   { label: "months",            msPerPeriod: null }, // handled specially
+      };
 
       function setFreq(val) {
         selectedFrequency = val;
-        const buttons = document.querySelectorAll('button[id^="freq-"]');
-        buttons.forEach((btn) => {
+        document.querySelectorAll('button[id^="freq-"]').forEach((btn) => {
           if (btn.id === `freq-${val}`) {
             btn.classList.add("bg-[#3A3A3A]", "text-white", "font-semibold", "shadow-md");
             btn.classList.remove("text-[#9E9E9E]", "font-medium");
@@ -202,27 +245,62 @@
             btn.classList.add("text-[#9E9E9E]", "font-medium");
           }
         });
+        document.getElementById("durationUnitLabel").textContent = `(${freqMeta[val].label})`;
+        updatePreview();
       }
 
-      document.getElementById("step2Btn").addEventListener("click", () => {
-        const amount = document.getElementById("amount").value;
-        const maxMembers = document.getElementById("maxMembers").value;
-        const errorEl = document.getElementById("setupError");
+      function updatePreview() {
+        const startVal  = document.getElementById("startDate").value;
+        const durVal    = parseInt(document.getElementById("duration").value);
+        const preview   = document.getElementById("durationPreview");
 
-        if (!amount || !maxMembers) {
-          errorEl.textContent = "Please fill in all contribution details.";
+        if (!startVal || !durVal || durVal < 1) { preview.classList.add("hidden"); return; }
+
+        const start = new Date(startVal);
+        let end;
+
+        if (selectedFrequency === "monthly") {
+          end = new Date(start);
+          end.setMonth(end.getMonth() + durVal);
+        } else {
+          end = new Date(start.getTime() + durVal * freqMeta[selectedFrequency].msPerPeriod);
+        }
+
+        const endLabel = end.toLocaleDateString("en-NG", { month: "long", year: "numeric" });
+        document.getElementById("previewRounds").textContent  = `${durVal} rotation${durVal !== 1 ? "s" : ""}`;
+        document.getElementById("previewEndDate").textContent = `Ends ${endLabel}`;
+        preview.classList.remove("hidden");
+      }
+
+      document.getElementById("startDate").addEventListener("change", updatePreview);
+      document.getElementById("duration").addEventListener("input", updatePreview);
+
+      // Set min date to today
+      document.getElementById("startDate").min = new Date().toISOString().split("T")[0];
+
+      document.getElementById("step2Btn").addEventListener("click", () => {
+        const amount     = document.getElementById("amount").value;
+        const maxMembers = document.getElementById("maxMembers").value;
+        const startDate  = document.getElementById("startDate").value;
+        const duration   = document.getElementById("duration").value;
+        const errorEl    = document.getElementById("setupError");
+
+        if (!amount || !maxMembers || !startDate || !duration) {
+          errorEl.textContent = "Please fill in all fields including start date and duration.";
           errorEl.classList.remove("hidden");
           return;
         }
 
-        // Save specifically as Step 2 data
-        const step2Data = {
+        errorEl.classList.add("hidden");
+
+        localStorage.setItem("group_step_2", JSON.stringify({
           contribution_amount: parseFloat(amount),
           frequency: selectedFrequency,
           max_members: parseInt(maxMembers),
-        };
+          start_date: startDate,
+          duration: parseInt(duration),
+        }));
 
-        localStorage.setItem("group_step_2", JSON.stringify(step2Data));
         window.location.href = "create-group-3.html";
       });
     </script>

@@ -77,11 +77,13 @@
             <span class="text-sm text-[#6B6B6B]">Members</span>
             <span id="summaryMembers" class="text-sm font-bold text-[#1A1A1A]">0</span>
           </div>
-          <div class="flex items-center justify-between px-4 py-3.5">
+          <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
             <span class="text-sm text-[#6B6B6B]">Frequency</span>
             <span id="summaryFrequency" class="text-sm font-bold text-[#1A1A1A] capitalize">-</span>
           </div>
         </div>
+        <!-- Extra rows: start date, end date, total rounds — injected if backend returns them -->
+        <div id="summaryExtra" class="bg-white rounded-2xl overflow-hidden border border-[#F5F5F5] mt-3 hidden"></div>
       </div>
 
       <div id="content-members" class="tab-content">
@@ -145,10 +147,13 @@
         window.location.href = groupId ? `health-report.html?id=${groupId}` : 'health-report.html';
       };
 
+      // ── OVERVIEW + MEMBERS ──────────────────────────────────────────
       async function initDetails() {
         if (!groupId) return;
         try {
-          const group = await getGroupDetail(groupId);
+          const group  = await getGroupDetail(groupId);
+          const adminId = String(group.admin_id || group.created_by || '');
+
           document.getElementById("groupTitle").textContent = group.name;
 
           const target  = group.target_amount || 0;
@@ -160,21 +165,50 @@
           document.getElementById("progressText").textContent = `${pct}% Complete`;
           document.getElementById("progressCircle").style.strokeDashoffset = 314 - (pct / 100) * 314;
 
+          // Overview summary
           document.getElementById("summaryTotalPool").textContent    = `₦${Number(target).toLocaleString()}`;
           document.getElementById("summaryContribution").textContent = `₦${Number(group.contribution_amount).toLocaleString()}`;
           document.getElementById("summaryMembers").textContent      = group.members_count || 0;
-          document.getElementById("summaryFrequency").textContent    = group.contribution_frequency || '—';
+          document.getElementById("summaryFrequency").textContent    = group.contribution_frequency || group.frequency || '—';
 
-          // Members tab
+          // Extra summary rows — shown only if backend returns these fields
+          if (group.start_date || group.end_date || group.total_rounds) {
+            const extra = document.getElementById("summaryExtra");
+            if (extra) {
+              extra.innerHTML = `
+                ${group.start_date ? `
+                  <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
+                    <span class="text-sm text-[#6B6B6B]">Start Date</span>
+                    <span class="text-sm font-bold text-[#1A1A1A]">${new Date(group.start_date).toLocaleDateString('en-NG',{month:'short',day:'numeric',year:'numeric'})}</span>
+                  </div>` : ''}
+                ${group.end_date ? `
+                  <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
+                    <span class="text-sm text-[#6B6B6B]">End Date</span>
+                    <span class="text-sm font-bold text-[#1A1A1A]">${new Date(group.end_date).toLocaleDateString('en-NG',{month:'short',day:'numeric',year:'numeric'})}</span>
+                  </div>` : ''}
+                ${group.total_rounds ? `
+                  <div class="flex items-center justify-between px-4 py-3.5">
+                    <span class="text-sm text-[#6B6B6B]">Total Rounds</span>
+                    <span class="text-sm font-bold text-[#1A1A1A]">${group.total_rounds}</span>
+                  </div>` : ''}`;
+              extra.classList.remove("hidden");
+            }
+          }
+
+          // Members tab — with admin badge
           const members = group.members || [];
           document.getElementById("membersList").innerHTML = members.length
             ? members.map(m => {
-                const initials = (m.full_name || m.name || '??').split(' ').map(n => n[0]).join('').toUpperCase();
+                const isAdmin  = adminId && String(m.id) === adminId;
+                const initials = (m.full_name || m.name || '??').split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                const badge    = isAdmin
+                  ? `<span class="text-[10px] font-bold text-white bg-[#3A3A3A] px-2 py-1 rounded-md">Admin</span>`
+                  : `<span class="text-[10px] font-bold text-[#9E9E9E] bg-[#F5F4EF] px-2 py-1 rounded-md">Member</span>`;
                 return `
                   <a href="member-profile.html?id=${m.id}&groupId=${groupId}"
                     class="bg-white border border-[#F5F5F5] rounded-2xl p-3.5 flex items-center justify-between active:scale-[0.98] transition-transform">
                     <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-full bg-[#B0B5AC] flex items-center justify-center">
+                      <div class="w-10 h-10 rounded-full ${isAdmin ? 'bg-[#3A3A3A]' : 'bg-[#B0B5AC]'} flex items-center justify-center shrink-0">
                         <span class="text-[10px] font-bold text-white">${initials}</span>
                       </div>
                       <div>
@@ -183,7 +217,7 @@
                       </div>
                     </div>
                     <div class="flex items-center gap-2">
-                      <span class="text-[10px] font-bold text-[#9E9E9E] bg-[#F5F4EF] px-2 py-1 rounded-md">Member</span>
+                      ${badge}
                       <svg class="w-3 h-3 text-[#9E9E9E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
                     </div>
                   </a>`;
@@ -196,56 +230,109 @@
         }
       }
 
+      // ── CONTRIBUTIONS — grouped by round ────────────────────────────
       async function loadContributions() {
         const el = document.getElementById("content-contributions");
         el.innerHTML = '<p class="text-center py-6 text-[#9E9E9E] text-xs">Loading contributions…</p>';
         try {
           const data = await getCycleContributions(groupId);
           const list = Array.isArray(data) ? data : (data.results || data.contributions || []);
-          if (!list.length) { el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No contributions yet.</p>'; return; }
-          el.innerHTML = `<div class="flex flex-col gap-2">${list.map(c => {
-            const statusMap = {
-              paid:    `<span class="text-xs text-[#22C55E] font-bold">✓ Paid</span>`,
-              missed:  `<span class="text-xs text-[#EF4444] font-bold">✗ Missed</span>`,
-              pending: `<span class="text-xs text-[#F5A623] font-semibold">Pending</span>`,
-            };
-            const name = c.user_name || c.userName || 'Member';
-            const status = statusMap[c.status?.toLowerCase()] || statusMap.pending;
-            const date = c.paid_at ? new Date(c.paid_at).toLocaleDateString('en-NG', {month:'short',day:'numeric'}) : '—';
-            return `
-              <div class="bg-white rounded-2xl px-4 py-3 flex items-center justify-between">
-                <div>
-                  <p class="text-sm font-semibold text-[#1A1A1A]">${name}</p>
-                  <p class="text-xs text-[#9E9E9E]">Round ${c.round_number ?? '—'} · ${date}</p>
-                </div>
-                ${status}
-              </div>`;
-          }).join('')}</div>`;
+          if (!list.length) {
+            el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No contributions yet.</p>';
+            return;
+          }
+
+          // Group by round_number
+          const byRound = {};
+          list.forEach(c => {
+            const r = c.round_number ?? 'N/A';
+            if (!byRound[r]) byRound[r] = [];
+            byRound[r].push(c);
+          });
+
+          const statusTag = {
+            paid:    `<span class="text-[10px] font-bold text-[#22C55E] bg-[#F0FDF4] px-2 py-0.5 rounded-full">✓ Paid</span>`,
+            missed:  `<span class="text-[10px] font-bold text-[#EF4444] bg-[#FFF1F0] px-2 py-0.5 rounded-full">✗ Missed</span>`,
+            pending: `<span class="text-[10px] font-semibold text-[#F5A623] bg-[#FFF8E7] px-2 py-0.5 rounded-full">Pending</span>`,
+          };
+
+          el.innerHTML = Object.entries(byRound)
+            .sort((a, b) => Number(a[0]) - Number(b[0]))
+            .map(([round, items]) => {
+              const paidCount = items.filter(i => i.status?.toLowerCase() === 'paid').length;
+              return `
+                <div class="mb-4">
+                  <div class="flex items-center justify-between mb-2 px-1">
+                    <p class="text-xs font-bold text-[#3A3A3A] uppercase tracking-wide">Round ${round}</p>
+                    <p class="text-[10px] text-[#9E9E9E]">${paidCount}/${items.length} paid</p>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    ${items.map(c => {
+                      const name   = c.user_name || c.userName || 'Member';
+                      const status = statusTag[c.status?.toLowerCase()] || statusTag.pending;
+                      const date   = c.paid_at
+                        ? new Date(c.paid_at).toLocaleDateString('en-NG', {month:'short', day:'numeric'})
+                        : '—';
+                      return `
+                        <div class="bg-white rounded-2xl px-4 py-3 flex items-center justify-between">
+                          <div>
+                            <p class="text-sm font-semibold text-[#1A1A1A]">${name}</p>
+                            <p class="text-xs text-[#9E9E9E]">${date}</p>
+                          </div>
+                          ${status}
+                        </div>`;
+                    }).join('')}
+                  </div>
+                </div>`;
+            }).join('');
         } catch (e) {
           el.innerHTML = `<p class="text-center py-6 text-red-400 text-xs">${e.message}</p>`;
         }
       }
 
+      // ── ROTATION — full payout schedule ─────────────────────────────
       async function loadRotation() {
         const el = document.getElementById("content-rotation");
         el.innerHTML = '<p class="text-center py-6 text-[#9E9E9E] text-xs">Loading schedule…</p>';
         try {
-          const data = await getNextPayout(groupId);
+          const data    = await getNextPayout(groupId);
           const payouts = Array.isArray(data) ? data : (data.results || data.payouts || []);
-          if (!payouts.length) { el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No payout schedule yet.</p>'; return; }
+          if (!payouts.length) {
+            el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No payout schedule yet.</p>';
+            return;
+          }
+
           el.innerHTML = `<div class="flex flex-col gap-2">${payouts.map((p, i) => {
-            const name = p.recipient_name || p.userName || `Member ${i+1}`;
-            const status = p.status === 'paid' ? 'bg-[#22C55E]' : i === 0 ? 'bg-[#F5A623]' : 'bg-[#E0E0E0]';
+            const isPaid     = p.status?.toLowerCase() === 'paid';
+            const isUpcoming = !isPaid && (p.is_next || i === payouts.findIndex(x => x.status?.toLowerCase() !== 'paid'));
+            const dotColor   = isPaid ? 'bg-[#22C55E]' : isUpcoming ? 'bg-[#F5A623]' : 'bg-[#E0E0E0]';
+            const dotText    = isPaid ? '✓' : String((p.round_number ?? i + 1));
+            const statusTag  = isPaid
+              ? `<span class="text-[10px] font-bold text-[#22C55E] bg-[#F0FDF4] px-2 py-0.5 rounded-full">Paid</span>`
+              : isUpcoming
+              ? `<span class="text-[10px] font-bold text-[#F5A623] bg-[#FFF8E7] px-2 py-0.5 rounded-full">Upcoming</span>`
+              : `<span class="text-[10px] text-[#9E9E9E] bg-[#F5F4EF] px-2 py-0.5 rounded-full">Scheduled</span>`;
+
+            const name     = p.recipient_name || p.user_name || p.userName || `Member ${i + 1}`;
+            const amount   = `₦${Number(p.amount || 0).toLocaleString()}`;
+            const dateStr  = p.payout_date || p.scheduled_date || null;
+            const dateLabel = dateStr
+              ? new Date(dateStr).toLocaleDateString('en-NG', {month:'short', day:'numeric', year:'numeric'})
+              : '—';
+
             return `
-              <div class="bg-white rounded-2xl px-4 py-3 flex items-center gap-3">
-                <div class="w-7 h-7 ${status} rounded-full flex items-center justify-center shrink-0">
-                  <span class="text-white text-[10px] font-bold">${i+1}</span>
+              <div class="bg-white rounded-2xl px-4 py-3.5 flex items-center gap-3 ${isUpcoming ? 'border border-[#F5A623] border-opacity-40' : ''}">
+                <div class="w-8 h-8 ${dotColor} rounded-full flex items-center justify-center shrink-0">
+                  <span class="text-white text-[10px] font-bold">${dotText}</span>
                 </div>
-                <div class="flex-1">
-                  <p class="text-sm font-semibold text-[#1A1A1A]">${name}</p>
-                  <p class="text-xs text-[#9E9E9E]">Round ${p.round_number ?? i+1}</p>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-[#1A1A1A] truncate">${name}</p>
+                  <p class="text-[10px] text-[#9E9E9E]">${dateLabel}</p>
                 </div>
-                <span class="text-sm font-bold text-[#1A1A1A]">₦${Number(p.amount||0).toLocaleString()}</span>
+                <div class="text-right shrink-0">
+                  <p class="text-sm font-bold text-[#1A1A1A]">${amount}</p>
+                  ${statusTag}
+                </div>
               </div>`;
           }).join('')}</div>`;
         } catch (e) {
@@ -253,9 +340,10 @@
         }
       }
 
+      // ── RISK ─────────────────────────────────────────────────────────
       async function loadRisk() {
         try {
-          const h = await getGroupHealthScore(groupId);
+          const h     = await getGroupHealthScore(groupId);
           const score = h.score ?? 75;
           document.getElementById("healthScoreValue").textContent = score;
           document.getElementById("healthStatusText").textContent = h.label || (score >= 80 ? 'Healthy' : score >= 50 ? 'Moderate' : 'At Risk');
@@ -263,17 +351,20 @@
         } catch (e) { console.error('loadRisk:', e.message); }
       }
 
+      // ── TAB SWITCHER ─────────────────────────────────────────────────
       window.switchTab = function(tabId) {
         document.querySelectorAll('[id^="tab-"]').forEach(btn => {
           btn.classList.remove("border-[#3A3A3A]", "text-[#1A1A1A]");
-          btn.classList.add("border-transparent", "text-[#9E9E9E]");
+          btn.classList.add("border-transparent", "text-[#9E9E9E]", "font-medium");
+          btn.classList.remove("font-semibold");
         });
-        document.getElementById(`tab-${tabId}`).classList.add("border-[#3A3A3A]", "text-[#1A1A1A]");
-        document.getElementById(`tab-${tabId}`).classList.remove("text-[#9E9E9E]");
+        const active = document.getElementById(`tab-${tabId}`);
+        active.classList.add("border-[#3A3A3A]", "text-[#1A1A1A]", "font-semibold");
+        active.classList.remove("text-[#9E9E9E]", "font-medium");
+
         document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
         document.getElementById(`content-${tabId}`).classList.add("active");
 
-        // Lazy-load tab data once
         if (tabId === 'contributions' && !loaded.contributions) { loaded.contributions = true; loadContributions(); }
         if (tabId === 'rotation'      && !loaded.rotation)      { loaded.rotation      = true; loadRotation(); }
         if (tabId === 'risk'          && !loaded.risk)          { loaded.risk          = true; loadRisk(); }

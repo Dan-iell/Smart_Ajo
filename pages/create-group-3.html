@@ -192,7 +192,7 @@
     <!-- ... existing head and styles ... -->
 
     <script type="module">
-      import { createGroup } from "../js/api.js";
+      import { createGroup, getGroupInviteLink } from "../js/api.js";
 
       let selectedMethod = "random";
 
@@ -208,59 +208,65 @@
 
       async function handleCreateGroup() {
         const errorEl = document.getElementById("finalError");
-        const btn = document.getElementById("finalCreateBtn");
+        const btn     = document.getElementById("finalCreateBtn");
 
-        // 1. Pull data from the updated localStorage keys
         const step1 = JSON.parse(localStorage.getItem("group_step_1") || "{}");
         const step2 = JSON.parse(localStorage.getItem("group_step_2") || "{}");
-        
-        // 2. Final check: If keys are empty, try the old session key as a fallback
-        const legacyData = JSON.parse(sessionStorage.getItem("pendingGroupData") || "{}");
 
         const finalData = {
-          name: step1.name || legacyData.name,
-          description: step1.description || legacyData.description,
-          contribution_amount: step2.contribution_amount || parseFloat(legacyData.contribution_amount),
-          max_members: step2.max_members || parseInt(legacyData.max_members),
-          rotation_method: selectedMethod,
-          // Add frequency if your backend requires it
-          frequency: step2.frequency || legacyData.frequency || "monthly"
+          name:                step1.name,
+          description:         step1.description,
+          contribution_amount: step2.contribution_amount,
+          max_members:         step2.max_members,
+          frequency:           step2.frequency || "monthly",
+          start_date:          step2.start_date,
+          duration:            step2.duration,
+          rotation_method:     selectedMethod,
         };
 
-        // Debugging: This helps you see if 'name' is still missing in the console
-        console.log("Attempting to create group with:", finalData);
-
-        if (!finalData.name || !finalData.max_members) {
-           errorEl.textContent = "Error: Group name or member count is missing. Please restart the process.";
-           errorEl.classList.remove("hidden");
-           return;
+        if (!finalData.name || !finalData.max_members || !finalData.start_date || !finalData.duration) {
+          errorEl.textContent = "Some required fields are missing. Please go back and complete all steps.";
+          errorEl.classList.remove("hidden");
+          return;
         }
 
         try {
           errorEl.classList.add("hidden");
-          btn.innerText = "Creating...";
+          btn.textContent = "Creating...";
           btn.disabled = true;
 
-          await createGroup(finalData);
+          const data = await createGroup(finalData);
 
-          // Clear all storage after success
+          // Clear step storage
           localStorage.removeItem("group_step_1");
           localStorage.removeItem("group_step_2");
-          sessionStorage.removeItem("pendingGroupData");
 
-          alert("Group created successfully!");
-          window.location.href = "groups.html";
+          // Store group info for success screen
+          const groupId = data?.id || data?.group?.id;
+          localStorage.setItem("ajo_new_group_name", finalData.name);
+          localStorage.setItem("ajo_new_group_id",   groupId || "");
+
+          // Try to fetch invite link (non-blocking)
+          if (groupId) {
+            try {
+              const linkData = await getGroupInviteLink(groupId);
+              const link = linkData.invite_link || linkData.inviteLink || linkData.link || "";
+              localStorage.setItem("ajo_new_group_link", link);
+            } catch {
+              localStorage.setItem("ajo_new_group_link", "");
+            }
+          }
+
+          window.location.href = "group-created.html";
         } catch (error) {
-          errorEl.textContent = error.message;
+          errorEl.textContent = error.message || "Failed to create group. Try again.";
           errorEl.classList.remove("hidden");
-          btn.innerText = "Create Group";
+          btn.textContent = "Create Group";
           btn.disabled = false;
         }
       }
 
-      document
-        .getElementById("finalCreateBtn")
-        .addEventListener("click", handleCreateGroup);
+      document.getElementById("finalCreateBtn").addEventListener("click", handleCreateGroup);
     </script>
   </body>
 </html>
