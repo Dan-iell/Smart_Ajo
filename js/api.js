@@ -340,17 +340,16 @@ export async function getGroupInviteLink(groupId) {
 // ─────────────────────────────────────────────
 
 export async function computeGroupHealth(groupId) {
-  // Fetch all three in parallel; contributions/summary may be empty for new groups
-  const [group, rawContribs, roundSummary] = await Promise.all([
+  // Fetch group detail and round summary in parallel
+  // Note: getCycleContributions (GET /api/contributions/group/{id}/) does not yet
+  // exist on the backend — contributions come from getRoundSummary instead.
+  const [group, roundSummary] = await Promise.all([
     getGroupDetail(groupId),
-    getCycleContributions(groupId).catch(() => []),
     getRoundSummary(groupId).catch(() => null),
   ]);
 
-  // Normalise contributions array
-  const contribs = Array.isArray(rawContribs)
-    ? rawContribs
-    : (rawContribs?.results || rawContribs?.contributions || []);
+  // Contributions live inside the round summary response
+  const contribs = roundSummary?.contributions || [];
 
   // ── Payment stats ──────────────────────────
   const total   = contribs.length;
@@ -378,27 +377,19 @@ export async function computeGroupHealth(groupId) {
     };
   });
 
-  // Round summary may contain richer risk_level per user
-  const summaryRows = roundSummary?.members || roundSummary?.contributions || [];
-  summaryRows.forEach(r => {
-    const key = String(r.user_id || r.id || '');
+  // Contributions from round summary already have user_id + risk_level per row
+  contribs.forEach(c => {
+    const key = String(c.user_id || '');
     if (!key) return;
     if (!memberMap[key]) {
-      memberMap[key] = { id: key, name: r.user_name || r.name || 'Member', risk_level: 'low', paid: 0, missed: 0, late: 0, total: 0 };
+      memberMap[key] = { id: key, name: c.user_name || 'Member', risk_level: 'low', paid: 0, missed: 0, late: 0, total: 0 };
     }
-    if (r.risk_level) memberMap[key].risk_level = r.risk_level.toLowerCase();
-  });
-
-  // Overlay contribution counts per member
-  contribs.forEach(c => {
-    const key = String(c.user_id || c.user || '');
-    if (!key) return;
-    if (!memberMap[key]) memberMap[key] = { id: key, name: c.user_name || 'Member', risk_level: 'low', paid: 0, missed: 0, late: 0, total: 0 };
+    if (c.risk_level) memberMap[key].risk_level = c.risk_level.toLowerCase();
     memberMap[key].total++;
     const s = c.status?.toLowerCase();
-    if (['paid','on_time'].includes(s)) memberMap[key].paid++;
-    else if (['missed','overdue'].includes(s)) memberMap[key].missed++;
-    else if (s === 'late') memberMap[key].late++;
+    if (['paid', 'on_time'].includes(s))      memberMap[key].paid++;
+    else if (['missed', 'overdue'].includes(s)) memberMap[key].missed++;
+    else if (s === 'late')                      memberMap[key].late++;
   });
 
   // Sort: high risk first, then by missed count
