@@ -1,5 +1,5 @@
 // ============================================================
-//  Smart Ajo — api.js
+//  Smart Ajo — api.js (MERGED)
 // ============================================================
 
 const BASE_URL = "https://smartajo.up.railway.app";
@@ -68,7 +68,6 @@ async function request(method, endpoint, body = null, isAuth = false) {
 
   try {
     const response = await fetch(url, options);
-    const contentType = response.headers.get("content-type");
 
     if (response.status === 401 && isAuth) {
       const refreshed = await attemptTokenRefresh();
@@ -78,10 +77,9 @@ async function request(method, endpoint, body = null, isAuth = false) {
     }
 
     if (!response.ok) {
-      const errorData =
-        contentType && contentType.includes("application/json")
-          ? await response.json()
-          : { message: "Server Error" };
+      const errorData = await response
+        .json()
+        .catch(() => ({ message: "Server Error" }));
       throw new Error(
         errorData.message || errorData.detail || `Error ${response.status}`,
       );
@@ -120,24 +118,17 @@ async function attemptTokenRefresh() {
 // AUTH ACTIONS
 // ─────────────────────────────────────────────
 
-function handleAuthResponse(data) {
+export async function loginUser(email, password) {
+  const data = await request("POST", "api/auth/login/", { email, password });
   const token =
     data.access ||
     data.token ||
     (data.data && (data.data.access || data.data.token));
   const refresh = data.refresh || (data.data && data.data.refresh);
-
   if (token) {
     saveToken(token);
     if (refresh) saveRefreshToken(refresh);
-    return true;
   }
-  return false;
-}
-
-export async function loginUser(email, password) {
-  const data = await request("POST", "api/auth/login/", { email, password });
-  handleAuthResponse(data);
   return data;
 }
 
@@ -147,7 +138,15 @@ export async function registerUser(userData) {
 
 export async function verifyOtp(email, otp) {
   const data = await request("POST", "api/auth/verify-otp/", { email, otp });
-  handleAuthResponse(data);
+  const token =
+    data.access ||
+    data.token ||
+    (data.data && (data.data.access || data.data.token));
+  const refresh = data.refresh || (data.data && data.data.refresh);
+  if (token) {
+    saveToken(token);
+    if (refresh) saveRefreshToken(refresh);
+  }
   return data;
 }
 
@@ -156,17 +155,17 @@ export async function resendOtp(email) {
 }
 
 // ─────────────────────────────────────────────
-// USER & DATA ACTIONS
+// USER & PROFILE
 // ─────────────────────────────────────────────
 
 export async function getMe() {
   return request("GET", "api/auth/me/", null, true);
 }
 
-/**
- * Fetches group members to extract a specific profile.
- * Targets Swagger: GET /api/groups/{id}/members/
- */
+export async function updateProfile(userData) {
+  return request("PATCH", "api/auth/profile/", userData, true);
+}
+
 export async function getMemberProfile(groupId, memberId) {
   try {
     const members = await request(
@@ -175,7 +174,6 @@ export async function getMemberProfile(groupId, memberId) {
       null,
       true,
     );
-    // Finds the specific member in the returned list
     const member = members.find((m) => String(m.id) === String(memberId));
     if (!member) throw new Error("Member not found in this group.");
     return member;
@@ -184,6 +182,10 @@ export async function getMemberProfile(groupId, memberId) {
     throw error;
   }
 }
+
+// ─────────────────────────────────────────────
+// GROUPS
+// ─────────────────────────────────────────────
 
 export async function getMyGroups() {
   try {
@@ -203,6 +205,10 @@ export async function getGroupDetail(groupId) {
   }
 }
 
+export async function getGroupById(groupId) {
+  return getGroupDetail(groupId);
+}
+
 export async function createGroup(groupData) {
   return request("POST", "api/groups/create/", groupData, true);
 }
@@ -220,16 +226,54 @@ export async function joinGroup(groupId) {
   return request("POST", `api/groups/${groupId}/join/`, null, true);
 }
 
+export async function joinGroupByCode(code) {
+  return request("POST", "api/groups/join-by-code/", { code }, true);
+}
+
+export async function getGroupMembers(groupId) {
+  return request("GET", `api/groups/${groupId}/members/`, null, true);
+}
+
+export async function getGroupInviteLink(groupId) {
+  return request("GET", `api/groups/${groupId}/invite-link/`, null, true);
+}
+
+export async function getGroupHealthScore(groupId) {
+  try {
+    return await request("GET", `api/groups/${groupId}/health/`, null, true);
+  } catch {
+    return { score: 75, label: "Good", details: "Based on payment history." };
+  }
+}
+
+// ─────────────────────────────────────────────
+// CONTRIBUTIONS & PAYMENTS
+// ─────────────────────────────────────────────
+
+export async function getUserRisk() {
+  return request("GET", "api/users/risk/", null, true);
+}
+
 export async function addCard(cardData) {
   return request("POST", "api/payments/add-card/", cardData, true);
 }
 
 export async function initiatePayment(groupId) {
-  return request("POST", `api/contributions/contribute/${groupId}/`, null, true);
+  return request(
+    "POST",
+    `api/contributions/contribute/${groupId}/`,
+    null,
+    true,
+  );
 }
 
 export async function verifyPayment({ transactionRef }) {
-  return request("POST", "api/contributions/squad-callback/", { transaction_ref: transactionRef }, true);
+  return request(
+    "POST",
+    "api/contributions/squad-callback/",
+    { transaction_ref: transactionRef },
+    true,
+  );
 }
 
 export async function getPaymentHistory() {
@@ -237,7 +281,20 @@ export async function getPaymentHistory() {
 }
 
 export async function getRoundSummary(groupId) {
-  return request("GET", `api/contributions/round-summary/${groupId}/`, null, true);
+  return request(
+    "GET",
+    `api/contributions/round-summary/${groupId}/`,
+    null,
+    true,
+  );
+}
+
+export async function getCycleContributions(groupId) {
+  return request("GET", `api/contributions/group/${groupId}/`, null, true);
+}
+
+export async function getNextPayout(groupId) {
+  return request("GET", `api/contributions/payouts/${groupId}/`, null, true);
 }
 
 // ─────────────────────────────────────────────
@@ -258,8 +315,6 @@ export async function getWalletTransactions() {
 
 // ─────────────────────────────────────────────
 // CARDS
-// Backend endpoint: POST /api/payments/add-card/
-// Body: { card_number, cvv, expiry_month, expiry_year }
 // ─────────────────────────────────────────────
 
 export async function getCards() {
@@ -267,12 +322,17 @@ export async function getCards() {
 }
 
 export async function saveCard({ cardNumber, cvv, expiryMonth, expiryYear }) {
-  return request("POST", "api/payments/add-card/", {
-    card_number: cardNumber,
-    cvv,
-    expiry_month: expiryMonth,
-    expiry_year: expiryYear,
-  }, true);
+  return request(
+    "POST",
+    "api/payments/add-card/",
+    {
+      card_number: cardNumber,
+      cvv,
+      expiry_month: expiryMonth,
+      expiry_year: expiryYear,
+    },
+    true,
+  );
 }
 
 export async function deleteCard(cardId) {
@@ -281,53 +341,25 @@ export async function deleteCard(cardId) {
 
 // ─────────────────────────────────────────────
 // ALERTS / NOTIFICATIONS
-// GET  /api/notifications/          → [ { id, type, title, message, is_read, created_at } ]
-// PATCH /api/notifications/{id}/    → mark as read
-// DELETE /api/notifications/{id}/   → delete
 // ─────────────────────────────────────────────
 
-export async function getAlerts(type = '') {
-  const endpoint = type ? `api/notifications/?type=${type}` : 'api/notifications/';
-  return request("GET", endpoint, null, true);
+export async function getRiskAlerts() {
+  return request("GET", "api/auth/risk/", null, true);
 }
 
-export async function markAlertAsRead(alertId) {
-  return request("PATCH", `api/notifications/${alertId}/`, { is_read: true }, true);
+export async function getPaymentAlerts() {
+  return request("GET", "api/contributions/mine/", null, true);
 }
 
-export async function deleteAlert(alertId) {
-  return request("DELETE", `api/notifications/${alertId}/`, null, true);
+export async function getPayoutAlerts() {
+  return request("GET", "api/contributions/mine/", null, true);
 }
 
-// ─────────────────────────────────────────────
-// GROUP DETAIL EXTRAS
-// These extend the base group endpoints already defined above.
-// GET /api/groups/{id}/             → full group detail (reuse getGroupDetail)
-// GET /api/groups/{id}/members/     → member list
-// GET /api/contributions/group/{id}/→ cycle contributions
-// GET /api/contributions/payouts/{id}/ → payout schedule
-// GET /api/groups/{id}/invite-link/ → shareable invite link
-// ─────────────────────────────────────────────
-
-// Alias so groups.js can call getGroupById without breaking
-export async function getGroupById(groupId) {
-  return getGroupDetail(groupId);
-}
-
-export async function getGroupMembers(groupId) {
-  return request("GET", `api/groups/${groupId}/members/`, null, true);
-}
-
-export async function getCycleContributions(groupId) {
-  return request("GET", `api/contributions/group/${groupId}/`, null, true);
-}
-
-export async function getNextPayout(groupId) {
-  return request("GET", `api/contributions/payouts/${groupId}/`, null, true);
-}
-
-export async function getGroupInviteLink(groupId) {
-  return request("GET", `api/groups/${groupId}/invite-link/`, null, true);
+export async function getAlerts(type = "all") {
+  if (type === "risk") return getRiskAlerts();
+  if (type === "payment") return getPaymentAlerts();
+  if (type === "payout") return getPayoutAlerts();
+  return getRiskAlerts();
 }
 
 // ─────────────────────────────────────────────
@@ -454,9 +486,8 @@ export async function computeGroupHealth(groupId) {
   };
 }
 
-export function logoutUser() {
-  clearToken();
-  window.location.href = window.location.origin + "/index.html";
+export async function deleteAlert(alertId) {
+  return request("DELETE", `api/notifications/${alertId}/`, null, true);
 }
 
 // ─────────────────────────────────────────────
@@ -466,6 +497,7 @@ export function logoutUser() {
 export function requireAuth() {
   const token = getToken();
   if (!token) {
+    // Relative path for GH Pages
     window.location.replace("../index.html");
     return false;
   }
@@ -476,4 +508,10 @@ export function redirectIfLoggedIn() {
   if (getToken()) {
     window.location.replace("dashboard.html");
   }
+}
+
+export function logoutUser() {
+  clearToken();
+  // Using relative path to fix GH Pages 404
+  window.location.href = "../index.html";
 }

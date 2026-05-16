@@ -11,75 +11,36 @@
     />
     <style>
       @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
       }
-      .fade-up {
-        animation: fadeUp 0.6s ease both;
-      }
-      .fade-up-2 {
-        animation: fadeUp 0.6s ease 0.1s both;
-      }
-      .fade-up-3 {
-        animation: fadeUp 0.6s ease 0.2s both;
-      }
-      .fade-up-4 {
-        animation: fadeUp 0.6s ease 0.3s both;
-      }
-      body {
-        padding-bottom: 80px;
-      }
+      .fade-up   { animation: fadeUp 0.6s ease both; }
+      .fade-up-2 { animation: fadeUp 0.6s ease 0.1s both; }
+      .fade-up-3 { animation: fadeUp 0.6s ease 0.2s both; }
+      .fade-up-4 { animation: fadeUp 0.6s ease 0.3s both; }
+      .fade-up-5 { animation: fadeUp 0.6s ease 0.4s both; }
+      body { padding-bottom: 80px; }
 
-      /* Loading skeleton pulse */
       .skeleton {
-        background: linear-gradient(
-          90deg,
-          #f0f0f0 25%,
-          #e0e0e0 50%,
-          #f0f0f0 75%
-        );
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
         background-size: 200% 100%;
         animation: pulse 1.5s infinite;
       }
       @keyframes pulse {
-        0% {
-          background-position: 200% 0;
-        }
-        100% {
-          background-position: -200% 0;
-        }
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
       }
     </style>
   </head>
-  <body
-    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
-  >
+  <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
     <div class="px-5 pt-10">
-      <!-- Header -->
+
       <div class="flex items-center justify-between mb-6 fade-up">
         <div class="flex items-center gap-3">
-          <div
-            class="w-11 h-11 bg-[#B0B5AC] rounded-full flex items-center justify-center overflow-hidden"
-          >
-            <img
-              id="userAvatar"
-              src=""
-              class="hidden w-full h-full object-cover"
-            />
+          <div class="w-11 h-11 bg-[#1B5E3B] rounded-full flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+            <img id="userAvatar" src="" class="hidden w-full h-full object-cover" />
             <div id="avatarPlaceholder">
-              <svg
-                class="w-5 h-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                viewBox="0 0 24 24"
-              >
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                 <circle cx="12" cy="7" r="4" />
                 <path d="M5.5 20a7 7 0 0 1 13 0" />
               </svg>
@@ -87,197 +48,120 @@
           </div>
           <div>
             <p class="text-xs text-[#9E9E9E]">Welcome back 👋</p>
-            <p id="userName" class="text-sm font-semibold text-[#1A1A1A]">
-              Hello, User
-            </p>
+            <p id="userName" class="text-sm font-bold text-[#1A1A1A]">Hello, User</p>
           </div>
         </div>
         <button
           onclick="window.location.href = 'alerts.html'"
           class="w-10 h-10 bg-white border border-[#E0E0E0] rounded-full flex items-center justify-center relative hover:bg-gray-50 transition-colors"
         >
-          <svg
-            class="w-5 h-5 text-[#3A3A3A]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-5 h-5 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 0 1-3.46 0" />
           </svg>
-          <span
-            id="notificationBadge"
-            class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full hidden"
-          ></span>
+          <span id="notificationBadge" class="absolute top-2 right-2 w-2 h-2 bg-[#F2A83B] rounded-full hidden"></span>
         </button>
       </div>
 
-      <!-- Balance Card (tap → wallet) -->
       <div
         onclick="window.location.href='wallet.html'"
-        class="bg-[#2A2A2A] rounded-3xl px-6 pt-6 pb-7 mb-5 fade-up-2 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform"
+        class="bg-[#1B5E3B] rounded-[32px] px-6 pt-6 pb-7 mb-5 fade-up-2 relative overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-xl shadow-green-900/20"
       >
-        <div
-          class="absolute -top-8 -right-8 w-32 h-32 bg-white opacity-5 rounded-full"
-        ></div>
-        <div
-          class="absolute -bottom-10 -left-8 w-40 h-40 bg-white opacity-5 rounded-full"
-        ></div>
+        <div class="absolute -top-8 -right-8 w-32 h-32 bg-white opacity-5 rounded-full"></div>
+        <div class="absolute -bottom-10 -left-8 w-40 h-40 bg-white opacity-5 rounded-full"></div>
 
-        <p class="text-[#9E9E9E] text-xs mb-1 relative">Total Saved</p>
+        <p class="text-white opacity-70 text-xs mb-1 relative font-medium uppercase tracking-widest">Total Saved</p>
         <div class="flex items-end gap-1 mb-6 relative">
-          <span
-            id="totalBalance"
-            class="text-white text-4xl font-['Fraunces'] font-bold tracking-tight"
-            >₦0</span
-          >
-          <span class="text-[#9E9E9E] text-sm mb-1">.00</span>
+          <span id="totalBalance" class="text-white text-4xl font-['Fraunces'] font-bold tracking-tight">₦0</span>
+          <span class="text-white opacity-70 text-sm mb-1 font-bold">.00</span>
         </div>
 
-        <!-- Quick Actions -->
         <div class="grid grid-cols-3 gap-3 relative">
           <button
             onclick="event.stopPropagation(); window.location.href = 'create-group.html'"
-            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
+            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95 border border-white/10"
           >
-            <svg
-              class="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              viewBox="0 0 24 24"
-            >
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
               <path d="M12 5v14M5 12h14" />
             </svg>
-            <span class="text-white text-xs font-medium">Create</span>
+            <span class="text-white text-[10px] font-bold uppercase tracking-tighter">Create</span>
           </button>
           <button
             onclick="event.stopPropagation(); window.location.href = 'groups.html'"
-            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95"
+            class="flex flex-col items-center gap-2 bg-white bg-opacity-10 rounded-2xl py-3 px-2 hover:bg-opacity-20 transition-all active:scale-95 border border-white/10"
           >
-            <svg
-              class="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              viewBox="0 0 24 24"
-            >
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.3-4.3" />
             </svg>
-            <span class="text-white text-xs font-medium">Explore</span>
+            <span class="text-white text-[10px] font-bold uppercase tracking-tighter">Explore</span>
           </button>
           <button
             onclick="event.stopPropagation(); window.location.href = 'make-payment.html'"
-            class="flex flex-col items-center gap-2 bg-white rounded-2xl py-3 px-2 hover:bg-gray-100 transition-all active:scale-95"
+            class="flex flex-col items-center gap-2 bg-[#F2A83B] rounded-2xl py-3 px-2 hover:bg-[#e0962d] transition-all active:scale-95 shadow-lg shadow-orange-900/20"
           >
-            <svg
-              class="w-5 h-5 text-[#2A2A2A]"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              viewBox="0 0 24 24"
-            >
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <line x1="12" y1="1" x2="12" y2="23" />
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
-            <span class="text-[#2A2A2A] text-xs font-semibold">Pay Now</span>
+            <span class="text-white text-[10px] font-black uppercase tracking-tighter">Pay Now</span>
           </button>
         </div>
       </div>
 
-      <!-- Alert Banner -->
       <div
         id="alertBanner"
-        class="hidden bg-[#FFF8E7] border border-[#F5E6B0] rounded-2xl px-4 py-3.5 mb-6 flex items-start gap-3 fade-up-3"
+        class="hidden bg-[#FFF9ED] border border-[#FDE6B1] rounded-2xl px-4 py-3.5 mb-5 flex items-start gap-3 fade-up-3"
       >
-        <div
-          class="w-8 h-8 bg-[#F5A623] rounded-full flex items-center justify-center shrink-0 mt-0.5"
-        >
-          <svg
-            class="w-4 h-4 text-white"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-            />
+        <div class="w-8 h-8 bg-[#F2A83B] rounded-full flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
             <line x1="12" y1="9" x2="12" y2="13" />
             <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
         </div>
         <div class="flex-1">
-          <p class="text-sm font-semibold text-[#7A5500]">Payment Due</p>
-          <p
-            id="alertText"
-            class="text-xs text-[#9A7020] mt-0.5 leading-relaxed"
-          >
-            You have an upcoming contribution.
-          </p>
+          <p class="text-sm font-bold text-[#8C5E00]">Payment Due</p>
+          <p id="alertText" class="text-xs text-[#A37410] mt-0.5 leading-relaxed">You have an upcoming contribution.</p>
         </div>
-        <button
-          onclick="this.parentElement.style.display = 'none'"
-          class="text-[#9A7020] hover:text-[#7A5500] transition-colors mt-0.5"
-        >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
+        <button onclick="this.parentElement.style.display = 'none'" class="text-[#A37410] hover:text-[#8C5E00] transition-colors mt-0.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M18 6L6 18M6 6l12 12" />
           </svg>
         </button>
       </div>
 
-      <!-- My Groups -->
-      <div class="fade-up-4">
+      <div class="fade-up-4 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-['Fraunces'] text-base font-bold text-[#1A1A1A]">AI Risk Insights</h2>
+        </div>
+        <div id="riskAlertsContainer" class="flex flex-col gap-2">
+          <div class="h-10 w-full skeleton rounded-xl"></div>
+        </div>
+      </div>
+
+      <div class="fade-up-5">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="font-['Fraunces'] text-lg font-bold text-[#1A1A1A]">
-            My Groups
-          </h2>
-          <a
-            href="groups.html"
-            class="text-xs text-[#6B6B6B] font-medium hover:text-black transition-colors"
-            >See All →</a
-          >
+          <h2 class="font-['Fraunces'] text-lg font-bold text-[#1A1A1A]">My Groups</h2>
+          <a href="groups.html" class="text-xs text-[#1B5E3B] font-bold hover:opacity-70 transition-colors uppercase tracking-widest">See All →</a>
         </div>
         <div id="groupsContainer" class="flex flex-col gap-3">
-          <!-- Skeleton Loaders -->
           <div class="h-20 w-full skeleton rounded-2xl"></div>
           <div class="h-20 w-full skeleton rounded-2xl opacity-60"></div>
         </div>
       </div>
+
     </div>
 
-    <!-- Bottom Nav -->
-    <nav
-      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50"
-    >
-      <button
-        onclick="window.location.href = 'dashboard.html'"
-        class="flex flex-col items-center gap-1 text-[#3A3A3A]"
-      >
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
+      <button onclick="window.location.href = 'dashboard.html'" class="flex flex-col items-center gap-1 text-[#1B5E3B]">
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
         </svg>
-        <span class="text-[10px] font-semibold">Home</span>
+        <span class="text-[10px] font-bold">Home</span>
       </button>
-      <button
-        onclick="window.location.href = 'groups.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
+      <button onclick="window.location.href = 'groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
         </svg>
@@ -285,49 +169,22 @@
       </button>
       <button
         onclick="window.location.href = 'make-payment.html'"
-        class="w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center -mt-6 shadow-lg active:scale-95 transition-all"
+        class="w-14 h-14 bg-[#1B5E3B] rounded-full flex items-center justify-center -mt-6 shadow-lg shadow-green-900/30 active:scale-95 transition-all"
       >
-        <svg
-          class="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path d="M12 5v14M5 12h14" />
         </svg>
       </button>
-      <button
-        onclick="window.location.href = 'alerts.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E] relative"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
+      <button onclick="window.location.href = 'alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] relative">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
           <path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
-        <span
-          id="navAlertBadge"
-          class="absolute top-0 right-2 w-2 h-2 bg-red-500 rounded-full hidden"
-        ></span>
+        <span id="navAlertBadge" class="absolute top-0 right-2 w-2 h-2 bg-[#F2A83B] rounded-full hidden"></span>
         <span class="text-[10px] font-medium">Alerts</span>
       </button>
-      <button
-        onclick="window.location.href = 'profile.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
+      <button onclick="window.location.href = 'profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
           <circle cx="12" cy="7" r="4" />
           <path d="M5.5 20a7 7 0 0 1 13 0" />
         </svg>
@@ -335,98 +192,6 @@
       </button>
     </nav>
 
-    <script type="module">
-      import { getToken, getMe, getMyGroups } from "../js/api.js";
-
-      async function initDashboard() {
-        const token = getToken();
-
-        if (!token) {
-          window.location.replace("../index.html");
-          return;
-        }
-
-        // Handle Name Fetching
-        try {
-          const user = await getMe();
-          const nameElement = document.getElementById("userName");
-          if (nameElement && user.full_name) {
-            nameElement.textContent = `Hello, ${user.full_name}`;
-          }
-        } catch (error) {
-          console.error("Name Fetch Error:", error);
-        }
-
-        // Handle Group Fetching
-        try {
-          const groups = await getMyGroups();
-          const container = document.getElementById("groupsContainer");
-
-          if (container) {
-            const groupsList = Array.isArray(groups)
-              ? groups
-              : groups.results || [];
-
-            if (groupsList.length > 0) {
-              container.innerHTML = groupsList
-                .map((group) => {
-                  // PROGRESS CALCULATION:
-                  // Set to 0 since there are no contributions yet.
-                  const progress = 0;
-
-                  return `
-          <div class="bg-white rounded-2xl p-4 shadow-sm border border-[#F0F0F0] mb-3 transition-all">
-            <!-- Top Section: Avatar and Info (Arrow Removed) -->
-            <div class="flex items-center justify-between mb-4">
-              <div class="flex items-center gap-3">
-                <!-- Circular Avatar -->
-                <div class="w-12 h-12 bg-[#E0E0E0] rounded-full flex items-center justify-center shrink-0">
-                  <svg class="w-6 h-6 text-[#9E9E9E]" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                  </svg>
-                </div>
-                <div>
-                  <p class="text-base font-bold text-[#1A1A1A]">${group.name}</p>
-                  <p class="text-sm text-[#9E9E9E]">₦${Number(group.contribution_amount).toLocaleString()}/mo</p>
-                </div>
-              </div>
-              <!-- The chevron SVG was removed from here to match image_1ca6bc.png -->
-            </div>
-
-            <!-- Progress Bar Section -->
-            <div class="w-full h-1.5 bg-[#E0E0E0] rounded-full mb-2 overflow-hidden">
-              <div class="h-full bg-[#3A3A3A] transition-all duration-500" style="width: ${progress}%"></div>
-            </div>
-
-            <!-- Bottom Stats Section -->
-            <div class="flex items-center justify-between">
-              <span class="text-xs text-[#9E9E9E]">${group.members_count || 0} members</span>
-              <span class="text-xs font-semibold text-[#3A3A3A]">Upcoming</span>
-            </div>
-          </div>
-        `;
-                })
-                .join("");
-            } else {
-              container.innerHTML = `<p class="text-xs text-[#9E9E9E] text-center py-8">No groups found.</p>`;
-            }
-          }
-        } catch (error) {
-          console.error("DETAILED GROUP ERROR:", error);
-          const container = document.getElementById("groupsContainer");
-          if (container) {
-            container.innerHTML = `<div class="p-4 bg-red-50 rounded-xl"><p class="text-xs text-red-500 text-center">Error: ${error.message}</p></div>`;
-          }
-        }
-
-        // Load external logic
-        const script = document.createElement("script");
-        script.type = "module";
-        script.src = "../js/dashboard.js";
-        document.body.appendChild(script);
-      }
-
-      initDashboard();
-    </script>
+    <script type="module" src="../js/dashboard.js"></script>
   </body>
 </html>

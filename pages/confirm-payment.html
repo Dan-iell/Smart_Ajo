@@ -1,88 +1,328 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Ajo – Confirm Payment</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    .fade-up{animation:fadeUp 0.5s ease both;}
-    .fade-up-2{animation:fadeUp 0.5s ease 0.1s both;}
-    body{padding-bottom:90px;}
-  </style>
-</head>
-<body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ajo – Confirm Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-up {
+        animation: fadeUp 0.5s ease both;
+      }
+      .fade-up-2 {
+        animation: fadeUp 0.5s ease 0.1s both;
+      }
+      body {
+        padding-bottom: 90px;
+      }
 
-  <div class="px-5 pt-10">
+      /* Professional Native-style Modal Animation */
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      .modal-animate {
+        animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto font-['DM_Sans']"
+  >
+    <div class="px-5 pt-10">
+      <div class="flex items-center gap-3 mb-7 fade-up">
+        <button
+          onclick="history.back()"
+          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] active:scale-90 transition-transform shadow-sm"
+        >
+          <svg
+            class="w-4 h-4 text-[#1B5E3B]"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <h1 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A]">
+          Confirm Payment
+        </h1>
+      </div>
 
-    <!-- Header -->
-    <div class="flex items-center gap-3 mb-7 fade-up">
-      <button onclick="history.back()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0]">
-        <svg class="w-4 h-4 text-[#3A3A3A]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      <div
+        class="bg-white rounded-[32px] overflow-hidden mb-5 fade-up shadow-sm border border-white"
+      >
+        <div class="px-5 py-4 border-b border-[#F5F5F5] bg-[#F5F4EF]/30">
+          <p
+            class="text-xs font-black text-[#1B5E3B] uppercase tracking-widest"
+          >
+            Payment Summary
+          </p>
+        </div>
+
+        <div class="divide-y divide-[#F5F5F5]">
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E] font-medium">Amount</span>
+            <span id="confirmAmount" class="text-sm font-bold text-[#1A1A1A]"
+              >₦ 0.00</span
+            >
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E] font-medium">Group</span>
+            <span id="confirmGroup" class="text-sm font-bold text-[#1A1A1A]"
+              >--</span
+            >
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E] font-medium">Cycle</span>
+            <span id="confirmCycle" class="text-sm font-bold text-[#1A1A1A]"
+              >Active Cycle</span
+            >
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E] font-medium">Method</span>
+            <span class="text-sm font-bold text-[#1A1A1A]">Squad / Card</span>
+          </div>
+          <div class="flex items-center justify-between px-5 py-4">
+            <span class="text-sm text-[#9E9E9E] font-medium">Date</span>
+            <span id="confirmDate" class="text-sm font-bold text-[#1A1A1A]"
+              >--</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex items-start gap-3 bg-[#FFF9ED] border border-[#FDE6B1] rounded-2xl px-4 py-4 mb-8 fade-up-2"
+      >
+        <svg
+          class="w-5 h-5 text-[#F2A83B] shrink-0 mt-0.5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M12 8v4" />
+          <path d="M12 16h.01" />
+        </svg>
+        <p class="text-[11px] text-[#8C5E00] leading-relaxed font-medium">
+          Deducting
+          <span id="warningAmount" class="font-bold text-[#1B5E3B]">₦0</span>
+          via <span class="font-bold">Squad</span>. Securely processed by GTCO.
+          Non-reversible once confirmed.
+        </p>
+      </div>
+
+      <button
+        id="confirmBtn"
+        onclick="window._checkAndConfirm()"
+        class="w-full py-5 bg-[#1B5E3B] text-white rounded-full text-sm font-black tracking-widest uppercase transition-all duration-300 hover:bg-[#144d30] active:scale-95 shadow-lg shadow-green-900/20"
+      >
+        Confirm & Pay Now
       </button>
-      <h1 class="font-['Fraunces'] text-2xl font-bold text-[#1A1A1A]">Confirm Payment</h1>
     </div>
 
-    <!-- Payment Summary Card -->
-    <div class="bg-white rounded-3xl overflow-hidden mb-5 fade-up">
-      <div class="px-5 py-4 border-b border-[#F5F5F5]">
-        <p class="text-sm font-semibold text-[#1A1A1A]">Payment Summary</p>
+    <div
+      id="memberModal"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-md z-[100] flex items-center justify-center px-8"
+    >
+      <div
+        class="bg-white rounded-[40px] p-8 w-full max-w-[340px] text-center shadow-2xl modal-animate border border-white/20"
+      >
+        <div
+          class="w-20 h-20 bg-[#FDE6B1]/40 rounded-[30px] flex items-center justify-center mx-auto mb-6"
+        >
+          <svg
+            class="w-10 h-10 text-[#F2A83B]"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+        </div>
+
+        <h3
+          class="font-['Fraunces'] text-2xl font-black text-[#1A1A1A] mb-3 leading-tight"
+        >
+          Group Incomplete
+        </h3>
+        <p
+          id="modalMsg"
+          class="text-sm text-[#6B6B6B] mb-8 leading-relaxed font-medium"
+        >
+          This circle needs more members to begin.
+        </p>
+
+        <button
+          onclick="
+            document.getElementById('memberModal').classList.add('hidden')
+          "
+          class="w-full py-4.5 bg-[#1B5E3B] text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all hover:bg-[#144d30] py-4"
+        >
+          Understood
+        </button>
       </div>
-
-      <!-- Summary rows -->
-      <div class="divide-y divide-[#F5F5F5]">
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Amount</span>
-          <span id="summaryAmount" class="text-sm font-bold text-[#1A1A1A]">—</span>
-        </div>
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Group</span>
-          <span id="summaryGroup" class="text-sm font-bold text-[#1A1A1A]">—</span>
-        </div>
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Payment Method</span>
-          <span id="summaryMethod" class="text-sm font-bold text-[#1A1A1A]">—</span>
-        </div>
-        <div class="flex items-center justify-between px-5 py-4">
-          <span class="text-sm text-[#9E9E9E]">Date</span>
-          <span id="summaryDate" class="text-sm font-bold text-[#1A1A1A]">—</span>
-        </div>
-      </div>
     </div>
 
-    <!-- Warning note -->
-    <div class="flex items-start gap-3 bg-[#FFF8E7] border border-[#F5E6B0] rounded-2xl px-4 py-3.5 mb-6 fade-up-2">
-      <svg class="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <p class="text-xs text-[#7A5500] leading-relaxed">This action will charge <span id="warningAmount" class="font-semibold">—</span> via Squad. This cannot be undone.</p>
-    </div>
+    <nav
+      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50"
+    >
+      <button
+        onclick="window.location.href = 'dashboard.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M3 12L12 3l9 9" />
+          <path d="M9 21V12h6v9" />
+        </svg>
+        <span class="text-[10px] font-medium">Home</span>
+      </button>
+      <button
+        onclick="window.location.href = 'groups.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+        </svg>
+        <span class="text-[10px] font-medium">Groups</span>
+      </button>
+      <button
+        onclick="window.location.href = 'make-payment.html'"
+        class="w-14 h-14 bg-[#1B5E3B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-green-900/30 active:scale-95 transition-all"
+      >
+        <svg
+          class="w-6 h-6 text-white"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+      <button
+        onclick="window.location.href = 'alerts.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        <span class="text-[10px] font-medium">Alerts</span>
+      </button>
+      <button
+        onclick="window.location.href = 'profile.html'"
+        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="12" cy="7" r="4" />
+          <path d="M5.5 20a7 7 0 0 1 13 0" />
+        </svg>
+        <span class="text-[10px] font-medium">Profile</span>
+      </button>
+    </nav>
 
-    <!-- Confirm button -->
-    <button id="confirmBtn" onclick="window._handleConfirmPayment()"
-      class="w-full py-4 bg-[#3A3A3A] text-white rounded-full text-base font-semibold tracking-wide
-             transition-all duration-200 hover:bg-black active:scale-95 fade-up-2">
-      Confirm Payment
-    </button>
+    <script type="module">
+      import { getGroupDetail } from "../js/api.js";
+      import {
+        initConfirmPayment,
+        handleConfirmPayment,
+      } from "../js/payment.js";
 
-  </div>
+      // Capture Group ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const groupId = urlParams.get("groupId");
 
-  <script type="module">
-    import { initConfirmPayment, handleConfirmPayment } from '../js/payment.js';
-    window._handleConfirmPayment = handleConfirmPayment;
-    initConfirmPayment();
-  </script>
+      window._checkAndConfirm = async () => {
+        const btn = document.getElementById("confirmBtn");
+        const modal = document.getElementById("memberModal");
+        const modalMsg = document.getElementById("modalMsg");
 
-  <!-- Bottom Nav -->
-  <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
-    <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg><span class="text-[10px]">Home</span></button>
-    <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="text-[10px]">Groups</span></button>
-    <button onclick="window.location.href='make-payment.html'" class="w-14 h-14 bg-[#3A3A3A] rounded-full flex items-center justify-center -mt-6 shadow-lg"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
-    <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="text-[10px]">Alerts</span></button>
-    <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E] hover:text-[#3A3A3A] transition-colors">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
-      <span class="text-[10px] font-medium">Profile</span>
-    </button>
-  </div>
+        if (!groupId || groupId === "null") {
+          alert("Error: No Group Selected.");
+          return;
+        }
 
-</body>
+        try {
+          btn.innerText = "Verifying Circle...";
+          btn.disabled = true;
+
+          const group = await getGroupDetail(groupId);
+          const current = group.members
+            ? group.members.length
+            : group.member_count || 0;
+          const max = group.max_members || 0;
+
+          if (current < max) {
+            modalMsg.innerHTML = `This circle needs <span class="text-[#1B5E3B] font-bold">${max} members</span> to begin contributions.<br>Currently at <span class="text-[#F2A83B] font-bold">${current}/${max}</span>.`;
+            modal.classList.remove("hidden");
+            btn.innerText = "Confirm & Pay Now";
+            btn.disabled = false;
+            return;
+          }
+
+          handleConfirmPayment();
+        } catch (e) {
+          console.error("Member check failed:", e);
+          handleConfirmPayment();
+        }
+      };
+
+      // Run initialization with the specific Group ID
+      if (groupId) {
+        initConfirmPayment(groupId);
+      }
+    </script>
+  </body>
 </html>
