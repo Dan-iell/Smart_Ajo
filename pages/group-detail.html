@@ -188,7 +188,7 @@
     </div>
 
     <script type="module">
-      import { getMe, getGroupDetail, getCycleContributions, getGroupHealthScore } from "../js/api.js";
+      import { getGroupDetail, getCycleContributions, getNextPayout, computeGroupHealth } from "../js/api.js";
 
       const urlParams = new URLSearchParams(window.location.search);
       const groupId   = urlParams.get("id");
@@ -482,15 +482,35 @@
       // ─── Health score (lazy) ──────────────────────────────────
       async function loadRisk() {
         try {
-          const h     = await getGroupHealthScore(groupId);
-          const score = h.score ?? 75;
-          document.getElementById("healthScoreValue").textContent = score;
-          document.getElementById("healthStatusText").textContent =
-            h.label || (score >= 80 ? "Healthy 💚" : score >= 50 ? "Moderate ⚠️" : "At Risk 🚨");
-          setTimeout(() => {
-            document.getElementById("riskCircleFill").style.strokeDashoffset = 314 - (score / 100) * 314;
-          }, 200);
-        } catch (e) { console.error("loadRisk:", e.message); }
+          const h = await computeGroupHealth(groupId);
+
+          // Ring
+          document.getElementById("healthScoreValue").textContent = h.score;
+          document.getElementById("healthScoreValue").style.color = h.color;
+          document.getElementById("healthStatusText").textContent = h.label;
+          document.getElementById("healthStatusText").style.color = h.color;
+          document.getElementById("riskCircleFill").style.stroke         = h.color;
+          document.getElementById("riskCircleFill").style.strokeDashoffset = 314 - (h.score / 100) * 314;
+
+          // Mini insight lines under the ring card
+          const container = document.getElementById("content-risk");
+          if (h.insights.length) {
+            const insightIcon = { positive:'✓', warning:'!', danger:'✕', info:'ℹ' };
+            const insightColor = { positive:'#22C55E', warning:'#F5A623', danger:'#EF4444', info:'#9E9E9E' };
+            container.insertAdjacentHTML('beforeend', `
+              <div class="flex flex-col gap-2 mt-1">
+                ${h.insights.map(i => `
+                  <div class="flex items-start gap-2 bg-white rounded-2xl px-4 py-3">
+                    <span class="text-xs font-bold shrink-0 mt-0.5" style="color:${insightColor[i.type]}">${insightIcon[i.type]}</span>
+                    <p class="text-xs text-[#6B6B6B] leading-relaxed">${i.text}</p>
+                  </div>`).join('')}
+              </div>
+              <button onclick="window.location.href='health-report.html?id=${groupId}'"
+                class="w-full mt-4 py-3 bg-[#3A3A3A] text-white text-xs font-semibold rounded-full active:scale-95 transition-transform">
+                View Full Health Report →
+              </button>`);
+          }
+        } catch (e) { console.error('loadRisk:', e.message); }
       }
 
       // ─── Tab switcher ─────────────────────────────────────────

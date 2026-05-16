@@ -362,13 +362,128 @@ export async function getAlerts(type = "all") {
   return getRiskAlerts();
 }
 
-export async function markAlertAsRead(alertId) {
-  return request(
-    "PATCH",
-    `api/notifications/${alertId}/`,
-    { is_read: true },
-    true,
+// ─────────────────────────────────────────────
+// GROUP HEALTH — computed client-side from existing endpoints
+// No dedicated backend endpoint needed.
+// Sources:
+//   getCycleContributions → payment rate (45%)
+//   getGroupDetail        → fill rate    (25%)
+//   getRoundSummary       → member risk  (30%)
+// ─────────────────────────────────────────────
+
+export async function computeGroupHealth(groupId) {
+  // Fetch all three in parallel; contributions/summary may be empty for new groups
+  const [group, rawContribs, roundSummary] = await Promise.all([
+    getGroupDetail(groupId),
+    getCycleContributions(groupId).catch(() => []),
+    getRoundSummary(groupId).catch(() => null),
+  ]);
+
+  // Normalise contributions array
+  const contribs = Array.isArray(rawContribs)
+    ? rawContribs
+    : (rawContribs?.results || rawContribs?.contributions || []);
+
+  // ── Payment stats ──────────────────────────
+  const total   = contribs.length;
+  const paid    = contribs.filter(c => ['paid','on_time'].includes(c.status?.toLowerCase())).length;
+  const missed  = contribs.filter(c => ['missed','overdue'].includes(c.status?.toLowerCase())).length;
+  const late    = contribs.filter(c => c.status?.toLowerCase() === 'late').length;
+  const hasData = total > 0;
+  const paymentRate = hasData ? Math.round((paid / total) * 100) : null;
+
+  // ── Fill rate ──────────────────────────────
+  const maxMembers = group.max_members || group.members_count || 1;
+  const fillRate   = Math.round(((group.members_count || 0) / maxMembers) * 100);
+
+  // ── Per-member profiles ────────────────────
+  // Build from group.members first, then overlay round-summary risk_level
+  const memberMap = {};
+
+  (group.members || []).forEach(m => {
+    const key = String(m.id);
+    memberMap[key] = {
+      id:         m.id,
+      name:       m.full_name || m.name || 'Member',
+      risk_level: (m.risk_level || 'low').toLowerCase(),
+      paid: 0, missed: 0, late: 0, total: 0,
+    };
+  });
+
+  // Round summary may contain richer risk_level per user
+  const summaryRows = roundSummary?.members || roundSummary?.contributions || [];
+  summaryRows.forEach(r => {
+    const key = String(r.user_id || r.id || '');
+    if (!key) return;
+    if (!memberMap[key]) {
+      memberMap[key] = { id: key, name: r.user_name || r.name || 'Member', risk_level: 'low', paid: 0, missed: 0, late: 0, total: 0 };
+    }
+    if (r.risk_level) memberMap[key].risk_level = r.risk_level.toLowerCase();
+  });
+
+  // Overlay contribution counts per member
+  contribs.forEach(c => {
+    const key = String(c.user_id || c.user || '');
+    if (!key) return;
+    if (!memberMap[key]) memberMap[key] = { id: key, name: c.user_name || 'Member', risk_level: 'low', paid: 0, missed: 0, late: 0, total: 0 };
+    memberMap[key].total++;
+    const s = c.status?.toLowerCase();
+    if (['paid','on_time'].includes(s)) memberMap[key].paid++;
+    else if (['missed','overdue'].includes(s)) memberMap[key].missed++;
+    else if (s === 'late') memberMap[key].late++;
+  });
+
+  // Sort: high risk first, then by missed count
+  const riskOrder = { high: 0, medium: 1, low: 2 };
+  const members = Object.values(memberMap).sort((a, b) =>
+    (riskOrder[a.risk_level] ?? 1) - (riskOrder[b.risk_level] ?? 1) || b.missed - a.missed
   );
+
+  // ── Member reliability score ───────────────
+  const riskWeights = { low: 100, medium: 55, high: 10 };
+  const memberReliability = members.length > 0
+    ? Math.round(members.reduce((s, m) => s + (riskWeights[m.risk_level] ?? 55), 0) / members.length)
+    : 100;
+
+  // ── Composite score ────────────────────────
+  const score = hasData
+    ? Math.round((paymentRate * 0.45) + (fillRate * 0.25) + (memberReliability * 0.30))
+    : Math.round((fillRate * 0.40) + (memberReliability * 0.60));
+
+  const label = score >= 80 ? 'Healthy' : score >= 60 ? 'Good' : score >= 40 ? 'At Risk' : 'Critical';
+  const color = score >= 80 ? '#22C55E' : score >= 60 ? '#F5A623' : score >= 40 ? '#F97316' : '#EF4444';
+
+  // ── Insights ───────────────────────────────
+  const insights = [];
+  if (!hasData) {
+    insights.push({ type: 'info', text: 'No contributions recorded yet. Score reflects group setup only.' });
+  } else {
+    if (paymentRate >= 90)      insights.push({ type: 'positive', text: `${paymentRate}% of contributions paid on time — excellent consistency.` });
+    else if (paymentRate >= 70) insights.push({ type: 'warning',  text: `${paymentRate}% payment rate. A few members are falling behind.` });
+    else                        insights.push({ type: 'danger',   text: `Only ${paymentRate}% payment rate. The group needs urgent attention.` });
+    if (missed > 0) insights.push({ type: 'warning', text: `${missed} missed contribution${missed !== 1 ? 's' : ''} across all rounds.` });
+    if (late > 0)   insights.push({ type: 'warning', text: `${late} late payment${late !== 1 ? 's' : ''} recorded.` });
+  }
+  if (fillRate < 50)      insights.push({ type: 'warning',  text: `Group is only ${fillRate}% full. Invite more members for a stronger pool.` });
+  else if (fillRate >= 90) insights.push({ type: 'positive', text: `Group is ${fillRate}% full — strong member base.` });
+
+  const highRisk = members.filter(m => m.risk_level === 'high');
+  if (highRisk.length)
+    insights.push({ type: 'danger', text: `${highRisk.map(m => m.name.split(' ')[0]).join(', ')} ${highRisk.length === 1 ? 'has' : 'have'} a high risk profile — monitor closely.` });
+
+  return {
+    score,
+    label,
+    color,
+    breakdown: [
+      hasData ? { label: 'Payment Rate',       value: paymentRate,       color: paymentRate >= 80 ? '#22C55E' : paymentRate >= 60 ? '#F5A623' : '#EF4444' } : null,
+      { label: 'Group Fill Rate',              value: fillRate,          color: fillRate >= 80 ? '#22C55E' : '#F5A623' },
+      { label: 'Member Reliability',           value: memberReliability, color: memberReliability >= 80 ? '#22C55E' : memberReliability >= 60 ? '#F5A623' : '#EF4444' },
+    ].filter(Boolean),
+    members,
+    insights,
+    meta: { total, paid, missed, late, hasData },
+  };
 }
 
 export async function deleteAlert(alertId) {

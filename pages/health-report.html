@@ -48,13 +48,25 @@
     </div>
 
     <!-- Score Breakdown -->
-    <div class="bg-white rounded-3xl p-5 mb-5 fade-up-2 shadow-sm border border-white">
-      <p class="text-sm font-bold text-[#1A1A1A] mb-5 flex items-center gap-2">
-        <span class="w-1.5 h-4 bg-[#F2A83B] rounded-full"></span>
-        Score Breakdown
-      </p>
-      <div id="breakdownContainer" class="flex flex-col gap-6">
-        <p id="noDataMessage" class="text-xs text-[#9E9E9E] text-center py-4 font-medium italic">No contribution activity recorded yet.</p>
+    <div class="bg-white rounded-3xl p-5 mb-5 fade-up-2">
+      <p class="text-sm font-semibold text-[#1A1A1A] mb-5">Score Breakdown</p>
+      <div id="breakdownContainer" class="flex flex-col gap-5">
+        <p class="text-xs text-[#9E9E9E] text-center py-4 animate-pulse">Calculating…</p>
+      </div>
+    </div>
+
+    <!-- Per-member breakdown -->
+    <div class="bg-white rounded-3xl p-5 mb-5 fade-up-2">
+      <div class="flex items-center justify-between mb-4">
+        <p class="text-sm font-semibold text-[#1A1A1A]">Member Risk</p>
+        <div class="flex items-center gap-3 text-[10px] text-[#9E9E9E]">
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#22C55E] inline-block"></span>Low</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#F5A623] inline-block"></span>Medium</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#EF4444] inline-block"></span>High</span>
+        </div>
+      </div>
+      <div id="memberRiskList" class="flex flex-col gap-3">
+        <p class="text-xs text-[#9E9E9E] text-center py-4 animate-pulse">Loading members…</p>
       </div>
     </div>
 
@@ -64,9 +76,7 @@
         <span class="text-base">🤖</span> AI INSIGHTS
       </p>
       <div id="aiInsightsContent">
-        <p class="text-xs text-[#6B6B6B] leading-relaxed font-medium">
-            Welcome to your new group! AI insights and health scores will be generated automatically once the first contribution cycle begins.
-        </p>
+        <p class="text-xs text-[#9E9E9E] animate-pulse">Analysing group data…</p>
       </div>
     </div>
 
@@ -99,69 +109,105 @@
   </div>
 
   <script type="module">
-    import { getGroupDetail } from "../js/api.js";
+    import { computeGroupHealth } from "../js/api.js";
+
+    const groupId = new URLSearchParams(window.location.search).get("id");
+
+    // ── helpers ───────────────────────────────────────────────────────
+    const riskColors = { low: '#22C55E', medium: '#F5A623', high: '#EF4444' };
+    const riskBg     = { low: 'bg-[#F0FDF4]', medium: 'bg-[#FFF8E7]', high: 'bg-[#FFF1F0]' };
+    const riskText   = { low: 'text-[#22C55E]', medium: 'text-[#F5A623]', high: 'text-[#EF4444]' };
+    const insightIcon = {
+      positive: `<span class="text-[#22C55E] shrink-0 mt-0.5 font-bold">✓</span>`,
+      warning:  `<span class="text-[#F5A623] shrink-0 mt-0.5 font-bold">!</span>`,
+      danger:   `<span class="text-[#EF4444] shrink-0 mt-0.5 font-bold">✕</span>`,
+      info:     `<span class="text-[#9E9E9E] shrink-0 mt-0.5">ℹ</span>`,
+    };
 
     async function loadHealthData() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const groupId = urlParams.get("id");
-      if (!groupId) return;
+      if (!groupId) {
+        document.getElementById("statusText").textContent = "No group selected";
+        return;
+      }
 
       try {
-        const group = await getGroupDetail(groupId);
-        // Checking if cycle has started based on members and pool
-        const currentPool = parseFloat(group.current_pool || 0);
-        if (currentPool > 0 || group.members_count > 0) {
-            renderActiveState();
-        } 
+        const h = await computeGroupHealth(groupId);
+
+        // ── Overall score ───────────────────────────────────────────
+        document.getElementById("overallScore").textContent = h.score;
+        document.getElementById("overallScore").style.color = h.color;
+
+        document.getElementById("statusText").textContent  = h.label;
+        document.getElementById("statusText").style.color  = h.color;
+
+        const iconSvg = h.score >= 60
+          ? `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:${h.color}"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>`
+          : `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:${h.color}"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+        document.getElementById("statusIcon").innerHTML = iconSvg;
+
+        const bar = document.getElementById("overallBar");
+        bar.style.setProperty('--w', `${h.score}%`);
+        bar.style.width = `${h.score}%`;
+        bar.style.backgroundColor = h.color;
+
+        // ── Score breakdown bars ────────────────────────────────────
+        document.getElementById("breakdownContainer").innerHTML = h.breakdown.map(b => `
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <p class="text-xs text-[#6B6B6B]">${b.label}</p>
+              <p class="text-xs font-bold text-[#1A1A1A]">${b.value}%</p>
+            </div>
+            <div class="h-2 bg-[#F0F0F0] rounded-full overflow-hidden">
+              <div class="bar h-full rounded-full" style="--w:${b.value}%; width:${b.value}%; background-color:${b.color}"></div>
+            </div>
+          </div>`).join('');
+
+        // ── Per-member risk list ────────────────────────────────────
+        if (h.members.length === 0) {
+          document.getElementById("memberRiskList").innerHTML =
+            `<p class="text-xs text-[#9E9E9E] text-center py-4">No member data yet.</p>`;
+        } else {
+          document.getElementById("memberRiskList").innerHTML = h.members.map(m => {
+            const initials = m.name.split(' ').filter(Boolean).map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            const rateText = m.total > 0 ? `${m.paid}/${m.total} paid` : 'No contributions yet';
+            const missedTag = m.missed > 0
+              ? `<span class="text-[10px] font-bold text-[#EF4444] bg-[#FFF1F0] px-2 py-0.5 rounded-full">${m.missed} missed</span>`
+              : '';
+            const lateTag = m.late > 0
+              ? `<span class="text-[10px] font-semibold text-[#F5A623] bg-[#FFF8E7] px-2 py-0.5 rounded-full">${m.late} late</span>`
+              : '';
+            const riskTag = `<span class="text-[10px] font-bold ${riskText[m.risk_level]} ${riskBg[m.risk_level]} px-2 py-0.5 rounded-full capitalize">${m.risk_level} risk</span>`;
+
+            return `
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-white text-[10px] font-bold"
+                  style="background-color:${riskColors[m.risk_level]}">
+                  ${initials}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold text-[#1A1A1A] truncate">${m.name}</p>
+                  <p class="text-[10px] text-[#9E9E9E]">${rateText}</p>
+                </div>
+                <div class="flex flex-col items-end gap-1 shrink-0">
+                  ${riskTag}
+                  <div class="flex gap-1">${missedTag}${lateTag}</div>
+                </div>
+              </div>`;
+          }).join('');
+        }
+
+        // ── AI Insights ─────────────────────────────────────────────
+        document.getElementById("aiInsightsContent").innerHTML = h.insights.length
+          ? `<ul class="flex flex-col gap-2.5">${h.insights.map(i => `
+              <li class="text-xs text-[#6B6B6B] leading-relaxed flex items-start gap-2">
+                ${insightIcon[i.type] || insightIcon.info} ${i.text}
+              </li>`).join('')}</ul>`
+          : `<p class="text-xs text-[#9E9E9E]">No insights available yet.</p>`;
+
       } catch (e) {
-        console.error("Error loading health data:", e);
+        console.error("Health report error:", e);
+        document.getElementById("statusText").textContent = "Failed to load";
       }
-    }
-
-    function renderActiveState() {
-        // Update Overall - Using Deep Green for high scores
-        document.getElementById("overallScore").textContent = "85";
-        document.getElementById("statusText").textContent = "Healthy Growth";
-        document.getElementById("statusText").className = "text-sm font-bold text-[#1B5E3B]";
-        document.getElementById("overallBar").style.setProperty('--w', '85%');
-        document.getElementById("overallBar").className = "bar h-full bg-[#1B5E3B] rounded-full";
-        document.getElementById("statusIcon").innerHTML = `<svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>`;
-
-        // Update Breakdown - Mixing Green and Gold
-        document.getElementById("breakdownContainer").innerHTML = `
-            <div>
-                <div class="flex items-center justify-between mb-2">
-                    <p class="text-xs font-bold text-[#6B6B6B]">On-Time Contribution Rate</p>
-                    <p class="text-xs font-bold text-[#1A1A1A]">90%</p>
-                </div>
-                <div class="h-2 bg-[#F0F0F0] rounded-full overflow-hidden">
-                    <div class="bar h-full bg-[#F2A83B] rounded-full" style="--w:90%; width:90%"></div>
-                </div>
-            </div>
-            <div>
-                <div class="flex items-center justify-between mb-2">
-                    <p class="text-xs font-bold text-[#6B6B6B]">Member Trust Index</p>
-                    <p class="text-xs font-bold text-[#1A1A1A]">82%</p>
-                </div>
-                <div class="h-2 bg-[#F0F0F0] rounded-full overflow-hidden">
-                    <div class="bar h-full bg-[#1B5E3B] rounded-full" style="--w:82%; width:82%"></div>
-                </div>
-            </div>
-        `;
-
-        // Update AI Insights
-        document.getElementById("aiInsightsContent").innerHTML = `
-            <ul class="flex flex-col gap-3">
-                <li class="text-xs text-[#6B6B6B] font-medium leading-relaxed flex items-start gap-3">
-                    <span class="text-[#1B5E3B] shrink-0 font-bold">✓</span> 
-                    Excellent momentum! Contributions are currently 90% on-time, which is above the platform average.
-                </li>
-                <li class="text-xs text-[#6B6B6B] font-medium leading-relaxed flex items-start gap-3">
-                    <span class="text-[#F2A83B] shrink-0 font-bold">!</span> 
-                    Tip: Invite 2 more members to reach the optimal rotation speed for this target pool.
-                </li>
-            </ul>
-        `;
     }
 
     loadHealthData();
