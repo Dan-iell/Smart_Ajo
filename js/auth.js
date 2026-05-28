@@ -2,7 +2,7 @@
 //  Smart Ajo — auth.js
 // ============================================================
 
-const BASE_URL = "https://smartajo.up.railway.app";
+const BASE_URL = "https://smart-ajo.onrender.com";
 
 import {
   loginUser,
