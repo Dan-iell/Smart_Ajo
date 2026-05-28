@@ -4,7 +4,7 @@
 
 import { getMe, getMyGroups, getToken } from "./api.js";
 
-const BASE_URL = "https://smartajo.up.railway.app";
+const BASE_URL = "https://smart-ajo.onrender.com";
 
 document.addEventListener("DOMContentLoaded", initDashboard);
 

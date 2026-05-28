@@ -56,11 +56,11 @@
     <!-- Tabs -->
     <div class="bg-[#F5F4EF] rounded-t-3xl -mt-8 px-5 pt-5 relative z-20">
       <div class="flex border-b border-[#E0E0E0] mb-5 overflow-x-auto scrollbar-hide gap-1">
-        <button id="tab-overview"      onclick="switchTab('overview')"      class="shrink-0 px-3 py-3 text-xs font-bold   text-[#1B5E3B] border-b-2 border-[#1B5E3B]  transition-all">Overview</button>
-        <button id="tab-members"       onclick="switchTab('members')"       class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">Members</button>
+        <button id="tab-overview" onclick="switchTab('overview')" class="shrink-0 px-3 py-3 text-xs font-bold text-[#1B5E3B] border-b-2 border-[#1B5E3B] transition-all">Overview</button>
+        <button id="tab-members" onclick="switchTab('members')" class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">Members</button>
         <button id="tab-contributions" onclick="switchTab('contributions')" class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">Contributions</button>
-        <button id="tab-rotation"      onclick="switchTab('rotation')"      class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">Rotation</button>
-        <button id="tab-risk"          onclick="switchTab('risk')"          class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">AI Risk</button>
+        <button id="tab-rotation" onclick="switchTab('rotation')" class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">Rotation</button>
+        <button id="tab-risk" onclick="switchTab('risk')" class="shrink-0 px-3 py-3 text-xs font-medium text-[#9E9E9E] border-b-2 border-transparent transition-all">AI Risk</button>
       </div>
 
       <!-- Overview -->
@@ -116,6 +116,8 @@
             </button>
           </div>
         </div>
+        <!-- Extra rows: start date, end date, total rounds — injected if backend returns them -->
+        <div id="summaryExtra" class="bg-white rounded-2xl overflow-hidden border border-[#F5F5F5] mt-3 hidden"></div>
       </div>
 
       <!-- Members -->
@@ -156,7 +158,7 @@
           <p id="healthStatusText" class="text-xs font-bold text-[#F2A83B]">Tap to view full report</p>
         </div>
         <p class="text-[11px] font-bold text-[#9E9E9E] uppercase mb-3 tracking-wider">Member Risk Levels</p>
-        <div id="memberRiskList" class="flex flex-col gap-2"></div>
+        <div id="memberRiskList" class="flex flex-col gap-2 mb-4"></div>
       </div>
     </div>
 
@@ -184,7 +186,7 @@
     </div>
 
     <script type="module">
-      import { getMe, getGroupDetail, getCycleContributions, getGroupHealthScore } from "../js/api.js";
+      import { getMe, getGroupDetail, getCycleContributions, computeGroupHealth } from "../js/api.js";
 
       const urlParams = new URLSearchParams(window.location.search);
       const groupId   = urlParams.get("id");
@@ -205,7 +207,14 @@
         return "??";
       }
 
+<<<<<<< HEAD
       const FREQ_MAP = { daily: "Daily", weekly: "Weekly", biweekly: "Bi-weekly", monthly: "Monthly" };
+=======
+      const FREQ_MAP = {
+        daily: "Daily", weekly: "Weekly",
+        biweekly: "Bi-weekly", monthly: "Monthly",
+      };
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
       function freqLabel(f) {
         if (!f?.trim()) return "Not set";
         return FREQ_MAP[f.toLowerCase()] ?? (f.charAt(0).toUpperCase() + f.slice(1));
@@ -216,6 +225,7 @@
         return new Date(d).toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
       }
 
+<<<<<<< HEAD
       // Due date with grace period warning based on frequency
       function dueDateDisplay(dueDateStr, frequency) {
         if (!dueDateStr) return `<span class="text-sm font-bold text-[#9E9E9E]">Not set</span>`;
@@ -238,6 +248,16 @@
         else if (diff === 1){ label = `Tomorrow`;                           cls = "text-[#F2A83B]"; }
         else               { label = fmtDate(dueDateStr);                  cls = "text-[#1A1A1A]"; }
 
+=======
+      function dueDateEl(d) {
+        if (!d) return `<span class="text-sm font-bold text-[#9E9E9E]">Not set</span>`;
+        const diff = Math.ceil((new Date(d) - new Date()) / 86400000);
+        const cls  = diff < 0  ? "text-[#EF4444]" :
+                     diff <= 1 ? "text-[#F2A83B]" : "text-[#1A1A1A]";
+        const label = diff < 0  ? `Overdue (${fmtDate(d)})` :
+                      diff === 0 ? `Today` :
+                      diff === 1 ? `Tomorrow` : fmtDate(d);
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
         return `<span class="text-sm font-bold ${cls}">${label}</span>`;
       }
 
@@ -257,19 +277,39 @@
         try {
           const [group, me] = await Promise.all([getGroupDetail(groupId), getMe()]);
 
+<<<<<<< HEAD
           // ✅ Admin check: compare created_by.id against logged-in user id
           const isAdmin = group.created_by?.id === me.id;
+=======
+          const isAdmin = group.admin && (
+            group.admin === me.username ||
+            group.admin === me.email   ||
+            group.admin === String(me.id)
+          );
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
 
           const contributionAmount = parseFloat(group.contribution_amount) || 0;
           const maxMembers         = group.max_members   || 0;
           const totalMembers       = group.total_members || 0;
+<<<<<<< HEAD
+=======
+          const currentRound       = group.current_round || 0;
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
           const poolAmount         = parseFloat(group.pool_amount) || 0;
           const frequency          = group.contribution_frequency || "";
           const members            = group.members || [];
           const targetPool         = contributionAmount * maxMembers;
           const pct = targetPool > 0 ? Math.min(Math.round((poolAmount / targetPool) * 100), 100) : 0;
 
+<<<<<<< HEAD
           // Header
+=======
+          const targetPool = contributionAmount * maxMembers;
+          const pct = targetPool > 0
+            ? Math.min(Math.round((poolAmount / targetPool) * 100), 100)
+            : 0;
+
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
           document.getElementById("groupTitle").textContent = group.name;
           if (isAdmin) document.getElementById("adminBadge").classList.remove("hidden");
 
@@ -277,11 +317,19 @@
           document.getElementById("targetPool").textContent   = `₦${targetPool.toLocaleString("en-NG")}`;
           document.getElementById("poolFormula").textContent  = `₦${contributionAmount.toLocaleString("en-NG")} × ${maxMembers} members`;
           document.getElementById("progressText").textContent = `${pct}% filled`;
+<<<<<<< HEAD
+=======
+          
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
           setTimeout(() => {
-            document.getElementById("progressCircle").style.strokeDashoffset = 314 - (pct / 100) * 314;
+            const circle = document.getElementById("progressCircle");
+            if(circle) circle.style.strokeDashoffset = 314 - (pct / 100) * 314;
           }, 200);
 
+<<<<<<< HEAD
           // Overview
+=======
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
           document.getElementById("summaryContribution").textContent = `₦${contributionAmount.toLocaleString("en-NG")}`;
           document.getElementById("summaryFrequency").textContent    = freqLabel(frequency);
           document.getElementById("summaryMembers").textContent      = `${totalMembers} / ${maxMembers}`;
@@ -297,13 +345,25 @@
                                         "text-[#9E9E9E] bg-[#F5F5F5]"
           }`;
 
+<<<<<<< HEAD
           // Invite code — admin only
+=======
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
           if (isAdmin && group.code) {
             document.getElementById("codeSection").classList.remove("hidden");
             let codeVisible = false;
             const codeDisplay = document.getElementById("codeDisplay");
 
+<<<<<<< HEAD
             document.getElementById("toggleCodeBtn").addEventListener("click", () => {
+=======
+            const codeDisplay  = document.getElementById("codeDisplay");
+            const toggleBtn    = document.getElementById("toggleCodeBtn");
+            const copyBtn      = document.getElementById("copyCodeBtn");
+            let   codeVisible  = false;
+
+            toggleBtn.addEventListener("click", () => {
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
               codeVisible = !codeVisible;
               codeDisplay.textContent = codeVisible ? group.code : "••••••••••";
               document.getElementById("eyeIcon").innerHTML = codeVisible
@@ -311,10 +371,16 @@
                 : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
             });
 
+<<<<<<< HEAD
             document.getElementById("copyCodeBtn").addEventListener("click", () => {
               navigator.clipboard.writeText(group.code).catch(() => {});
               const btn = document.getElementById("copyCodeBtn");
               btn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>`;
+=======
+            copyBtn.addEventListener("click", () => {
+              navigator.clipboard.writeText(group.code).catch(() => {});
+              copyBtn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> `;
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
               setTimeout(() => {
                 btn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
               }, 2000);
@@ -432,8 +498,12 @@
           }
           const statusMap = {
             paid:    `<span class="text-xs text-[#22C55E] font-bold">✓ Paid</span>`,
+<<<<<<< HEAD
             missed:  `<span class="text-xs text-[#EF4444] font-bold">✗ Missed</span>`,
             late:    `<span class="text-xs text-[#F2A83B] font-bold">⚠ Late</span>`,
+=======
+            missed:  `<span class="text-xs text-[#EF4444] font-bold">✕ Missed</span>`,
+>>>>>>> c99c3be89e3963ef07ad668a6a029120bc7e0e64
             pending: `<span class="text-xs text-[#F5A623] font-semibold">Pending</span>`,
           };
           el.innerHTML = `<div class="flex flex-col gap-2">${list.map((c) => {
@@ -459,15 +529,44 @@
       // ─── Health score (lazy) ──────────────────────────────────
       async function loadRisk() {
         try {
-          const h     = await getGroupHealthScore(groupId);
-          const score = h.score ?? 75;
-          document.getElementById("healthScoreValue").textContent = score;
-          document.getElementById("healthStatusText").textContent =
-            h.label || (score >= 80 ? "Healthy 💚" : score >= 50 ? "Moderate ⚠️" : "At Risk 🚨");
-          setTimeout(() => {
-            document.getElementById("riskCircleFill").style.strokeDashoffset = 314 - (score / 100) * 314;
-          }, 200);
-        } catch (e) { console.error("loadRisk:", e.message); }
+          const h = await computeGroupHealth(groupId);
+
+          document.getElementById("healthScoreValue").textContent = h.score;
+          document.getElementById("healthScoreValue").style.color = h.color;
+          document.getElementById("healthStatusText").textContent = h.label;
+          document.getElementById("healthStatusText").style.color = h.color;
+          
+          const riskRing = document.getElementById("riskCircleFill");
+          if(riskRing) {
+            riskRing.style.stroke = h.color;
+            riskRing.style.strokeDashoffset = 314 - (h.score / 100) * 314;
+          }
+
+          const container = document.getElementById("content-risk");
+          if (h.insights && h.insights.length) {
+            const insightIcon = { positive:'✓', warning:'!', danger:'✕', info:'ℹ' };
+            const insightColor = { positive:'#22C55E', warning:'#F5A623', danger:'#EF4444', info:'#9E9E9E' };
+            
+            // Avoid duplicate appends if user keeps toggling tabs
+            const checkInsights = document.getElementById("insightsWrapper");
+            if(checkInsights) checkInsights.remove();
+
+            container.insertAdjacentHTML('beforeend', `
+              <div id="insightsWrapper" class="w-full">
+                <div class="flex flex-col gap-2 mt-4">
+                  ${h.insights.map(i => `
+                    <div class="flex items-start gap-2 bg-white rounded-2xl px-4 py-3 border border-[#F5F5F5]">
+                      <span class="text-xs font-bold shrink-0 mt-0.5" style="color:${insightColor[i.type]}">${insightIcon[i.type]}</span>
+                      <p class="text-xs text-[#6B6B6B] leading-relaxed">${i.text}</p>
+                    </div>`).join('')}
+                </div>
+                <button onclick="window.location.href='health-report.html?id=${groupId}'"
+                  class="w-full mt-4 py-3 bg-[#3A3A3A] text-white text-xs font-semibold rounded-full active:scale-95 transition-transform">
+                  View Full Health Report →
+                </button>
+              </div>`);
+          }
+        } catch (e) { console.error('loadRisk:', e.message); }
       }
 
       // ─── Tab switcher ─────────────────────────────────────────
