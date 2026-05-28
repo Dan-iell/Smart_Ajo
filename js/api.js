@@ -2,7 +2,7 @@
 //  Smart Ajo — api.js (MERGED)
 // ============================================================
 
-const BASE_URL = "https://smartajo.up.railway.app";
+const BASE_URL = "https://smart-ajo.onrender.com";
 
 // ─────────────────────────────────────────────
 // TOKEN HELPERS
