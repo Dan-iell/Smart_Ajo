@@ -21,7 +21,7 @@
   </head>
   <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto">
 
-    <!-- ── Header ──────────────────────────────────────────── -->
+    <!-- Header -->
     <div class="bg-[#1B5E3B] px-5 pt-10 pb-20 relative overflow-hidden">
       <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10"></div>
       <div class="flex items-center justify-between mb-6 relative z-10">
@@ -30,12 +30,11 @@
         </button>
         <div class="text-center">
           <h1 id="groupTitle" class="text-lg font-bold text-white font-['Fraunces']">Loading…</h1>
-          <span id="adminBadge" class="hidden text-[10px] font-bold bg-[#F2A83B] text-white px-2 py-0.5 rounded-full">Admin</span>
+          <span id="adminBadge" class="hidden text-[10px] font-bold bg-[#F2A83B] text-white px-2 py-0.5 rounded-full mt-1 inline-block">Admin</span>
         </div>
         <div class="w-9"></div>
       </div>
 
-      <!-- Progress circle -->
       <div class="flex flex-col items-center relative z-10">
         <div class="relative w-40 h-40 mb-3">
           <svg viewBox="0 0 110 110" class="w-full h-full">
@@ -54,7 +53,7 @@
       </div>
     </div>
 
-    <!-- ── Tab bar ──────────────────────────────────────────── -->
+    <!-- Tabs -->
     <div class="bg-[#F5F4EF] rounded-t-3xl -mt-8 px-5 pt-5 relative z-20">
       <div class="flex border-b border-[#E0E0E0] mb-5 overflow-x-auto scrollbar-hide gap-1">
         <button id="tab-overview"      onclick="switchTab('overview')"      class="shrink-0 px-3 py-3 text-xs font-bold   text-[#1B5E3B] border-b-2 border-[#1B5E3B]  transition-all">Overview</button>
@@ -68,14 +67,13 @@
       <div id="content-overview" class="tab-content active">
         <p class="text-[11px] font-bold text-[#9E9E9E] uppercase mb-3 tracking-wider">Group Summary</p>
         <div class="bg-white rounded-2xl overflow-hidden border border-[#F5F5F5] shadow-sm mb-4">
-
           <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
             <span class="text-sm text-[#6B6B6B]">Contribution / cycle</span>
             <span id="summaryContribution" class="text-sm font-bold text-[#F2A83B]">—</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
             <span class="text-sm text-[#6B6B6B]">Frequency</span>
-            <span id="summaryFrequency" class="text-sm font-bold text-[#1A1A1A] capitalize">—</span>
+            <span id="summaryFrequency" class="text-sm font-bold text-[#1A1A1A]">—</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3.5 border-b border-[#F5F5F5]">
             <span class="text-sm text-[#6B6B6B]">Members</span>
@@ -95,23 +93,23 @@
           </div>
           <div class="flex items-center justify-between px-4 py-3.5">
             <span class="text-sm text-[#6B6B6B]">Due date</span>
-            <span id="summaryDueDate" class="text-sm font-bold text-[#1A1A1A]">—</span>
+            <span id="summaryDueDate" class="text-sm font-bold">—</span>
           </div>
         </div>
 
-        <!-- Invite code — hidden by default, visible to admin only -->
+        <!-- Invite code — admin only -->
         <div id="codeSection" class="hidden bg-white rounded-2xl px-4 py-4 border border-[#F5F5F5] shadow-sm">
           <p class="text-[11px] font-bold text-[#9E9E9E] uppercase tracking-wider mb-3">Invite Code</p>
-          <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
             <div class="flex-1 bg-[#F5F4EF] rounded-xl px-4 py-3 font-mono font-bold text-[#1B5E3B] tracking-widest text-sm" id="codeDisplay">
               ••••••••••
             </div>
-            <button id="toggleCodeBtn" class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center shrink-0 hover:bg-[#E8F5EE] transition-colors">
-              <svg id="eyeOpenIcon" class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <button id="toggleCodeBtn" class="w-10 h-10 bg-[#F5F4EF] rounded-xl flex items-center justify-center hover:bg-[#E8F5EE] transition-colors">
+              <svg id="eyeIcon" class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
               </svg>
             </button>
-            <button id="copyCodeBtn" class="w-10 h-10 bg-[#1B5E3B] rounded-xl flex items-center justify-center shrink-0 hover:bg-[#14452b] transition-colors">
+            <button id="copyCodeBtn" class="w-10 h-10 bg-[#1B5E3B] rounded-xl flex items-center justify-center hover:bg-[#14452b] transition-colors">
               <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
               </svg>
@@ -201,38 +199,45 @@
       }
 
       function memberInitials(m) {
-        if (m.full_name?.trim()) {
+        if (m.full_name?.trim())
           return m.full_name.trim().split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase();
-        }
         if (m.phone_number) return m.phone_number.slice(-2);
         return "??";
       }
 
-      // Friendly frequency label
-      const FREQ_MAP = {
-        daily: "Daily", weekly: "Weekly",
-        biweekly: "Bi-weekly", monthly: "Monthly",
-      };
+      const FREQ_MAP = { daily: "Daily", weekly: "Weekly", biweekly: "Bi-weekly", monthly: "Monthly" };
       function freqLabel(f) {
-        if (!f || f.trim() === "") return "Not set";
+        if (!f?.trim()) return "Not set";
         return FREQ_MAP[f.toLowerCase()] ?? (f.charAt(0).toUpperCase() + f.slice(1));
       }
 
-      // Friendly date — returns "Not set" if null/empty
       function fmtDate(d) {
         if (!d) return "Not set";
         return new Date(d).toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
       }
 
-      // Due date with urgency colour
-      function dueDateEl(d) {
-        if (!d) return `<span class="text-sm font-bold text-[#9E9E9E]">Not set</span>`;
-        const diff = Math.ceil((new Date(d) - new Date()) / 86400000);
-        const cls  = diff < 0  ? "text-[#EF4444]" :
-                     diff <= 1 ? "text-[#F2A83B]" : "text-[#1A1A1A]";
-        const label = diff < 0  ? `Overdue (${fmtDate(d)})` :
-                      diff === 0 ? `Today` :
-                      diff === 1 ? `Tomorrow` : fmtDate(d);
+      // Due date with grace period warning based on frequency
+      function dueDateDisplay(dueDateStr, frequency) {
+        if (!dueDateStr) return `<span class="text-sm font-bold text-[#9E9E9E]">Not set</span>`;
+
+        const due  = new Date(dueDateStr);
+        const now  = new Date();
+        const diff = Math.ceil((due - now) / 86400000);
+
+        // Grace period in days per frequency
+        const grace = { daily: 0.25, weekly: 2, biweekly: 3, monthly: 7 }; // daily = 6hrs ≈ 0.25 days
+        const graceHours = { daily: 6, weekly: 48, biweekly: 72, monthly: 168 };
+        const freq  = frequency?.toLowerCase();
+        const hoursLeft = (due - now) / 3600000;
+        const inGrace   = freq && hoursLeft > 0 && hoursLeft <= (graceHours[freq] ?? 0);
+
+        let label, cls;
+        if (diff < 0)      { label = `Overdue — ${fmtDate(dueDateStr)}`;  cls = "text-[#EF4444]"; }
+        else if (inGrace)  { label = `⚠️ Grace period — ${fmtDate(dueDateStr)}`; cls = "text-[#F2A83B]"; }
+        else if (diff === 0){ label = `Today`;                              cls = "text-[#F2A83B]"; }
+        else if (diff === 1){ label = `Tomorrow`;                           cls = "text-[#F2A83B]"; }
+        else               { label = fmtDate(dueDateStr);                  cls = "text-[#1A1A1A]"; }
+
         return `<span class="text-sm font-bold ${cls}">${label}</span>`;
       }
 
@@ -250,53 +255,39 @@
       async function initDetails() {
         if (!groupId) return;
         try {
-          // Fetch group + current user in parallel
           const [group, me] = await Promise.all([getGroupDetail(groupId), getMe()]);
 
-          // ── Determine if current user is admin ───────────────
-          // group.admin is the admin's username — compare against me.username
-          const isAdmin = group.admin && (
-            group.admin === me.username ||
-            group.admin === me.email   ||
-            group.admin === String(me.id)
-          );
+          // ✅ Admin check: compare created_by.id against logged-in user id
+          const isAdmin = group.created_by?.id === me.id;
 
-          // ── Raw fields ───────────────────────────────────────
           const contributionAmount = parseFloat(group.contribution_amount) || 0;
           const maxMembers         = group.max_members   || 0;
           const totalMembers       = group.total_members || 0;
-          const currentRound       = group.current_round || 0;
-          const poolAmount         = parseFloat(group.pool_amount) || 0; // money collected so far
+          const poolAmount         = parseFloat(group.pool_amount) || 0;
           const frequency          = group.contribution_frequency || "";
           const members            = group.members || [];
+          const targetPool         = contributionAmount * maxMembers;
+          const pct = targetPool > 0 ? Math.min(Math.round((poolAmount / targetPool) * 100), 100) : 0;
 
-          // ── Calculated ───────────────────────────────────────
-          const targetPool = contributionAmount * maxMembers;
-          const pct = targetPool > 0
-            ? Math.min(Math.round((poolAmount / targetPool) * 100), 100)
-            : 0;
-
-          // ── Header ───────────────────────────────────────────
+          // Header
           document.getElementById("groupTitle").textContent = group.name;
           if (isAdmin) document.getElementById("adminBadge").classList.remove("hidden");
 
           document.getElementById("currentPool").textContent  = `₦${poolAmount.toLocaleString("en-NG")}`;
           document.getElementById("targetPool").textContent   = `₦${targetPool.toLocaleString("en-NG")}`;
-          document.getElementById("poolFormula").textContent  =
-            `₦${contributionAmount.toLocaleString("en-NG")} × ${maxMembers} members`;
+          document.getElementById("poolFormula").textContent  = `₦${contributionAmount.toLocaleString("en-NG")} × ${maxMembers} members`;
           document.getElementById("progressText").textContent = `${pct}% filled`;
-          // Animate after a short delay so the transition plays
           setTimeout(() => {
             document.getElementById("progressCircle").style.strokeDashoffset = 314 - (pct / 100) * 314;
           }, 200);
 
-          // ── Overview ─────────────────────────────────────────
+          // Overview
           document.getElementById("summaryContribution").textContent = `₦${contributionAmount.toLocaleString("en-NG")}`;
           document.getElementById("summaryFrequency").textContent    = freqLabel(frequency);
           document.getElementById("summaryMembers").textContent      = `${totalMembers} / ${maxMembers}`;
           document.getElementById("summaryTotalPool").textContent    = `₦${targetPool.toLocaleString("en-NG")}`;
           document.getElementById("summaryStartDate").textContent    = fmtDate(group.start_date);
-          document.getElementById("summaryDueDate").innerHTML        = dueDateEl(group.due_date);
+          document.getElementById("summaryDueDate").innerHTML        = dueDateDisplay(group.due_date, frequency);
 
           const statusEl = document.getElementById("summaryStatus");
           statusEl.textContent = group.status || "—";
@@ -306,36 +297,30 @@
                                         "text-[#9E9E9E] bg-[#F5F5F5]"
           }`;
 
-          // ── Invite code — admin only ──────────────────────────
+          // Invite code — admin only
           if (isAdmin && group.code) {
-            const codeSection = document.getElementById("codeSection");
-            codeSection.classList.remove("hidden");
+            document.getElementById("codeSection").classList.remove("hidden");
+            let codeVisible = false;
+            const codeDisplay = document.getElementById("codeDisplay");
 
-            const codeDisplay  = document.getElementById("codeDisplay");
-            const toggleBtn    = document.getElementById("toggleCodeBtn");
-            const copyBtn      = document.getElementById("copyCodeBtn");
-            let   codeVisible  = false;
-
-            // Toggle show/hide
-            toggleBtn.addEventListener("click", () => {
+            document.getElementById("toggleCodeBtn").addEventListener("click", () => {
               codeVisible = !codeVisible;
               codeDisplay.textContent = codeVisible ? group.code : "••••••••••";
-              document.getElementById("eyeOpenIcon").innerHTML = codeVisible
+              document.getElementById("eyeIcon").innerHTML = codeVisible
                 ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
                 : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
             });
 
-            // Copy
-            copyBtn.addEventListener("click", () => {
+            document.getElementById("copyCodeBtn").addEventListener("click", () => {
               navigator.clipboard.writeText(group.code).catch(() => {});
-              copyBtn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>`;
+              const btn = document.getElementById("copyCodeBtn");
+              btn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>`;
               setTimeout(() => {
-                copyBtn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+                btn.innerHTML = `<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
               }, 2000);
             });
           }
 
-          // ── Render member-based tabs ──────────────────────────
           renderMembers(members, groupId);
           renderRotation(members, contributionAmount, maxMembers);
           renderMemberRisk(members);
@@ -347,7 +332,7 @@
       }
 
       // ─── Members tab ──────────────────────────────────────────
-      function renderMembers(members, groupId) {
+      function renderMembers(members, gId) {
         const el = document.getElementById("membersList");
         if (!members.length) {
           el.innerHTML = '<p class="text-center py-10 text-[#9E9E9E] text-xs">No members yet.</p>';
@@ -357,23 +342,16 @@
           const name     = memberDisplayName(m);
           const initials = memberInitials(m);
           const joined   = fmtDate(m.joined_at?.split("T")[0]);
-          const cfg      = RISK_CONFIG[m.risk_level?.toLowerCase()] || RISK_CONFIG.low;
           return `
-            <a href="member-profile.html?memberId=${m.id}&groupId=${groupId}"
+            <a href="member-profile.html?memberId=${m.id}&groupId=${gId}"
               class="bg-white border border-[#F5F5F5] rounded-2xl p-4 flex items-center gap-3 active:scale-[0.98] transition-transform cursor-pointer hover:border-[#1B5E3B]/20">
-
-              <!-- Avatar -->
               <div class="w-11 h-11 rounded-full bg-[#1B5E3B]/10 flex items-center justify-center shrink-0">
                 <span class="text-sm font-bold text-[#1B5E3B]">${initials}</span>
               </div>
-
-              <!-- Info -->
               <div class="flex-1 min-w-0">
                 <p class="text-sm font-bold text-[#1A1A1A] truncate">${name}</p>
                 <p class="text-[11px] text-[#9E9E9E] mt-0.5">Slot #${m.rotation_order} · Joined ${joined}</p>
               </div>
-
-              <!-- Right side -->
               <div class="flex flex-col items-end gap-1.5 shrink-0">
                 ${riskBadge(m.risk_level)}
                 <span class="text-[10px] ${m.has_received_payout ? "text-[#22C55E] font-bold" : "text-[#9E9E9E]"}">
@@ -399,14 +377,14 @@
           <p class="text-[11px] font-bold text-[#9E9E9E] uppercase mb-3 tracking-wider">Payout Schedule</p>
           <div class="flex flex-col gap-2">
             ${sorted.map((m) => {
-              const name     = memberDisplayName(m);
+              const name    = memberDisplayName(m);
               const initials = memberInitials(m);
-              const isPaid   = m.has_received_payout;
-              const isNext   = !isPaid && m.id === nextMember?.id;
-              const dotBg    = isPaid ? "bg-[#22C55E]" : isNext ? "bg-[#F2A83B]" : "bg-[#E0E0E0]";
-              const subtext  = isPaid ? "Received payout ✓" : isNext ? "⏳ Next to receive" : `Position #${m.rotation_order}`;
+              const isPaid  = m.has_received_payout;
+              const isNext  = !isPaid && m.id === nextMember?.id;
+              const dotBg   = isPaid ? "bg-[#22C55E]" : isNext ? "bg-[#F2A83B]" : "bg-[#E0E0E0]";
+              const subtext = isPaid ? "Received payout ✓" : isNext ? "⏳ Next to receive" : `Position #${m.rotation_order}`;
               return `
-                <div class="bg-white rounded-2xl px-4 py-3 flex items-center gap-3 border border-[#F5F5F5] ${isNext ? "border-[#F2A83B]/30 bg-[#FFF9ED]/50" : ""}">
+                <div class="bg-white rounded-2xl px-4 py-3 flex items-center gap-3 border ${isNext ? "border-[#F2A83B]/30 bg-[#FFF9ED]/50" : "border-[#F5F5F5]"}">
                   <div class="w-8 h-8 ${dotBg} rounded-full flex items-center justify-center shrink-0">
                     <span class="text-white text-[11px] font-bold">${isPaid ? "✓" : m.rotation_order}</span>
                   </div>
@@ -455,6 +433,7 @@
           const statusMap = {
             paid:    `<span class="text-xs text-[#22C55E] font-bold">✓ Paid</span>`,
             missed:  `<span class="text-xs text-[#EF4444] font-bold">✗ Missed</span>`,
+            late:    `<span class="text-xs text-[#F2A83B] font-bold">⚠ Late</span>`,
             pending: `<span class="text-xs text-[#F5A623] font-semibold">Pending</span>`,
           };
           el.innerHTML = `<div class="flex flex-col gap-2">${list.map((c) => {

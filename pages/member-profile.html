@@ -5,355 +5,274 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Ajo – Member Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
     <style>
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(16px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .fade-up {
-        animation: fadeUp 0.5s ease both;
-      }
-      .fade-up-2 {
-        animation: fadeUp 0.5s ease 0.1s both;
-      }
-      body {
-        padding-bottom: 90px;
-        font-family: "DM Sans", sans-serif;
-      }
-      .font-brand {
-        font-family: "Fraunces", serif;
-      }
+      @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+      .fade-up   { animation: fadeUp 0.5s ease both; }
+      .fade-up-2 { animation: fadeUp 0.5s ease 0.1s both; }
+      body { padding-bottom: 90px; font-family: 'DM Sans', sans-serif; }
+      .font-brand { font-family: 'Fraunces', serif; }
     </style>
   </head>
   <body class="bg-[#F5F4EF] min-h-screen max-w-[430px] mx-auto">
-    <div
-      id="loadingState"
-      class="fixed inset-0 bg-[#F5F4EF] z-[60] flex items-center justify-center"
-    >
+
+    <!-- Loading overlay -->
+    <div id="loadingState" class="fixed inset-0 bg-[#F5F4EF] z-[60] flex items-center justify-center">
       <div class="text-center">
-        <div
-          class="w-8 h-8 border-4 border-[#1B5E3B] border-t-transparent rounded-full animate-spin mx-auto mb-3"
-        ></div>
-        <p class="text-xs font-bold text-[#1B5E3B] uppercase tracking-widest">
-          Fetching Profile
-        </p>
+        <div class="w-8 h-8 border-4 border-[#1B5E3B] border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+        <p class="text-xs font-bold text-[#1B5E3B] uppercase tracking-widest">Fetching Profile</p>
       </div>
     </div>
 
     <div class="px-5 pt-10">
+
       <!-- Header -->
       <div class="flex items-center gap-3 mb-7 fade-up">
-        <button
-          onclick="history.back()"
-          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] shadow-sm active:scale-90 transition-transform"
-        >
-          <svg
-            class="w-4 h-4 text-[#1B5E3B]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            viewBox="0 0 24 24"
-          >
-            <path d="M15 18l-6-6 6-6" />
+        <button onclick="history.back()"
+          class="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-[#E0E0E0] shadow-sm active:scale-90 transition-transform">
+          <svg class="w-4 h-4 text-[#1B5E3B]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path d="M15 18l-6-6 6-6"/>
           </svg>
         </button>
-        <h1 class="font-brand text-xl font-bold text-[#1A1A1A]">
-          Member Profile
-        </h1>
+        <h1 class="font-brand text-xl font-bold text-[#1A1A1A]">Member Profile</h1>
       </div>
 
       <!-- Profile Card -->
-      <div
-        class="bg-white rounded-3xl p-7 mb-5 text-center fade-up shadow-sm border border-white"
-      >
-        <div
-          id="memberInitials"
-          class="w-20 h-20 bg-[#1B5E3B] rounded-full mx-auto mb-4 flex items-center justify-center font-brand text-white text-2xl font-bold shadow-lg shadow-green-900/20"
-        >
+      <div class="bg-white rounded-3xl p-7 mb-5 text-center fade-up shadow-sm border border-white">
+        <div id="memberInitials"
+          class="w-20 h-20 bg-[#1B5E3B] rounded-full mx-auto mb-4 flex items-center justify-center font-brand text-white text-2xl font-bold shadow-lg shadow-green-900/20">
           --
         </div>
-        <h2
-          id="memberName"
-          class="font-brand text-xl font-bold text-[#1A1A1A] mb-1"
-        >
-          Loading...
-        </h2>
-        <span
-          id="riskBadge"
-          class="text-[10px] font-black px-4 py-1.5 rounded-full bg-[#F5F4EF] text-[#9E9E9E] uppercase tracking-tighter"
-          >Calculating Risk...</span
-        >
+        <h2 id="memberName" class="font-brand text-xl font-bold text-[#1A1A1A] mb-1">Loading…</h2>
+        <p id="memberPhone" class="text-xs text-[#9E9E9E] font-medium mb-3">—</p>
+        <span id="riskBadge"
+          class="text-[10px] font-black px-4 py-1.5 rounded-full bg-[#F5F4EF] text-[#9E9E9E] uppercase tracking-tighter">
+          Calculating Risk…
+        </span>
 
         <!-- Stats row -->
-        <div
-          class="flex items-center justify-around mt-7 pt-6 border-t border-[#F5F5F5]"
-        >
+        <div class="flex items-center justify-around mt-7 pt-6 border-t border-[#F5F5F5]">
           <div class="text-center">
-            <p
-              id="statCycles"
-              class="font-brand text-2xl font-bold text-[#1A1A1A]"
-            >
-              0
-            </p>
-            <p
-              class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide"
-            >
-              Cycles
-            </p>
+            <p id="statRotation" class="font-brand text-2xl font-bold text-[#1A1A1A]">—</p>
+            <p class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide">Slot</p>
           </div>
           <div class="w-px h-8 bg-[#E0E0E0]"></div>
           <div class="text-center">
-            <p
-              id="statOnTime"
-              class="font-brand text-2xl font-bold text-[#1B5E3B]"
-            >
-              0
-            </p>
-            <p
-              class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide"
-            >
-              On Time
-            </p>
+            <p id="statScore" class="font-brand text-2xl font-bold text-[#1B5E3B]">0</p>
+            <p class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide">Risk Score</p>
           </div>
           <div class="w-px h-8 bg-[#E0E0E0]"></div>
           <div class="text-center">
-            <p
-              id="statMissed"
-              class="font-brand text-2xl font-bold text-[#EF4444]"
-            >
-              0
-            </p>
-            <p
-              class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide"
-            >
-              Missed
-            </p>
+            <p id="statPayout" class="font-brand text-2xl font-bold text-[#1A1A1A]">—</p>
+            <p class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-wide">Payout</p>
           </div>
         </div>
       </div>
 
-      <!-- AI Risk note (Themed) -->
-      <div
-        id="riskNoteContainer"
-        class="bg-[#1B5E3B]/5 border border-[#1B5E3B]/10 rounded-2xl p-4 mb-5 fade-up-2 hidden"
-      >
-        <p
-          class="text-xs font-bold text-[#1B5E3B] mb-2 flex items-center gap-2"
-        >
+      <!-- AI Trust Assessment -->
+      <div class="bg-[#1B5E3B]/5 border border-[#1B5E3B]/10 rounded-2xl p-4 mb-5 fade-up-2">
+        <p class="text-xs font-bold text-[#1B5E3B] mb-2 flex items-center gap-2">
           <span class="text-base">🤖</span> AI TRUST ASSESSMENT
         </p>
-        <p
-          id="riskNoteText"
-          class="text-xs text-[#6B6B6B] leading-relaxed font-medium"
-        >
-          Analyzing performance history...
+        <p id="riskNoteText" class="text-xs text-[#6B6B6B] leading-relaxed font-medium">
+          Analyzing performance history…
         </p>
+      </div>
+
+      <!-- Member details card -->
+      <div class="bg-white rounded-3xl p-5 mb-5 fade-up-2 shadow-sm border border-white">
+        <p class="text-sm font-bold text-[#1A1A1A] mb-4 flex items-center gap-2">
+          <span class="w-1.5 h-4 bg-[#1B5E3B] rounded-full"></span>
+          Member Details
+        </p>
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-[#9E9E9E]">Joined</span>
+            <span id="detailJoined" class="text-xs font-bold text-[#1A1A1A]">—</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-[#9E9E9E]">Rotation order</span>
+            <span id="detailRotation" class="text-xs font-bold text-[#1A1A1A]">—</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-[#9E9E9E]">Payout received</span>
+            <span id="detailPayout" class="text-xs font-bold">—</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-[#9E9E9E]">Role</span>
+            <span id="detailRole" class="text-xs font-bold text-[#1A1A1A] capitalize">—</span>
+          </div>
+        </div>
       </div>
 
       <!-- Payment History -->
-      <div
-        class="bg-white rounded-3xl p-6 mb-5 fade-up-2 shadow-sm border border-white"
-      >
-        <p
-          class="text-sm font-bold text-[#1A1A1A] mb-5 flex items-center gap-2"
-        >
+      <div class="bg-white rounded-3xl p-6 mb-5 fade-up-2 shadow-sm border border-white">
+        <p class="text-sm font-bold text-[#1A1A1A] mb-5 flex items-center gap-2">
           <span class="w-1.5 h-4 bg-[#F2A83B] rounded-full"></span>
-          Recent History
+          Contribution History
         </p>
-        <div
-          id="historyList"
-          class="flex flex-col gap-4 text-center py-4 text-xs text-[#9E9E9E] font-medium"
-        >
-          No contribution history available.
+        <div id="historyList" class="flex flex-col gap-4 text-center py-4 text-xs text-[#9E9E9E] font-medium">
+          No contribution history available yet.
         </div>
       </div>
+
     </div>
 
     <!-- Bottom Nav -->
-    <div
-      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50"
-    >
-      <button
-        onclick="window.location.href = 'dashboard.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
-          <path d="M3 12L12 3l9 9" />
-          <path d="M9 21V12h6v9" /></svg
-        ><span class="text-[10px]">Home</span>
+    <div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-[#F0F0F0] px-6 py-3 flex items-center justify-between z-50">
+      <button onclick="window.location.href='dashboard.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
+        <span class="text-[10px]">Home</span>
       </button>
-      <button
-        onclick="window.location.href = 'groups.html'"
-        class="flex flex-col items-center gap-1 text-[#1B5E3B]"
-      >
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"
-          /></svg
-        ><span class="text-[10px] font-bold">Groups</span>
+      <button onclick="window.location.href='groups.html'" class="flex flex-col items-center gap-1 text-[#1B5E3B]">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <span class="text-[10px] font-bold">Groups</span>
       </button>
-      <button
-        onclick="window.location.href = 'make-payment.html'"
-        class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 active:scale-95 transition-all"
-      >
-        <svg
-          class="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M12 5v14M5 12h14" />
-        </svg>
+      <button onclick="window.location.href='make-payment.html'"
+        class="w-14 h-14 bg-[#F2A83B] rounded-full flex items-center justify-center -mt-8 shadow-xl shadow-orange-900/30 active:scale-95 transition-all">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
       </button>
-      <button
-        onclick="window.location.href = 'alerts.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-          <path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg
-        ><span class="text-[10px]">Alerts</span>
+      <button onclick="window.location.href='alerts.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="text-[10px]">Alerts</span>
       </button>
-      <button
-        onclick="window.location.href = 'profile.html'"
-        class="flex flex-col items-center gap-1 text-[#9E9E9E]"
-      >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="7" r="4" />
-          <path d="M5.5 20a7 7 0 0 1 13 0" /></svg
-        ><span class="text-[10px]">Profile</span>
+      <button onclick="window.location.href='profile.html'" class="flex flex-col items-center gap-1 text-[#9E9E9E]">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5.5 20a7 7 0 0 1 13 0"/></svg>
+        <span class="text-[10px]">Profile</span>
       </button>
     </div>
 
     <script type="module">
-      import { getMemberProfile } from "../js/api.js";
+      import { getGroupMembers, getCycleContributions } from "../js/api.js";
 
       async function initProfile() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const memberId = urlParams.get("id");
-        const groupId = urlParams.get("groupId");
+        const params   = new URLSearchParams(window.location.search);
+        // ✅ Fixed: was reading "id" but group-detail passes "memberId"
+        const memberId = params.get("memberId") || params.get("id");
+        const groupId  = params.get("groupId");
 
         if (!memberId || !groupId) {
-          document.getElementById("loadingState").innerHTML =
-            `<p class="text-xs font-bold text-red-500">Parameters Missing</p>`;
+          document.getElementById("loadingState").innerHTML = `
+            <div class="text-center px-6">
+              <p class="text-sm font-bold text-red-500 mb-2">Missing URL parameters</p>
+              <p class="text-xs text-[#9E9E9E] mb-4">memberId and groupId are required.</p>
+              <button onclick="history.back()" class="bg-[#1B5E3B] text-white px-6 py-2 rounded-full text-xs font-bold">Go Back</button>
+            </div>`;
           return;
         }
 
         try {
-          const data = await getMemberProfile(groupId, memberId);
-          const fullName =
-            data.full_name ||
-            (data.user && data.user.full_name) ||
-            "Unknown Member";
-          document.getElementById("memberName").textContent = fullName;
+          // Fetch all members for this group, then find the one we want
+          const members = await getGroupMembers(groupId);
+          const member  = Array.isArray(members)
+            ? members.find(m => String(m.id) === String(memberId))
+            : null;
 
-          document.getElementById("memberInitials").textContent = fullName
-            .split(" ")
-            .filter((n) => n)
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase()
-            .substring(0, 2);
+          if (!member) throw new Error("Member not found in this group.");
 
-          document.getElementById("statCycles").textContent =
-            data.stats?.total_cycles ?? 0;
-          document.getElementById("statOnTime").textContent =
-            data.stats?.on_time ?? 0;
-          document.getElementById("statMissed").textContent =
-            data.stats?.missed ?? 0;
+          // ── Name & initials ───────────────────────────────────
+          const fullName = member.full_name?.trim() || member.phone_number || `Member #${member.id}`;
+          const initials = member.full_name?.trim()
+            ? member.full_name.trim().split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
+            : member.phone_number?.slice(-2) ?? "??";
 
+          document.getElementById("memberName").textContent     = fullName;
+          document.getElementById("memberInitials").textContent = initials;
+          document.getElementById("memberPhone").textContent    = member.phone_number || "No phone on record";
+
+          // ── Stats ─────────────────────────────────────────────
+          document.getElementById("statRotation").textContent = `#${member.rotation_order}`;
+          document.getElementById("statScore").textContent    = member.risk_score ?? 0;
+          document.getElementById("statPayout").textContent   = member.has_received_payout ? "✓" : "—";
+
+          // ── Details ───────────────────────────────────────────
+          document.getElementById("detailJoined").textContent = member.joined_at
+            ? new Date(member.joined_at).toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" })
+            : "—";
+          document.getElementById("detailRotation").textContent = `Position ${member.rotation_order}`;
+
+          const payoutEl = document.getElementById("detailPayout");
+          payoutEl.textContent  = member.has_received_payout ? "Yes ✓" : "Not yet";
+          payoutEl.className    = `text-xs font-bold ${member.has_received_payout ? "text-[#22C55E]" : "text-[#9E9E9E]"}`;
+
+          document.getElementById("detailRole").textContent = member.role || "Member";
+
+          // ── Risk badge ────────────────────────────────────────
+          const risk    = (member.risk_level || "low").toLowerCase();
           const riskBadge = document.getElementById("riskBadge");
-          const risk = (data.risk_level || "low").toLowerCase();
-          riskBadge.textContent = `${risk} risk`;
+          const riskMap = {
+            low:    { text: "Low Risk",    cls: "bg-[#1B5E3B]/10 text-[#1B5E3B]" },
+            medium: { text: "Medium Risk", cls: "bg-[#F2A83B]/10 text-[#F2A83B]" },
+            high:   { text: "High Risk",   cls: "bg-[#EF4444]/10 text-[#EF4444]" },
+          };
+          const riskCfg = riskMap[risk] || riskMap.low;
+          riskBadge.textContent = riskCfg.text;
+          riskBadge.className   = `text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-sm ${riskCfg.cls}`;
 
-          if (risk === "low") {
-            riskBadge.className =
-              "text-[10px] bg-[#1B5E3B]/10 text-[#1B5E3B] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-sm";
-          } else if (risk === "medium") {
-            riskBadge.className =
-              "text-[10px] bg-[#F2A83B]/10 text-[#F2A83B] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-sm";
-          } else {
-            riskBadge.className =
-              "text-[10px] bg-[#EF4444]/10 text-[#EF4444] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-sm";
-          }
+          // ── AI note (generated from risk data) ───────────────
+          const score = member.risk_score ?? 0;
+          const aiNotes = {
+            low:    `This member has a strong payment record with a risk score of ${score}. They are considered a reliable contributor and pose minimal risk to the group.`,
+            medium: `This member has a moderate risk score of ${score}. There may have been occasional delays. The group should monitor their contributions going forward.`,
+            high:   `This member has a high risk score of ${score}. They have a pattern of missed or late payments. The group admin should take note and consider follow-up.`,
+          };
+          document.getElementById("riskNoteText").textContent = aiNotes[risk] || aiNotes.low;
 
-          if (data.ai_note) {
-            document
-              .getElementById("riskNoteContainer")
-              .classList.remove("hidden");
-            document.getElementById("riskNoteText").textContent = data.ai_note;
-          }
+          // ── Contribution history (lazy fetch) ────────────────
+          try {
+            const contribData = await getCycleContributions(groupId);
+            const allContribs = Array.isArray(contribData) ? contribData : (contribData.results || contribData.contributions || []);
 
-          if (data.history && data.history.length > 0) {
-            document.getElementById("historyList").innerHTML = data.history
-              .map((h) => {
-                let iconBg = "#F5F4EF",
-                  iconColor = "#9E9E9E",
-                  svgPath = "M12 8v4l3 3",
-                  statusColor = "#9E9E9E";
-                const status = h.status.toLowerCase();
+            // Filter to only this member's contributions
+            const myContribs = allContribs.filter(c =>
+              String(c.user_id) === String(member.user_id) ||
+              String(c.member_id) === String(member.id)
+            );
 
-                if (status === "paid" || status === "on-time") {
-                  iconBg = "#1B5E3B/10";
-                  iconColor = "#1B5E3B";
-                  statusColor = "#1B5E3B";
-                  svgPath = "M5 13l4 4L19 7";
-                } else if (status === "missed" || status === "overdue") {
-                  iconBg = "#FFF1F0";
-                  iconColor = "#EF4444";
-                  statusColor = "#EF4444";
-                  svgPath = "M18 6L6 18M6 6l12 12";
-                }
+            if (myContribs.length) {
+              document.getElementById("historyList").innerHTML = myContribs.map((h) => {
+                const status = h.status?.toLowerCase() || "pending";
+                const cfg = {
+                  paid:    { bg: "#1B5E3B15", icon: "#1B5E3B", path: "M5 13l4 4L19 7",    label: "Paid",    color: "#1B5E3B" },
+                  missed:  { bg: "#FFF1F0",   icon: "#EF4444", path: "M18 6L6 18M6 6l12 12", label: "Missed",  color: "#EF4444" },
+                  late:    { bg: "#FFF9ED",   icon: "#F2A83B", path: "M12 8v4l3 3",        label: "Late",    color: "#F2A83B" },
+                  pending: { bg: "#F5F4EF",   icon: "#9E9E9E", path: "M12 8v4l3 3",        label: "Pending", color: "#9E9E9E" },
+                }[status] || { bg: "#F5F4EF", icon: "#9E9E9E", path: "M12 8v4l3 3", label: status, color: "#9E9E9E" };
+
+                const date = h.paid_at
+                  ? new Date(h.paid_at).toLocaleDateString("en-NG", { month: "short", day: "numeric" })
+                  : "—";
 
                 return `
-                    <div class="flex items-center gap-4 py-1">
-                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0" style="background-color: ${iconBg.includes("/") ? "#1B5E3B15" : iconBg}">
-                            <svg class="w-4 h-4" style="color: ${iconColor}" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="${svgPath}"/></svg>
-                        </div>
-                        <div class="flex-1 text-left">
-                            <p class="text-sm font-bold text-[#1A1A1A]">Cycle ${h.cycle_number || "#"}</p>
-                            <p class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-tight">${h.date || "Pending"}</p>
-                        </div>
-                        <span class="text-[10px] font-black uppercase tracking-tighter" style="color: ${statusColor}">${h.status}</span>
+                  <div class="flex items-center gap-4 py-1">
+                    <div class="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0" style="background:${cfg.bg}">
+                      <svg class="w-4 h-4" style="color:${cfg.icon}" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path d="${cfg.path}"/>
+                      </svg>
                     </div>
-                `;
-              })
-              .join("");
+                    <div class="flex-1 text-left">
+                      <p class="text-sm font-bold text-[#1A1A1A]">Round ${h.round_number ?? "—"}</p>
+                      <p class="text-[10px] font-bold text-[#9E9E9E] uppercase tracking-tight">${date}</p>
+                    </div>
+                    <span class="text-[10px] font-black uppercase tracking-tighter" style="color:${cfg.color}">${cfg.label}</span>
+                  </div>`;
+              }).join("");
+            }
+          } catch (e) {
+            // Contribution history failing shouldn't break the whole page
+            console.warn("Could not load contribution history:", e.message);
           }
 
           document.getElementById("loadingState").classList.add("hidden");
+
         } catch (error) {
-          document.getElementById("loadingState").innerHTML =
-            `<div class="text-center px-5"><p class="text-sm font-bold text-red-500 mb-4">Connection Error</p><button onclick="location.reload()" class="bg-[#1B5E3B] text-white px-6 py-2 rounded-full text-xs font-bold">Retry</button></div>`;
+          console.error(error);
+          document.getElementById("loadingState").innerHTML = `
+            <div class="text-center px-5">
+              <p class="text-sm font-bold text-red-500 mb-2">Could not load profile</p>
+              <p class="text-xs text-[#9E9E9E] mb-4">${error.message}</p>
+              <button onclick="history.back()" class="bg-[#1B5E3B] text-white px-6 py-2 rounded-full text-xs font-bold">Go Back</button>
+            </div>`;
         }
       }
 
